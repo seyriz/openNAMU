@@ -50,13 +50,20 @@ module.exports = function(n, ba){
   d('6: '+six)
 
   // 리스트
-  six = six.replace(/\s\*\s?([^\*]*)/g, "<li>$1</li>")
+  six = six.replace(/\s\*\s?([^\n]*)/g, "<li>$1</li>")
   //six = six.replace(/(<li>.*<\/li>)/g, "<ul>$1</ul>")
   d('7: '+six)
 
   // 매크로
   six = six.replace(/\[include\((.*)\)]/g, wiki.include["$1"]) // 틀
-  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>") // 구현 예정
+
+  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
+  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*),\s?height=(.*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+  six = six.replace(/\[youtube\(([^,]*),\s?height=(.*),\s?width=(.*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+  six = six.replace(/\[youtube\(([^,]*),height=(.*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+
+
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>")
   d('8: '+six)
 
