@@ -51,7 +51,9 @@ module.exports = function(n, ba){
 
   // 리스트
   six = six.replace(/\s\*\s?([^\n]*)/g, "<li>$1</li>")
-  //six = six.replace(/(<li>.*<\/li>)/g, "<ul>$1</ul>")
+
+  six = six.replace(/(([1-9]\.\s?(.*)\n?)+)/g, "<ol>$1<ol>")
+  six = six.replace(/(([1-9]\.\s?(.*)\n?)+)/g, "<li>$1<li>")
   d('7: '+six)
 
   // 매크로
