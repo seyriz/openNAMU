@@ -56,7 +56,7 @@ module.exports = function(n, ba){
 
   // 매크로
   six = six.replace(/\[include\((.*)\)]/g, wiki.include["$1"]) // 틀
-  six = six.replace(/\[youtube\((.*)\)]/g, "미구현된 기능이므로 $1을 재생하지 못했습니다.") // 구현 예정
+  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>") // 구현 예정
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>")
   d('8: '+six)
 
