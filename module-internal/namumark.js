@@ -53,6 +53,12 @@ module.exports = function(n, ba){
   six = six.replace(/\{\{\{\+4\s?(((?!{{{).)*)\}\}\}/g, "<big><big><big><big>$1</big></big></big></big>")
   six = six.replace(/\{\{\{\+5\s?(((?!{{{).)*)\}\}\}/g, "<big><big><big><big><big>$1</big></big></big></big></big>")
 
+  six = six.replace(/\{\{\{\-1\s?(((?!{{{).)*)\}\}\}/g, "<small>$1</small>")
+  six = six.replace(/\{\{\{\-2\s?(((?!{{{).)*)\}\}\}/g, "<small><small>$1</small></small>")
+  six = six.replace(/\{\{\{\-3\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small>$1</small></small></small>")
+  six = six.replace(/\{\{\{\-4\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small>$1</small></small></small></small>")
+  six = six.replace(/\{\{\{\-5\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small><small>$1</small></small></small></small></small>")
+
   six = six.replace(/\{{{(((?!{{{).)*)}}}/g, "<code>$1</code>") // 코드로 바꾸기만 지원
   six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
   d('6: '+six)
