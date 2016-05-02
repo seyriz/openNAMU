@@ -2,7 +2,7 @@
   "name": "openNAMU",
   "front": "HelloWorld",
   "saveSecond": 60,
-  "verbose": true,
+  "verbose": false,
   "backup": {
     "use": true
   },
@@ -105,6 +105,13 @@
         "admin (34)"
       ],
       "content": "#redirect 테스트"
+    },
+    "안녕하세요": {
+      "canEdit": true,
+      "history": [
+        "admin (60)"
+      ],
+      "content": "안녕하세요 이건 오픈나무입니다!"
     }
   },
   "nick": {
@@ -112,7 +119,7 @@
   },
   "user": {
     "admin": {
-      "lastEdit": "HelloWorld"
+      "lastEdit": "안녕하세요"
     }
   },
   "include": {
