@@ -7,4 +7,4 @@ block content
         a(href="/w/#{val}")= val
 block menu
   nav.menu
-    a.menu-item(href='/', aria-label='문서의 내용을 읽습니다.') 대문으로
+    a.menu-item(onclick='history.back(-1)', aria-label='이전 위치로 돌아갑니다.') 이전으로
