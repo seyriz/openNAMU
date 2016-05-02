@@ -36,7 +36,7 @@ module.exports = function(n, ba){
   // 고급 태그
   six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^\[\]]*)\|([^\[\]]*)]]/g, "<a href=\"$1\">$2</a>") // 커스텀 이름의 다른 곳 링크
   six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^[\[\]]*)]]/g, "<a href=\"$1\">$1</a>") // 다른 곳 링크
-  six = six.replace(/\[\[(((?!\[\[).)*)\|(((?!\[\[).)*)]]/g, "<a href=\"/w/$1\">$2</a>") // 커스텀 이름의 링크
+  six = six.replace(/\[\[(((?!\[\[).)*)\|(((?!\[\[).)*)]]/g, "<a href=\"/w/$1\">$3</a>") // 커스텀 이름의 링크
   six = six.replace(/\[\[(((?!\[\[).)*)\]\]/g, "<a href=\"/w/$1\">$1</a>") // 링크
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))/g, "<img src=\"$1\">") // 이미지
   six = six.replace(/\{{{\|\s?([^\{\}\|]*)\s?\|}}}/g, "<table class=\"wiki-closure\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>")
