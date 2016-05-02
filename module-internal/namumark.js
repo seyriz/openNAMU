@@ -38,7 +38,13 @@ module.exports = function(n, ba){
   six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^[\[\]]*)]]/g, "<a href=\"$1\">$1</a>") // 다른 곳 링크
   six = six.replace(/\[\[(((?!\[\[).)*)\|(((?!\[\[).)*)]]/g, "<a href=\"/w/$1\">$3</a>") // 커스텀 이름의 링크
   six = six.replace(/\[\[(((?!\[\[).)*)\]\]/g, "<a href=\"/w/$1\">$1</a>") // 링크
+
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))/g, "<img src=\"$1\">") // 이미지
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)/g, "<img width=\"$3\" src=\"$1\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)/g, "<img height=\"$3\" src=\"$1\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img height=\"$3\" width=\"$4\" src=\"$1\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img height=\"$4\" width=\"$3\" src=\"$1\">")
+
   six = six.replace(/\{{{\|\s?([^\{\}\|]*)\s?\|}}}/g, "<table class=\"wiki-closure\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>")
 
   six = six.replace(/\{\{\{\+1\s?(((?!{{{).)*)\}\}\}/g, "<big>$1</big>")
