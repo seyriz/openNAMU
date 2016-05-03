@@ -3,10 +3,13 @@ module.exports = function(n, ba){
   var d = doNothing
   if(wiki.verbose) d = console.log
   var six = n
+  var today = getNow()
 
-  // XSS 방지
+  // XSS 방지와 바보패치
   six = six.replace(/<script>|<\/script>/g, "")
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "")
+
+  six = six.replace(/\{\{\{#![hH][tT][mM][lL] (.*)\}\}\}/g, "$1")
   d('1: '+six)
 
   // 앞 태그
@@ -66,8 +69,8 @@ module.exports = function(n, ba){
   // 리스트
   six = six.replace(/\s\*\s?([^\n]*)/g, "<li>$1</li>")
 
-  six = six.replace(/(([1-9]\.\s?(.*)\n?)+)/g, "<ol>$1<ol>")
-  six = six.replace(/(([1-9]\.\s?(.*)\n?)+)/g, "<li>$1<li>")
+  six = six.replace(/(([1-9]\.\s(.*)\n?)+)/g, "<ol>$1<ol>")
+  six = six.replace(/(([1-9]\.\s(.*)\n?)+)/g, "<li>$1<li>")
   d('6: '+six)
 
   // 매크로
@@ -78,7 +81,8 @@ module.exports = function(n, ba){
   six = six.replace(/\[youtube\(([^,]*),\s?width=(.*),\s?height=(.*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*),\s?width=(.*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
-
+  six = six.replace(/\[date]/g, today)
+  six = six.replace(/\[datetime]/g, today)
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>")
   d('7: '+six)
 
@@ -90,5 +94,18 @@ module.exports = function(n, ba){
 
 
   ba(six) // My name
+  // Thanks for 2DU //
 }
 function doNothing(a) {}
+function getNow() {
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //1월이 0월이 되는 마아-법!
+  var yyyy = today.getFullYear();
+  if(dd<10) {
+      dd='0'+dd
+  }
+  if(mm<10) {
+      mm='0'+mm
+  }
+  return yyyy+'/' + mm+'/'+dd;
+}
