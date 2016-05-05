@@ -1,4 +1,16 @@
 var wiki = require('../wiki');
+function getNow() {
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //1월이 0월이 되는 마아-법!
+  var yyyy = today.getFullYear();
+  if(dd<10) {
+      dd='0'+dd
+  }
+  if(mm<10) {
+      mm='0'+mm
+  }
+  return yyyy+'/' + mm+'/'+dd;
+}
 module.exports = function(n, ba){
   var d = doNothing
   if(wiki.verbose) d = console.log
@@ -13,8 +25,8 @@ module.exports = function(n, ba){
   d('1: '+six)
 
   // 앞 태그
-  six = six.replace(/>\s([^\n]*)/g, "<blockquote>$1</blockquote>")
-  six = six.replace(/##([^#\n]*)/g, "")
+  six = six.replace(/\n>\s([^\n]*)/g, "<blockquote style=\"padding: 1em calc(2em + 25px) 1em 1em;background: #eeeeee;border: 2px dashed #ccc;border-left: 5px solid #71BC6D;\">$1</blockquote>")
+  six = six.replace(/##([^#\n]*)/g, "<!-- $1 -->")
   six = six.replace(/#redirect\s(.*)/g, "<div class=\"flash\">[[$1]] 문서를 찾고 계신가요?</div>")
   d('2: '+six)
 
@@ -50,7 +62,7 @@ module.exports = function(n, ba){
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img height=\"$3\" width=\"$4\" src=\"$1\">")
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img height=\"$4\" width=\"$3\" src=\"$1\">")
 
-  six = six.replace(/\{{{\|\s?([^\{\}\|]*)\s?\|}}}/g, "<table class=\"wiki-closure\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>")
+  six = six.replace(/\{{\|\s?([^\{\}\|]*)\s?\|}}/g, "<table style=\"border: 1px solid;\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>")
 
   six = six.replace(/\{\{\{\+1\s?(((?!{{{).)*)\}\}\}/g, "<big>$1</big>")
   six = six.replace(/\{\{\{\+2\s?(((?!{{{).)*)\}\}\}/g, "<big><big>$1</big></big>")
@@ -63,6 +75,7 @@ module.exports = function(n, ba){
   six = six.replace(/\{\{\{\-3\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small>$1</small></small></small>")
   six = six.replace(/\{\{\{\-4\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small>$1</small></small></small></small>")
   six = six.replace(/\{\{\{\-5\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small><small>$1</small></small></small></small></small>")
+  six = six.replace(/\[\* ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$1\"><sup>[각주]</sup></span>")
 
   six = six.replace(/\{{{(((?!{{{).)*)}}}/g, "<code>$1</code>") // 코드로 바꾸기만 지원
   six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
@@ -79,10 +92,11 @@ module.exports = function(n, ba){
   six = six.replace(/\[include\((.*)\)]/g, wiki.include["$1"]) // 틀
 
   six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
-  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?width=(.*),\s?height=(.*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*),\s?width=(.*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
+  six = six.replace(/\[youtube\(([^,]g*)\)]/g, "<iframe src=\"https:\/\/www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
   six = six.replace(/\[date]/g, today)
   six = six.replace(/\[datetime]/g, today)
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>")
@@ -99,15 +113,3 @@ module.exports = function(n, ba){
   // Thanks for 2DU //
 }
 function doNothing(a) {}
-function getNow() {
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; //1월이 0월이 되는 마아-법!
-  var yyyy = today.getFullYear();
-  if(dd<10) {
-      dd='0'+dd
-  }
-  if(mm<10) {
-      mm='0'+mm
-  }
-  return yyyy+'/' + mm+'/'+dd;
-}
