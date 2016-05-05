@@ -63,7 +63,7 @@ module.exports = function(n, ba){
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img height=\"$3\" width=\"$4\" src=\"$1\">")
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img height=\"$4\" width=\"$3\" src=\"$1\">")
 
-  six = six.replace(/\{{\|\s?([^\{\}\|]*)\s?\|}}/g, "<table style=\"border: 1px solid;\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>")
+  six = six.replace(/\{{\|\s?([^\{\}\|]*)\s?\|}}/g, "<table style=\"border: 1px solid;\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>") //글상자
 
   six = six.replace(/\{\{\{\+1\s?(((?!{{{).)*)\}\}\}/g, "<big>$1</big>")
   six = six.replace(/\{\{\{\+2\s?(((?!{{{).)*)\}\}\}/g, "<big><big>$1</big></big>")
@@ -76,10 +76,11 @@ module.exports = function(n, ba){
   six = six.replace(/\{\{\{\-3\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small>$1</small></small></small>")
   six = six.replace(/\{\{\{\-4\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small>$1</small></small></small></small>")
   six = six.replace(/\{\{\{\-5\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small><small>$1</small></small></small></small></small>")
-  six = six.replace(/\[\* ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$1\"><sup>[각주]</sup></span>")
+  six = six.replace(/\[\* ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$1\"><sup>[각주]</sup></span>") // 이름 없는 각주
+  six = six.replace(/\[\*([^\[]+) ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$2\"><sup>[$1]</sup></span>")
 
   six = six.replace(/\{{{(((?!{{{).)*)}}}/g, "<code>$1</code>") // 코드로 바꾸기만 지원
-  six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
+  six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />") //수학 식
   d('5: '+six)
 
   // 리스트
