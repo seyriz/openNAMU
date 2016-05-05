@@ -1,5 +1,6 @@
 var wiki = require('../wiki');
 function getNow() {
+  var today = new Date()
   var dd = today.getDate();
   var mm = today.getMonth()+1; //1월이 0월이 되는 마아-법!
   var yyyy = today.getFullYear();
