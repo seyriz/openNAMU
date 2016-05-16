@@ -1,6 +1,7 @@
 {
   "name": "openNAMU",
   "front": "HelloWorld",
+  "pure": true,
   "saveSecond": 60,
   "verbose": false,
   "backup": {

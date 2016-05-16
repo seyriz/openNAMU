@@ -14,10 +14,12 @@ router.get('/showall', function(req, res) {
 });
 // 지금까지의 변화를 wiki.json에 저장합니다.
 router.get('/save', function(req, res) {
-  jsonfile.writeFile('./wiki.json', wiki, {spaces: 2}, (err) => {
-    if(err) throw err;
-    console.log("Data saved.");
-  })
+  if(wiki.pure){
+    jsonfile.writeFile('./wiki.json', wiki, {spaces: 2}, (err) => {
+      if(err) throw err;
+      console.log("Data saved.");
+    })
+  }
   res.redirect('/w/'+encodeURI(wiki.front))
 });
 // 검색 결과를 보여줍니다.

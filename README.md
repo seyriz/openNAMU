@@ -32,6 +32,7 @@
 * CSS 변경이 필요하시면 `public/stylesheets/style.css`를 변형하시거나, Pug (구 Jade) 사용법을 아시는 경우 `views/layout.jade`와 다른 파일을 변형하셔도 됩니다.
 * 문서 역사는 영원히 (...) 기록됩니다. 혹시라도 지우고 싶으신 분들은 `wiki.json`을 편집하셔서 `"history"` 부분을 완전히 제거하시면 됩니다.
 * 작성 금지를 하시려면, `wiki.json`의 `doc.문서명.canEdit`를 `false`로 설정하시면 됩니다.
+* 새로운 기능: 혹시라도 `wiki.js`를 따로 작성하여 DB를 사용중이나 문제가 있는 경우에는 새로 추가된 옵션인 `pure`를 `false`로 바꿔주시면 됩니다. 물론 Wiki**JSON** 을 사용하시면서 `pure`를 `false`로 해두시면 업데이트가 꺼지므로 반드시 켜 두세요.
 
 ## 기능
 * /save - 현재까지의 변화를 `wiki.json`에 저장 합니다.

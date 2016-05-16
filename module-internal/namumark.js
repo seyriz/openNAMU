@@ -75,7 +75,7 @@ module.exports = function(n, ba){
   six = six.replace(/\{\{\{\-2\s?(((?!{{{).)*)\}\}\}/g, "<small><small>$1</small></small>")
   six = six.replace(/\{\{\{\-3\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small>$1</small></small></small>")
   six = six.replace(/\{\{\{\-4\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small>$1</small></small></small></small>")
-  six = six.replace(/\{\{\{\-5\s?(((?!{{{).)*)\}\}\}/g, "<small><small><small><small><small>$1</small></small></small></small></small>")
+  six = six.replace(/\{\{\{\-5\s?(((?!{{{).)*)\}\}\}/g, "<small><sgmall><small><small><small>$1</small></small></small></small></small>")
   six = six.replace(/\[\* ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$1\"><sup>[각주]</sup></span>") // 이름 없는 각주
   six = six.replace(/\[\*([^\[]+) ([^\[]*)\]/g, "<span class=\"tooltipped tooltipped-n\" aria-label=\"$2\"><sup>[$1]</sup></span>")
 
