@@ -21,7 +21,7 @@ module.exports = function(n, ba){
   // XSS 방지와 바보패치
   six = six.replace(/<script>|<\/script>/g, "")
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "")
-
+  six = six.replace(/javascript:/g, "")
   six = six.replace(/\{\{\{#![hH][tT][mM][lL] (.*)\}\}\}/g, "$1")
   d('1: '+six)
 
