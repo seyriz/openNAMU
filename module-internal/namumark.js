@@ -1,4 +1,4 @@
-var wiki = require('../wiki');
+ovar wiki = require('../wiki');
 function getNow() {
   var today = new Date()
   var dd = today.getDate();
@@ -13,8 +13,7 @@ function getNow() {
   return yyyy+'/' + mm+'/'+dd;
 }
 module.exports = function(n, ba){
-  var d = doNothing
-  if(wiki.verbose) d = console.log
+  var d = require('debug')('openNAMU:parser')
   var six = n
   var today = getNow()
 
@@ -22,7 +21,8 @@ module.exports = function(n, ba){
   six = six.replace(/<script>|<\/script>/g, "")
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "")
   six = six.replace(/javascript:/g, "")
-  six = six.replace(/\{\{\{#![hH][tT][mM][lL] (.*)\}\}\}/g, "$1")
+  six = six.replace(/\{\{\{#![hH][tT][mM][lL] ([^]*)\}\}\}/g, "$1")
+
   d('1: '+six)
 
   // 앞 태그
@@ -50,18 +50,21 @@ module.exports = function(n, ba){
   d('4: '+six)
 
   // 고급 태그
-  six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^\[\]]*)\|([^\[\]]*)]]/g, "<a href=\"$1\">$2</a>") // 커스텀 이름의 다른 곳 링크
-  six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^[\[\]]*)]]/g, "<a href=\"$1\">$1</a>") // 다른 곳 링크
+  six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^\[\]]*)\|([^\[\]]*)]]/g, "<a id=\"outdoor\" style=\"color:green;\" href=\"$1\">$2</a>") // 커스텀 이름의 다른 곳 링크
+  six = six.replace(/\[\[(https?:\/\/[^\n가-힣ㄱ-ㅎ]*[^\n]*[^[\[\]]*)]]/g, "<a id=\"outdoor\" style=\"color:green;\" href=\"$1\">$1</a>") // 다른 곳 링크
   six = six.replace(/\[\[(((?!\[\[).)*)\|(((?!\[\[).)*)]]/g, "<a href=\"/w/$1\">$3</a>") // 커스텀 이름의 링크
   six = six.replace(/\[\[(#((?!\[\[).)*)\|(((?!\[\[).)*)]]/g, "<a href=\"$1\">$3</a>") // 앵커에 커스텀 이름의 링크
   six = six.replace(/\[\[(#((?!\[\[).)*)\]\]/g, "<a href=\"$1\">$1</a>") // 앵커에 링크
   six = six.replace(/\[\[(((?!\[\[).)*)\]\]/g, "<a href=\"/w/$1\">$1</a>") // 링크
 
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))/g, "<img src=\"$1\">") // 이미지
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)/g, "<img width=\"$3\" src=\"$1\">")
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)/g, "<img height=\"$3\" src=\"$1\">")
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img height=\"$3\" width=\"$4\" src=\"$1\">")
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img height=\"$4\" width=\"$3\" src=\"$1\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img src=\"$1\" width=\"$3\"  height=\"$4\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img src=\"$1\" width=\"$3\" height=\"$4\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)/g, "<img src=\"$1\" height=\"$3\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)/g, "<img src=\"$1\" width=\"$3\">")
+  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))/g, "<img src=\"$1\">")
+  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" width="([^\n]*)" height="([^\n]*)">/g, "<img src=\"$1\" width=\"$3\" height=\"$4\">") // 이미지
+  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" width="([^\n]*)">/g, "<img src=\"$1\" width=\"$3\">") // 이미지
+  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" height="([^\n]*)">/g, "<img src=\"$1\" height=\"$3\">") // 이미지
 
   six = six.replace(/\{{\|\s?([^\{\}\|]*)\s?\|}}/g, "<table style=\"border: 1px solid;\"><tbody><tr><td><div class=\"wiki-indent border\">$1<\/div><\/td><\/tr><\/tbody><\/table>") //글상자
 
@@ -93,12 +96,11 @@ module.exports = function(n, ba){
   // 매크로
   six = six.replace(/\[include\((.*)\)]/g, wiki.include["$1"]) // 틀
 
-  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?width=(.*),\s?height=(.*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*),\s?width=(.*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?width=(.*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
   six = six.replace(/\[youtube\(([^,]*),\s?height=(.*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>")
-  six = six.replace(/\[youtube\(([^,]g*)\)]/g, "<iframe src=\"https:\/\/www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
+  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>")
   six = six.replace(/\[date]/g, today)
   six = six.replace(/\[datetime]/g, today)
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>")
@@ -106,12 +108,13 @@ module.exports = function(n, ba){
 
   // 개행 담당
   six = six.replace(/<br>/g, "")
-  six = six.replace(/\n\n|\r\n\r\n/g, "<br>")
   six = six.replace(/\[br\]/g, "<br>")
   d('8: '+six)
 
-
-  ba(six) // My name
-  // Thanks for 2DU //
+  var six = nl2br(six);
+  function nl2br(str){
+    return str.replace(/\n/g, "<br />");
+  }
+  // 2DU님의 기여 사항을 일부..아니 많이 적용했습니다. 감사합니다! //
 }
 function doNothing(a) {}
