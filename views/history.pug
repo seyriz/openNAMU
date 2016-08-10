@@ -4,7 +4,7 @@ block content
   ul
     each val in history
       li
-        a(href="/users/#{val}")= val
+        a(href="/users/" + val)= val
 block menu
   nav.menu
     a.menu-item(href='/w/' + title, aria-label='문서의 내용을 읽습니다.') 문서보기
