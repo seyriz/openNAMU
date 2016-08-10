@@ -1,8 +1,11 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@media (max-width: 767px) {
+  .one-fifth {
+    width: 100%;
+  }
+  .four-fifths {
+    width: 100%;
+  }
 }
-
-a {
-  color: #00B7FF;
+textarea {
+    width: 100%;
 }

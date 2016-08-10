@@ -104,7 +104,7 @@ if(wiki.backup.use){
  var j = schedule.scheduleJob('0 0 * * *', function(){
    jsonfile.writeFile('../backup/'+Time.now(), wiki, {spaces: 2}, (err) => {
      if(err) throw err;
-     console.log("Task -- Backup Success.");
+     debug("Task -- Backup Success.");
    })
  });
 }
