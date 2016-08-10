@@ -4,7 +4,7 @@ block content
   ul
     each val in data
       li
-        a(href="/w/#{val}")= val
+        a(href="/w/" + val.article_title})= val.article_title
 block menu
   nav.menu
-    a.menu-item(onclick='history.back(-1)', aria-label='이전 위치로 돌아갑니다.') 이전으로
+    a.menu-item(href='/w/' + title, aria-label='대문으로 돌아갑니다.') 대문으로
