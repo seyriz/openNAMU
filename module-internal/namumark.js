@@ -23,8 +23,8 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "")
   six = six.replace(/javascript:/g, "")
   
-  six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 <a href=\"/w/$1\">$1</a> 문서로 리다이렉트 합니다.</li>")
-  six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 <a href=\"/w/$1\">$1</a> 문서로 리다이렉트 합니다.</li>")
+  six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>")
+  six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>")
   
   six = six.replace(/\n>\s?([^\n]*)/g, "<blockquote>$1</blockquote><not_br></not_br>")
   
