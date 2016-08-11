@@ -63,7 +63,14 @@ router.get('/raw/:page', function(req, res) {
 });
 // 편집 화면을 보여줍니다.
 router.get('/edit/:page', function(req, res) {
-  if(!wiki.doc[req.params.page] || !wiki.doc[req.params.page].content){
+  var ip = ip ||
+     req.connection.remoteAddress ||
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
+  if(ip === ""){
+	  res.redirect('http://oriwiki.net/')
+  }
+  else if(!wiki.doc[req.params.page] || !wiki.doc[req.params.page].content){
     res.render('edit', { title: req.params.page, content: "" });
     res.end()
     return;
