@@ -127,5 +127,6 @@ module.exports = function(n, ba){
 
   ba(six)
   // 새 파서 테스트중 Beta 0.3 버전 //
+  // Thank for 2DU, LiteHell //
 }
 function doNothing(a) {}
