@@ -12,6 +12,10 @@ router.get('/', function(req, res, next) {
 router.get('/showall', function(req, res) {
   res.render('showall', { doc: wiki.doc })
 });
+// 버전을 보여줍니다.
+router.get('/ver', function(req, res) {
+  res.render('ver', { doc: wiki.doc })
+});
 // 지금까지의 변화를 wiki.json에 저장합니다.
 router.get('/save', function(req, res) {
   if(wiki.pure){

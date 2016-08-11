@@ -1,0 +1,22 @@
+extends wiki
+block content
+    h1.title 오픈나무 버전 0.3 알파
+    h2 패치 내역
+    h3 0.1
+    br
+    li 기초 설립
+    h3 0.2
+    br
+    li 파서 개선
+    h3 0.3
+    br
+    li <s>사실 0.1 / 0.2 패치 내역이 기억이 잘 안난다.</s>
+    li 파서 <b>많이</b> 개선 <s>갈아 엎었다.</s>
+    li jade에서 pug로 변경
+    li 디자인 개선
+block menu
+  nav.menu
+    a.menu-item(href='/w/' + title, aria-label='문서의 내용을 읽습니다.') 문서보기
+    a.menu-item(href='/edit/' + title, aria-label='관리자만 가능합니다.') 수정하기
+    a.menu-item.selected(href='#', onclick='return false', aria-label="문서의 역사를 확인합니다.") 역사보기
+    a.menu-item(href='/showall', aria-label="모든 문서의 목록을 봅니다.") 문서목록
