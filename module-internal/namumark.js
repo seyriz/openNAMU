@@ -8,7 +8,7 @@ module.exports = function(n, ba){
   function getNow() {
   var today = new Date()
   var dd = today.getDate();
-  var mm = today.getMonth()+1; //1월이 0월이 되는 마아-법!
+  var mm = today.getMonth()+1; 
   var yyyy = today.getFullYear();
   if(dd<10) {
       dd='0'+dd
@@ -126,7 +126,7 @@ module.exports = function(n, ba){
   d('1: '+six)
 
   ba(six)
-  // 새 파서 테스트중 Beta 0.3 버전 //
+  // 새 파서 테스트중 Beta 0.4 버전 //
   // Thank for 2DU, LiteHell //
 }
 function doNothing(a) {}
