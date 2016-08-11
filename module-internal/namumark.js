@@ -3,7 +3,8 @@ module.exports = function(n, ba){
   var six = n
   var today = getNow()
   var d = require('debug')('openNAMU:parser')
-  
+  var docnames = Object.keys(wiki.doc);
+
   function getNow() {
   var today = new Date()
   var dd = today.getDate();
@@ -33,11 +34,35 @@ module.exports = function(n, ba){
   six = six.replace(/\[각주\]/g, "")
   six = six.replace(/\[목차\]/g, "")
   
+  var docLinkPattern_Labeled = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/g,
+    docLinkPattern = /\[\[([^\]\]]*)\]\]/g;
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>")
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$1$2</a>")
-  six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a href=\"/w/$1\">$2</a>")
-  six = six.replace(/\[\[([^\]\]]*)\]\]/g, "<a href=\"/w/$1\">$1</a>")
-  
+  while(true) {
+    var match = docLinkPattern_Labeled.exec(six);
+    if(match == null)
+        break;
+    if(docnames.indexOf(match[1]) != -1) {
+        // 존재하는 문서
+        six = six.replace(match[0], '<a href="/w/' + match[1] + '">' + match[2] + '</a>');
+    } else {
+        // 안 존재하는 문서
+        six = six.replace(match[0], '<a class="not_thing" href="/w/' + match[1] + '">' + match[2] + '</a>');
+    }
+  }
+  while(true) {
+    var match = docLinkPattern.exec(six);
+    if(match == null)
+        break;
+    if(docnames.indexOf(match[1]) != -1) {
+        // 존재하는 문서
+        six = six.replace(match[0], '<a href="/w/' + match[1] + '">' + match[1] + '</a>');
+    } else {
+        // 안 존재하는 문서
+        six = six.replace(match[0], '<a class="not_thing" href="/w/' + match[1] + '">' + match[1] + '</a>');
+    }
+  }
+
   six = six.replace(/======\s(.*)\s======[ ]*/g, "<h6>$1</h6>")
   six = six.replace(/=====\s(.*)\s=====[ ]*/g, "<h5>$1</h5>")
   six = six.replace(/====\s(.*)\s====[ ]*/g, "<h4>$1</h4>")

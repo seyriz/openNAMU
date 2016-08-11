@@ -9,3 +9,6 @@
 textarea {
     width: 100%;
 }
+a.not_thing {
+    color: red;
+}
