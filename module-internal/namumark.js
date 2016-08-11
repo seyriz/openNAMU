@@ -36,25 +36,26 @@ module.exports = function(n, ba){
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>")
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$1$2</a>")
   
-  var test = "/<body>No Content</body>/";
-  var cheerio = require('cheerio');
-  var request = require('request');
-  var yellow = "/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/";
-  var green = "/\[\[([^\]\]]*)\]\]/";
+  var test = /<body>No Content<\/body>/;
+  var yellow = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
+  var green = /\[\[([^\]\]]*)\]\]/;
   var i = 0
   
   while(i>10)
   {
 	if(six.indexOf(yellow) != -1)
 	{	
-		test2 = six.match(yellow);
-		var url = '/raw/' + test2[1];
-		request(url, function(error, response, html){
-		if (error) {throw error};
-		var blue = html;
+		test2 = six.match(yellow);	
+		
+		var page = require('webpage').create();
+		page.open('/raw/' + test2[1], function (status) {
+			if (status) {
+				var html = page.content;
+			};
+			phantom.exit();
 		});
 		
-		if(blue.indexOf(test) != -1)
+		if(html.indexOf(test) != -1)
 		{
 			six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, "<a class=\"not_thing\" href=\"/w/$1\">$2</a>")
 		}
@@ -65,14 +66,17 @@ module.exports = function(n, ba){
 	}
 	else if(six.indexOf(green) != -1)
 	{	
-		test2 = six.match(green);
-		var url = '/raw/' + test2[1];
-		request(url, function(error, response, html){
-		if (error) {throw error};
-		var blue = html;
+		test2 = six.match(green);	
+		
+		var page = require('webpage').create();
+		page.open('/raw/' + test2[1], function (status) {
+			if (status) {
+				var html = page.content;
+			};
+			phantom.exit();
 		});
 		
-		if(blue.indexOf(test) != -1)
+		if(html.indexOf(test) != -1)
 		{
 			six = six.replace(/\[\[([^\]\]]*)\]\]/, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>")
 		}
@@ -86,6 +90,7 @@ module.exports = function(n, ba){
 		i = 11
 	}
   }
+  
   six = six.replace(/======\s(.*)\s======[ ]*/g, "<h6>$1</h6>")
   six = six.replace(/=====\s(.*)\s=====[ ]*/g, "<h5>$1</h5>")
   six = six.replace(/====\s(.*)\s====[ ]*/g, "<h4>$1</h4>")

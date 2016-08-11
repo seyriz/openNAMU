@@ -129,9 +129,10 @@
         "::1 (359)",
         "::1 (359)",
         "::1 (43)",
-        "::1 (39)"
+        "::1 (39)",
+        "::1 (35)"
       ],
-      "content": "#redirect [[HelloWorld]]"
+      "content": "#redirect HelloWorld"
     },
     "나무위키": {
       "canEdit": true,
@@ -157,7 +158,7 @@
       "lastEdit": "안녕하세요"
     },
     "::1": {
-      "lastEdit": "HelloWorld"
+      "lastEdit": "Hello World"
     }
   },
   "include": {
