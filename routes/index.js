@@ -64,7 +64,7 @@ router.get('/raw/:page', function(req, res) {
 // 편집 화면을 보여줍니다.
 router.get('/edit/:page', function(req, res) {
   if(!wiki.doc[req.params.page] || !wiki.doc[req.params.page].content){
-    res.render('edit', { title: req.params.page, content: "뭔가를 해보세요." });
+    res.render('edit', { title: req.params.page, content: "" });
     res.end()
     return;
   }
