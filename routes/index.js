@@ -68,7 +68,7 @@ router.get('/edit/:page', function(req, res) {
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
   if(ip === ""){
-	  res.redirect('http://oriwiki.net/')
+	  res.redirect('http://naver.com/')
   }
   else if(!wiki.doc[req.params.page] || !wiki.doc[req.params.page].content){
     res.render('edit', { title: req.params.page, content: "" });
