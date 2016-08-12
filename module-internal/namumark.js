@@ -117,7 +117,20 @@ module.exports = function(n, ba){
   
   six = six.replace(/-{4,11}/g, "<hr>")
   
-  six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/g, "<ref><a>[각주]</a> $1</ref>")
+  var a = 1
+  var b = /\[\*\s((?:[^\[\]]+)*)\]/;
+  while(true)
+  {
+	  if(six.indexOf(b) != -1)
+	  {
+		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<ref><a>[" + a + "]</a> $1</ref>")
+		a = a + 1
+	  }
+	  else
+	  {
+		  break;
+	  }
+  }
   
   six = six.replace(/{{{#!html/g, "")
   six = six.replace(/}}}/g, "")
