@@ -142,6 +142,10 @@ not_del {
     display: none;
 }
 
+.four-fifths.column {
+    margin-bottom: 30px;
+}
+
 s, strike, del {
 	color:gray;
 }
