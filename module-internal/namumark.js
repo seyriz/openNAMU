@@ -26,7 +26,21 @@ module.exports = function(n, ba){
   six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>")
   six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>")
   
-  six = six.replace(/\n>\s?([^\n]*)/g, "<blockquote>$1</blockquote><not_br></not_br>")
+  var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
+  var read
+  while(true)
+  {
+	  if(read = ohhhh.exec(six))
+	  {
+		read[1] = read[1].replace(/\n>\s?/, "\n")
+		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/g, "<blockquote>" + read[1] + "</blockquote>")
+	  }
+	  else
+	  {
+		  break;
+	  }
+  }
+  
   
   six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->")
   

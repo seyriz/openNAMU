@@ -116,9 +116,16 @@ iframe {
 }
 
 blockquote {
-    padding: 10px 20px;
-    margin: 0 0 0px;
-    border-left: 5px solid #eee;
+    padding:1em calc(2em + 25px) 1em 1em;
+    margin:1em 0;
+    background:#eeeeee;
+    display:table;
+    border:2px dashed #ccc;
+    border-left:5px solid #71BC6D;
+    background-image: url('../images/quote.png');
+    background-position:calc(100% - 10px) 10px;
+    background-repeat:no-repeat;
+    background-size:25px;
 }
 
 img {
