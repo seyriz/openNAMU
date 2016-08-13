@@ -33,7 +33,7 @@ module.exports = function(n, ba){
 	  if(read = ohhhh.exec(six))
 	  {
 		read[1] = read[1].replace(/\n>\s?/, "\n")
-		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/g, "<blockquote>" + read[1] + "</blockquote>")
+		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/, "<blockquote>" + read[1] + "</blockquote>")
 	  }
 	  else
 	  {
