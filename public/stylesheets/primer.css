@@ -117,7 +117,7 @@ iframe {
 
 blockquote {
     padding:1em calc(2em + 25px) 1em 1em;
-    margin:1em 0;
+    margin:1em 0em 0em;
     background:#eeeeee;
     display:table;
     border:2px dashed #ccc;
