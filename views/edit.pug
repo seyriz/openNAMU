@@ -10,9 +10,7 @@ block content
   form#usrform(method='POST', action='/edit/' + title)
     dl.form-group(id="title")
       dt
-        label(for="title") 문서명
       dd
-        input.form-control.input-sm(type='text', placeholder=title, value=title, name='title')
     dl.form-group
       dt
         label(for="content") 내용
