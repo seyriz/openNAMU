@@ -48,6 +48,9 @@ module.exports = function(n, ba){
   six = six.replace(/\[각주\]/g, "")
   six = six.replace(/\[목차\]/g, "")
   
+  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\|(.*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$5</a>")
+  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$1asdf</a>")
+  
   var docLinkPattern_Labeled = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/g,
     docLinkPattern = /\[\[([^\]\]]*)\]\]/g;
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>")
@@ -106,6 +109,11 @@ module.exports = function(n, ba){
   six = six.replace(/\|\|([^\|\|]*)\|\|/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>")
   six = six.replace(/{{\|([^\|}}]*)\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>")
   
+  six = six.replace(/\.pngasdf/g, ".peg")
+  six = six.replace(/\.gifasdf/g, ".gef")
+  six = six.replace(/\.jpgasdf/g, ".jeg")
+  six = six.replace(/\.jpegasdf/g, ".jepg")
+  
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img src=\"$1\" width=\"$3\"  height=\"$4\">")
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img src=\"$1\" width=\"$3\" height=\"$4\">")
   six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)/g, "<img src=\"$1\" height=\"$3\">")
@@ -150,6 +158,11 @@ module.exports = function(n, ba){
   
   six = six.replace(/{{{#!html/g, "")
   six = six.replace(/}}}/g, "")
+  
+  six = six.replace(/\.peg/g, ".png")
+  six = six.replace(/\.gef/g, ".gif")
+  six = six.replace(/\.jeg/g, ".jpg")
+  six = six.replace(/\.jepg/g, ".jpeg")
   
   six = six.replace(/\n/g, "<br>")
   d('1: '+six)
