@@ -45,7 +45,6 @@ module.exports = function(n, ba){
   six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->")
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "")
-  six = six.replace(/\[각주\]/g, "")
   six = six.replace(/\[목차\]/g, "")
   
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\|(.*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$5</a>")
@@ -141,6 +140,7 @@ module.exports = function(n, ba){
   
   var a = 1;
   var b = /\[\*\s((?:[^\[\]]+)*)\]/;
+  var tou = "<br>";
   
   while(true)
   {
@@ -151,7 +151,8 @@ module.exports = function(n, ba){
 	  }
 	  else
 	  {
-		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<ref><a>[" + a + "]</a> $1</ref>");
+		tou = tou + "<a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "<br>";
+		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\" title=\"$1\">[" + a + "]</a></sup>");
 		a = a + 1;
 	  }
   }
@@ -165,6 +166,10 @@ module.exports = function(n, ba){
   six = six.replace(/\.jepg/g, ".jpeg")
   
   six = six.replace(/\n/g, "<br>")
+  
+  six = six.replace(/\[각주\]((\s+)*(\n+))?$/g, "");
+  six = six.replace(/\[각주\]/g, tou);
+  six = six + tou;
   d('1: '+six)
 
   ba(six)
