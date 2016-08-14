@@ -168,7 +168,7 @@ module.exports = function(n, ba){
   six = six.replace(/\n/g, "<br>")
   
   six = six.replace(/\[각주\]((\s+)*(\n+))?$/g, "");
-  six = six.replace(/\[각주\]/g, tou);
+  six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
 
