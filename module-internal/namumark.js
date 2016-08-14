@@ -152,7 +152,7 @@ module.exports = function(n, ba){
 	  else
 	  {
 		tou = tou + "<a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "<br>";
-		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\" title=\"$1\">[" + a + "]</a></sup>");
+		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\">[" + a + "]</a></sup>");
 		a = a + 1;
 	  }
   }
@@ -167,7 +167,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/\n/g, "<br>")
   
-  six = six.replace(/\[각주\]((\s+)*(\n+))?$/g, "");
+  six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
   six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
