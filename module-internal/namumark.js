@@ -84,7 +84,7 @@ module.exports = function(n, ba){
   six = six.replace(/====\s(.*)\s====[ ]*/g, "<h4>$1</h4>")
   six = six.replace(/===\s(.*)\s===[ ]*/g, "<h3>$1</h3>")
   six = six.replace(/==\s(.*)\s==[ ]*/g, "<h2>$1</h2>")
-  six = six.replace(/=\s(.*)\s=[ ]*/g, "<h1>$1</h1>")
+  six = six.replace(/=\s(.*)\s=[^ ]/g, "<h1>$1</h1>")
   
   six = six.replace(/<!--\s?([^--]*)\s?-->/g, "<not_del>$1</not_del>")
   
@@ -156,6 +156,8 @@ module.exports = function(n, ba){
 		a = a + 1;
 	  }
   }
+  
+  six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
   
   six = six.replace(/{{{#!html/g, "")
   six = six.replace(/}}}/g, "")
