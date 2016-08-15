@@ -96,8 +96,8 @@ module.exports = function(n, ba){
   six = six.replace(/\^\^(.+?)\^\^(?!\^)/g,'<sup>$1</sup>')
   six = six.replace(/,,(.+?),,(?!,)/g,'<sub>$1</sub>')
   
-  six = six.replace(/{{{\+([1-5]) +(.*?)}}}(?!})/g,'<span class="font-size-$1">$2</span>')
-  six = six.replace(/{{{\-([1-5]) +(.*?)}}}(?!})/g,'<span class="font-size-small-$1">$2</span>')
+  six = six.replace(/{{{\+([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-$1">$2</span>')
+  six = six.replace(/{{{\-([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-small-$1">$2</span>')
   
   six = six.replace(/{{{(#[0-9a-f-A-F]{3}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>')
   six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>')
