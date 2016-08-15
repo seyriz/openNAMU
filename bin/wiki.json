@@ -130,9 +130,10 @@
     "테스트으": {
       "canEdit": true,
       "history": [
-        "admin (34)"
+        "admin (34)",
+        "::1 (130)"
       ],
-      "content": "#redirect 테스트"
+      "content": "{{{+1\r\n나무위키는\r\n\r\n세계 최고의 위키이며}}} {{{-1 오리위키랑은\r\n비교도 되지 않는다.}}}"
     },
     "안녕하세요": {
       "canEdit": true,
@@ -176,7 +177,7 @@
       "lastEdit": "안녕하세요"
     },
     "::1": {
-      "lastEdit": "Hello, world!"
+      "lastEdit": "테스트으"
     }
   },
   "include": {
