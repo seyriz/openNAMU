@@ -105,7 +105,6 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[br\]/ig,'<br>')
   
-  six = six.replace(/\|\|([^\|\|]*)\|\|/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>")
   six = six.replace(/{{\|([^\|}}]*)\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>")
   
   six = six.replace(/\.pngasdf/g, ".peg")
@@ -167,7 +166,12 @@ module.exports = function(n, ba){
   six = six.replace(/\.jeg/g, ".jpg")
   six = six.replace(/\.jepg/g, ".jpeg")
   
+  six = six.replace(/\|\|((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>")
+  six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>")
+  six = six.replace(/\|\|/g, "</td><td>")
+  
   six = six.replace(/\n/g, "<br>")
+  six = six.replace(/<not_br><\/not_br>/g, "\n")
   
   six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
   six = six.replace(/\[각주\]/g, "<br>" + tou);
