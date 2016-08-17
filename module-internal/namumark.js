@@ -169,6 +169,8 @@ module.exports = function(n, ba){
   six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
   six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
   six = six.replace(/\|\|/g, "</td><td>");
+  six = six.replace(/<td>(<-([^>]*)>)?<:>/g, "<td style=\"text-align: center;\">$1");
+  six = six.replace(/(<td\s?([^>]*)?)><-([1-9]*)>/g, "$1 colspan=\"$3\">");
   
   six = six.replace(/\n/g, "<br>");
   six = six.replace(/<not_br><\/not_br>/g, "\n");
