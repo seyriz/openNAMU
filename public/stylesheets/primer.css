@@ -149,6 +149,19 @@ not_del {
     display: none;
 }
 
+#toc {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 20px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#toc-name {
+    font-size: 18px;
+}
+
 .four-fifths.column {
     margin-bottom: 30px;
 }

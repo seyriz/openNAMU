@@ -45,7 +45,6 @@ module.exports = function(n, ba){
   six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->");
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
-  six = six.replace(/\[목차\]/g, "");
   
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\|(.*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$5</a>");
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$1asdf</a>");
@@ -78,13 +77,72 @@ module.exports = function(n, ba){
         six = six.replace(match[0], '<a class="not_thing" href="/w/' + match[1] + '">' + match[1] + '</a>');
     }
   }
-
-  six = six.replace(/======\s(.*)\s======[ ]*/g, "<h6>$1</h6>");
-  six = six.replace(/=====\s(.*)\s=====[ ]*/g, "<h5>$1</h5>");
-  six = six.replace(/====\s(.*)\s====[ ]*/g, "<h4>$1</h4>");
-  six = six.replace(/===\s(.*)\s===[ ]*/g, "<h3>$1</h3>");
-  six = six.replace(/==\s(.*)\s==[ ]*/g, "<h2>$1</h2>");
-  six = six.replace(/=\s(.*)\s=\n/g, "<h1>$1</h1>\n");
+  
+  var h0 = /======\s([^======]*)\s======\r\n/;
+  var h1 = /=====\s([^=====]*)\s=====\r\n/;
+  var h2 = /====\s([^====]*)\s====\r\n/;
+  var h3 = /===\s([^===]*)\s===\r\n/;
+  var h4 = /==\s([^==]*)\s==\r\n/;
+  var h5 = /=\s([^=]*)\s=\r\n/;
+  var h0c = 0;
+  var h1c = 0;
+  var h2c = 0;
+  var h3c = 0;
+  var h4c = 0;
+  var h5c = 0;
+  var head;
+  var toc;
+  var rtoc = '<div id="toc"><span id="toc-name">목차</span><br><br>';
+  while(true) {
+	  if(head = h5.exec(six)) {
+		  h0c = h0c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/=\s([^=]*)\s=\r\n/, '<h1><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h1>\n');
+	  } else if(head = h4.exec(six)) {
+		  h1c = h1c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/==\s([^==]*)\s==\r\n/, '<h2><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h2>\n');
+	  } else if(head = h3.exec(six)) {
+		  h2c = h2c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/===\s([^===]*)\s===\r\n/, '<h3><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h3>\n');
+	  } else if(head = h2.exec(six)) {
+		  h3c = h3c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/====\s([^====]*)\s====\r\n/, '<h4><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h4>\n');
+	  } else if(head = h1.exec(six)) {  
+		  h4c = h4c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/=====\s([^=====]*)\s=====\r\n/, '<h5><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h5>\n');
+	  } else if(head = h0.exec(six)) {
+		  h5c = h5c + 1;
+		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
+	      toc = toc.replace(/0./g, '');
+	      toc = toc.replace(/.0/g, '');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
+		  six = six.replace(/======\s([^======]*)\s======\r\n/, '<h6><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h6>\n');
+	  } else {
+		  rtoc = rtoc + '</div>';
+		  break;
+	  }
+  }
+  
+  six = six.replace(/\[목차\]/g, rtoc);
   
   six = six.replace(/<!--\s?([^--]*)\s?-->/g, "<not_del>$1</not_del>");
   
