@@ -5,6 +5,13 @@ var parseNamu = require('../module-internal/namumark')
 var jsonfile = require('jsonfile');
 var mongoose = require('mongoose');
 
+var db = mongoose.connection;
+db.on('error', console.error);
+db.once('open', function(){
+    // CONNECTED TO MONGODB SERVER
+    console.log("Connected to mongod server");
+});
+
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
   res.redirect('/w/'+encodeURI(wiki.front))
