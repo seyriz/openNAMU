@@ -3,6 +3,7 @@ var router = express.Router();
 var wiki = require('../wiki')
 var parseNamu = require('../module-internal/namumark')
 var jsonfile = require('jsonfile');
+var mongoose = require('mongoose');
 
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
