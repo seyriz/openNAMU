@@ -104,12 +104,6 @@ router.post('/edit/:page', function(req, res) {
   }else{
     wiki.doc[req.body.title].history.push(ip+bytlen)
   }
-  if(!wiki.user[wiki.nick[ip] || ip]){
-    wiki.user[wiki.nick[ip] || ip] = {
-      "lastEdit": ""
-    }
-  }
-  wiki.user[wiki.nick[ip] || ip].lastEdit = req.body.title
 
   wiki.doc[req.body.title].content = req.body.content
   if(wiki.doc[req.body.title] !== wiki.doc[req.params.title]){
@@ -127,26 +121,6 @@ router.get('/history/:page', function(req, res) {
   res.render('history', { title: req.params.page, history: wiki.doc[req.params.page].history });
   res.end()
 });
-// nick에 아이피를 등록합니다.
-router.get('/signin/:name', function(req, res) {
-  var ip = ip ||
-     req.connection.remoteAddress ||
-     req.socket.remoteAddress ||
-     req.connection.socket.remoteAddress;
-  if(!req.params.name === "admin") {
-    wiki.nick[ip] = req.params.name
-  }
-  res.redirect('/w/'+encodeURI(wiki.front))
-})
-// 등록한 아이피를 삭제합니다.
-router.get('/signout', function(req, res) {
-  var ip = ip ||
-     req.connection.remoteAddress ||
-     req.socket.remoteAddress ||
-     req.connection.socket.remoteAddress;
-  delete wiki.nick[ip] // 등록된 nick를 삭제합니다.
-  res.redirect('/w/'+encodeURI(wiki.front))
-})
 process.on('exit', function(){
   jsonfile.writeFile('./wiki.json', wiki, {spaces: 2}, (err) => {
     if(err) throw err;
