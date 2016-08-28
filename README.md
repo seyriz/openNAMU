@@ -1,4 +1,6 @@
 # openNAMU
+
+[![Join the chat at https://gitter.im/openNAMU/Lobby](https://badges.gitter.im/openNAMU/Lobby.svg)](https://gitter.im/openNAMU/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![오픈나무 로고](https://raw.githubusercontent.com/teamatus/openNAMU/master/public/images/on2.png)
 
 오픈소스 버전 the seed, **openNAMU** 입니다.
