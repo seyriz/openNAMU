@@ -1,5 +1,6 @@
 # DEPRECATED - openNAMU
-** 지원 중지됨 **: [deesle](github.com/deesle/deesle)를 새로 개발중입니다. 이 이후 현 오픈나무는 구분을 위해 때로 openNAMU Legacy로 불릴 수 있음을 참조해 주십시오. 감사합니다.
+
+**지원 중지됨** : [deesle](github.com/deesle/deesle)를 새로 개발중입니다. 이 이후 현 오픈나무는 구분을 위해 때로 openNAMU Legacy로 불릴 수 있음을 참조해 주십시오. 감사합니다.
 
 [![Join the chat at https://gitter.im/openNAMU/Lobby](https://badges.gitter.im/openNAMU/Lobby.svg)](https://gitter.im/openNAMU/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![오픈나무 로고](https://raw.githubusercontent.com/teamatus/openNAMU/master/public/images/on2.png)
