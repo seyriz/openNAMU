@@ -4,19 +4,18 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/primer.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel='shortcut icon', href='/images/on.png')
+    link(rel='shortcut icon', href='/stylesheets/on.png')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
   body
     br
     .one-fifth.column
-      a(href='/')
-        img(src="/images/on2.png", width="100%")
-      block menu
-      form(method='POST', action='/search')
-        .input-group
-          input.form-control(type='text', placeholder='문서명 또는 검색', name='name')
-          span.input-group-button
-            button.btn 검색
-      br
-      | Powered by <a href="https://github.com/teamatus/openNAMU">openNAMU</a>
+      div(id='top')
+        a(href='/', id='logo')= wikiname
+        block menu
+        form(method='POST', action='/search', id='search')
+          .input-group
+            input.form-control(type='text', placeholder='문서명 또는 검색', name='name')
+            span.input-group-button
+              button.btn 검색
     .four-fifths.column
       block content

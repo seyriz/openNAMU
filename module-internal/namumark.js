@@ -1,10 +1,10 @@
-var wiki = require('../wiki');
 module.exports = function(n, ba){
+  var fs = require('fs');
   var six = n;
   var today = getNow();
+  var parseNamu = require('./namumark')
   var d = require('debug')('openNAMU:parser');
-  var docnames = Object.keys(wiki.doc);
-
+  
   function getNow() {
   var today = new Date();
   var dd = today.getDate();
@@ -23,11 +23,14 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
   
+  six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
+  six = six.replace(/\{\{\{#!html(\s?(.*)\n?(((((.*)(\n)?)+))))}}}/g, "$1");
+  
   six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
   six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
   
   var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
-  var read
+  var read;
   while(true)
   {
 	  if(read = ohhhh.exec(six))
@@ -46,36 +49,58 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
   
+  var include = /\[include\(([^)]*)\)\]/;
+  var under;
+  while(true) {
+	  if(under = include.exec(six)) {
+		  if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
+			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
+			parseNamu(data, function(cnt){
+			six = six.replace(/\[include\(([^)]*)\)\]/g, cnt);
+			})
+		  }
+		  else {
+			  six = six.replace(/\[include\(([^)]*)\)\]/g, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>");
+		  }
+	  }
+	  else {
+		  break;
+	  }
+  }
+  
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\|(.*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$5</a>");
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$1asdf</a>");
   
-  var docLinkPattern_Labeled = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/g,
-    docLinkPattern = /\[\[([^\]\]]*)\]\]/g;
+  var tong = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
+  var tang = /\[\[([^\]\]]*)\]\]/;
+  var match;
+  var van;
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$1$2</a>");
+  
   while(true) {
-    var match = docLinkPattern_Labeled.exec(six);
-    if(match == null)
-        break;
-    if(docnames.indexOf(match[1]) != -1) {
-        // 존재하는 문서
-        six = six.replace(match[0], '<a href="/w/' + match[1] + '">' + match[2] + '</a>');
-    } else {
-        // 안 존재하는 문서
-        six = six.replace(match[0], '<a class="not_thing" href="/w/' + match[1] + '">' + match[2] + '</a>');
-    }
+	if(match = tong.exec(six)) {
+		van = '';
+		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+			van = van + 'class="not_thing"';
+		}
+		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+match[1]+'">'+match[2]+'</a>');
+	}
+	else {
+		break;
+	}
   }
   while(true) {
-    var match = docLinkPattern.exec(six);
-    if(match == null)
-        break;
-    if(docnames.indexOf(match[1]) != -1) {
-        // 존재하는 문서
-        six = six.replace(match[0], '<a href="/w/' + match[1] + '">' + match[1] + '</a>');
-    } else {
-        // 안 존재하는 문서
-        six = six.replace(match[0], '<a class="not_thing" href="/w/' + match[1] + '">' + match[1] + '</a>');
-    }
+	if(match = tang.exec(six)) {
+		van = '';
+		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+			van = van + 'class="not_thing"';
+		}
+		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+match[1]+'">'+match[1]+'</a>');
+	}
+	else {
+		break;
+	}
   }
   
   var h0 = /======\s([^======]*)\s======\r\n/;
@@ -99,8 +124,8 @@ module.exports = function(n, ba){
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
 	      toc = toc.replace(/0./g, '');
 	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/=\s([^=]*)\s=\r\n/, '<h1><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h1>\n');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a> ' + head[1] + '<br>';
+		  six = six.replace(/=\s([^=]*)\s=\r\n/, '<h1><a href="#toc" id="s-' + toc + '">' + toc + '</a> $1</h1>\n');
 	  } else if(head = h4.exec(six)) {
 		  h1c = h1c + 1;
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
@@ -216,19 +241,10 @@ module.exports = function(n, ba){
   
   six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
   
-  six = six.replace(/{{{#!html/g, "")
-  six = six.replace(/}}}/g, "")
-  
-  six = six.replace(/\.peg/g, ".png")
-  six = six.replace(/\.gef/g, ".gif")
-  six = six.replace(/\.jeg/g, ".jpg")
-  six = six.replace(/\.jepg/g, ".jpeg")
-  
-  six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
-  six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
-  six = six.replace(/\|\|/g, "</td><td>");
-  six = six.replace(/<td>(<-([^>]*)>)?<:>/g, "<td style=\"text-align: center;\">$1");
-  six = six.replace(/(<td\s?([^>]*)?)><-([1-9]*)>/g, "$1 colspan=\"$3\">");
+  six = six.replace(/\.peg/g, ".png");
+  six = six.replace(/\.gef/g, ".gif");
+  six = six.replace(/\.jeg/g, ".jpg");
+  six = six.replace(/\.jepg/g, ".jpeg");
   
   six = six.replace(/\n/g, "<br>");
   six = six.replace(/<not_br><\/not_br>/g, "\n");
