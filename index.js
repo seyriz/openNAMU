@@ -94,6 +94,13 @@ router.get('/', function(req, res, next) {
 });
 // 재 생성 테스트
 router.get('/reset', function(req, res, next) {
+	var ip = req.headers['x-forwarded-for'] ||
+ 	  req.connection.remoteAddress ||
+	  req.socket.remoteAddress ||
+	  req.connection.socket.remoteAddress;
+    admin(ip);
+    var today = getNow();
+	
 	fs.mkdirSync('./history', 777);
 	fs.mkdirSync('./data', 777);
 	fs.mkdirSync('./topic', 777);
