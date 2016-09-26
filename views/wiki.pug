@@ -11,6 +11,8 @@ html
     .one-fifth.column
       div(id='top')
         a(href='/', id='logo')= wikiname
+        div
+          a(href='/RecentChanges', id='RecentChanges') 최근 변경
         block menu
         form(method='POST', action='/search', id='search')
           .input-group

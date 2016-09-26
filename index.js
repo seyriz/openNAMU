@@ -82,7 +82,13 @@ function admin(ip) {
 		ipban = fs.readFileSync('./setting/Admin.txt', 'utf8');
 	}
 	else {
-		ipban = "";
+		var exists = fs.existsSync('./localset/Admin.txt');
+		if(exists) {
+			ipban = fs.readFileSync('./localset/Admin.txt', 'utf8');
+		}
+		else {
+			ipban = "";
+		}
 	}
 	if(!vip.exec(ipban)) {
 		res.send('error');
@@ -316,6 +322,13 @@ router.get('/w/:page', function(req, res, next) {
 	})
   })
 });
+// 최근 바뀜을 보여줍니다.
+router.get('/RecentChanges', function(req, res, next) {
+  fs.readFile('./RecentChanges.txt', 'utf8', function(err, data) {
+		res.status(200).render('index', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+		res.end()
+  });
+});
 // raw를 보여줍니다.
 router.get('/raw/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
@@ -359,6 +372,8 @@ router.post('/edit/:page', function(req, res) {
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
+	var today = getNow();
+	fs.appendFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>', 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
@@ -367,12 +382,12 @@ router.post('/edit/:page', function(req, res) {
 			});
 			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 				if(!exists) {
-					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 0700, function(err) {
+					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+' '+today, 'utf8');
 						});
 					});
 				}
@@ -386,7 +401,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+' '+today, 'utf8');
 							});
 							break;
 						}
@@ -398,12 +413,12 @@ router.post('/edit/:page', function(req, res) {
 			fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
 			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 				if(!exists) {
-					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 0700, function(err) {
+					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+' '+today, 'utf8');
 						});
 					});
 				}
@@ -417,7 +432,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+' '+today, 'utf8');
 							});
 							break;
 						}
