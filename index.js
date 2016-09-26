@@ -92,6 +92,14 @@ function admin(ip) {
 router.get('/', function(req, res, next) {
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
+// 재 생성 테스트
+router.get('/reset', function(req, res, next) {
+	fs.mkdirSync('./history', 777);
+	fs.mkdirSync('./data', 777);
+	fs.mkdirSync('./topic', 777);
+	fs.mkdirSync('./setting', 777);
+	res.redirect('/w/'+encodeURIComponent(FrontPage))
+});
 // 토론
 router.get('/topic/:page', function(req, res) {
   fs.readFile('./topic/'+ encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
