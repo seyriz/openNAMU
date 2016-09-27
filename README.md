@@ -8,7 +8,7 @@
 기본 포트는 3000 입니다.
 
 ## 사용법
-폴더 localset에 있는 파일을 setting으로 이동 한 후 오픈나무 폴더에서 node app.js로 실행 후 주소/reset 에 접속해서 파일 생성 필요
+폴더 localset에 있는 파일을 setting으로 이동 한 후 오픈나무 폴더에서 node app.js로 실행 후 http://주소:3000/reset 에 접속해서 파일 생성 필요
 
 ## 기능
  * /w/문서명 - 문서보기
