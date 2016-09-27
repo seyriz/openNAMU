@@ -1,4 +1,4 @@
-## OWNET
+## OWNET (Open Wiki Namu Engine Test)
 오픈나무 레거시의 파일 버전 입니다만 구조가 완전 다릅니다. (모니위키 방식)
 
 아직 베타라 미흡한점이 많습니다.
