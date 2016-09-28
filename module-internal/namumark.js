@@ -24,7 +24,27 @@ module.exports = function(n, ba){
   six = six.replace(/javascript:/g, "");
   
   six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
-  six = six.replace(/\{\{\{#!html(\s?(.*)\n?(((((.*)(\n)?)+))))}}}/g, "$1");
+  
+  var ohhh = /\{\{\{#!html(\s?(.*)\n?(((((.*)(\n)?)+))))}}}/;
+  while(true)
+  {
+	  if(love = ohhh.exec(six))
+	  {
+		 love[1] = love[1].replace(/</g,'#left#');
+		 love[1] = love[1].replace(/>/g,'#right#');
+         six = six.replace(ohhh, love[1]);		 
+	  }
+	  else
+	  {
+		  break;
+	  }
+  }
+  six = six.replace(/</g, "《");
+  six = six.replace(/>/g, "》");
+  
+  six = six.replace(/#left#/g, "<");
+  six = six.replace(/#right#/g, ">");
+  
   
   six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
   six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
