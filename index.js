@@ -105,7 +105,6 @@ router.get('/reset', function(req, res, next) {
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
     admin(ip);
-    var today = getNow();
 	
 	fs.mkdirSync('./history', 777);
 	fs.mkdirSync('./data', 777);
@@ -373,7 +372,8 @@ router.post('/edit/:page', function(req, res) {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 	var today = getNow();
-	fs.appendFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>', 'utf8');
+	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';

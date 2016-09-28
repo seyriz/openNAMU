@@ -239,7 +239,7 @@ s:hover, strike:hover, del:hover {
 }
 
 #logo {
-    width: 180px;
+    width: 110px;
     height: 42.2px;
 	font-size: 25px;
 	color: white;
@@ -294,7 +294,7 @@ body {
 
 #RecentChanges {
 	line-height: 32px;
-    width: 180px;
+    width: 80px;
     height: 42.2px;
     font-size: 16px;
     color: white;
