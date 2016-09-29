@@ -392,6 +392,13 @@ router.get('/edit/:page', function(req, res) {
 		}
 	})
 });
+// 미리보기
+router.post('/preview/:page', function(req, res) {
+	parseNamu(req.body.content, function(cnt){
+		res.render('preview', { title: req.params.page+' 미리보기', content: cnt , wikiname: name});
+		res.end()
+	});
+});
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	var ip = req.headers['x-forwarded-for'] ||
