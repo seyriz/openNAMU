@@ -12,6 +12,6 @@ block content
       dd
         textarea(rows='30', cols='100', name='content', form='usrform')= content
         .form-actions
-          button.btn.btn-primary(type='submit') 수정 내용 저장하기
+          button.btn.btn-primary(type='submit', onclick="f1.action='/edit/"+title+"';") 수정 내용 저장하기
           button.btn(type='submit', onclick="f1.action='/preview/"+title+"';") 미리보기
           a.btn(type='button', href='/w/' + title) 취소
