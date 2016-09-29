@@ -275,8 +275,14 @@ router.get('/delete/:page', function(req, res) {
 });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
+	var ip = req.headers['x-forwarded-for'] ||
+ 	  req.connection.remoteAddress ||
+	  req.socket.remoteAddress ||
+	  req.connection.socket.remoteAddress;
+	var today = getNow();
+	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' '+req.params.page+' 문서를 삭제함</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' 문서를 삭제함</li>'+plus, 'utf8');
 	
 	fs.unlink('./data/' + encodeURIComponent(req.params.page)+'.txt', function (err) {
 	});
@@ -304,8 +310,14 @@ router.get('/move/:page', function(req, res) {
 	})
 });
 router.post('/move/:page', function(req, res) {
+	var ip = req.headers['x-forwarded-for'] ||
+ 	  req.connection.remoteAddress ||
+	  req.socket.remoteAddress ||
+	  req.connection.socket.remoteAddress;
+	  var today = getNow();
+	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' '+req.body.title+' 문서로 문서를 이동함</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' <a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</li>'+plus, 'utf8');
 	
 	fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
 	});
