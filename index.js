@@ -344,14 +344,14 @@ router.get('/w/:page', function(req, res, next) {
 // 최근 바뀜을 보여줍니다.
 router.get('/RecentChanges', function(req, res, next) {
   fs.readFile('./RecentChanges.txt', 'utf8', function(err, data) {
-		res.status(200).render('index', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+		res.status(200).render('nope', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
   fs.readFile('./RecentDiscuss.txt', 'utf8', function(err, data) {
-		res.status(200).render('index', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
+		res.status(200).render('nope', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
