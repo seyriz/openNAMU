@@ -467,7 +467,7 @@ router.get('/history/:page', function(req, res) {
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(exists) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
-			neoa = neoa + '<li><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a> '+ip+'</li>';
+			neoa = '<li><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a> '+ip+'</li>' + neoa;
 		}
 		else {
 			neoa = neoa + '</div>';

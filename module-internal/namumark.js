@@ -25,7 +25,14 @@ module.exports = function(n, ba){
   
   six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
   
-  var ohhh = /\{\{\{#!html(\s?(.*)\n?(((((.*)(\n)?)+))))}}}/;
+  six = six.replace(/{{{\+([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-$1">$2</span>');
+  six = six.replace(/{{{\-([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-small-$1">$2</span>');
+  
+  six = six.replace(/{{{(#[0-9a-f-A-F]{3}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
+  six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
+  six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
+  
+  var ohhh = /\{\{\{#!html(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
   while(true)
   {
 	  if(love = ohhh.exec(six))
@@ -45,6 +52,20 @@ module.exports = function(n, ba){
   six = six.replace(/#left#/g, "<");
   six = six.replace(/#right#/g, ">");
   
+  var live = /\{\{\{(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
+  var sh;
+  var nc;
+  while(true)
+  {
+	if(sh = live.exec(six))
+	{
+		sh[1] = '<pre>'+encodeURIComponent(sh[1])+'</pre>';
+		six = six.replace(live, sh[1]);
+	}
+	else {
+		break;
+	}
+  }
   
   six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
   six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
@@ -199,13 +220,6 @@ module.exports = function(n, ba){
   six = six.replace(/\^\^(.+?)\^\^(?!\^)/g,'<sup>$1</sup>');
   six = six.replace(/,,(.+?),,(?!,)/g,'<sub>$1</sub>');
   
-  six = six.replace(/{{{\+([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-$1">$2</span>');
-  six = six.replace(/{{{\-([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-small-$1">$2</span>');
-  
-  six = six.replace(/{{{(#[0-9a-f-A-F]{3}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
-  six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
-  six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
-  
   six = six.replace(/\[br\]/ig,'<br>');
   
   six = six.replace(/{{\|([^\|}}]*)\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
@@ -273,7 +287,6 @@ module.exports = function(n, ba){
   six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
-
   ba(six)
   // 새 파서 테스트중 Beta 0.4 버전 //
   // Thank for 2DU, LiteHell //
