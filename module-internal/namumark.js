@@ -52,6 +52,21 @@ module.exports = function(n, ba){
   six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   
+  var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
+  var read;
+  while(true)
+  {
+	  if(read = ohhhh.exec(six))
+	  {
+		read[1] = read[1].replace(/\n>\s?/, "\n");
+		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/, "<blockquote>" + read[1] + "</blockquote>");
+	  }
+	  else
+	  {
+		  break;
+	  }
+  }
+  
   var live = /\{\{\{(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
   var sh;
   var nc;
@@ -68,23 +83,7 @@ module.exports = function(n, ba){
   }
   
   six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
-  six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
-  
-  var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
-  var read;
-  while(true)
-  {
-	  if(read = ohhhh.exec(six))
-	  {
-		read[1] = read[1].replace(/\n>\s?/, "\n");
-		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/, "<blockquote>" + read[1] + "</blockquote>");
-	  }
-	  else
-	  {
-		  break;
-	  }
-  }
-  
+  six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");  
   
   six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->");
   
