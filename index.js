@@ -161,6 +161,9 @@ router.post('/topic/:page', function(req, res) {
   stop(ip);
   var today = getNow();
   
+  var plus = fs.readFileSync('./RecentDiscuss.txt', 'utf8');
+  fs.writeFileSync('./RecentDiscuss.txt', '<li><a href="/topic/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>'+plus, 'utf8');
+  
   req.body.content = req.body.content.replace(/<([^>]*)>/g, "");
   req.body.content = req.body.content.replace(/(#[1-9]*[1-9])/g, "<a href=\"$1\">$1</a>");
   fs.exists(sfile, function (exists) {
@@ -325,6 +328,13 @@ router.get('/w/:page', function(req, res, next) {
 router.get('/RecentChanges', function(req, res, next) {
   fs.readFile('./RecentChanges.txt', 'utf8', function(err, data) {
 		res.status(200).render('index', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+		res.end()
+  });
+});
+// 최근 토론을 보여줍니다.
+router.get('/RecentDiscuss', function(req, res, next) {
+  fs.readFile('./RecentDiscuss.txt', 'utf8', function(err, data) {
+		res.status(200).render('index', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
