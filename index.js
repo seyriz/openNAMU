@@ -98,6 +98,11 @@ function admin(ip) {
 router.get('/', function(req, res, next) {
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
+// 파일 업로드
+router.get('/Upload', function(req, res, next) {
+	res.status(200).render('upload', { title: '파일 업로드', wikiname: name });
+	res.end()
+});
 // 재 생성 테스트
 router.get('/reset', function(req, res, next) {
 	var ip = req.headers['x-forwarded-for'] ||
@@ -110,6 +115,7 @@ router.get('/reset', function(req, res, next) {
 	fs.mkdirSync('./data', 777);
 	fs.mkdirSync('./topic', 777);
 	fs.mkdirSync('./setting', 777);
+	fs.mkdirSync('./images', 777);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
 // 토론
@@ -425,7 +431,7 @@ router.post('/edit/:page', function(req, res) {
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+' '+today, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
 						});
 					});
 				}
@@ -439,7 +445,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+' '+today, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -456,7 +462,7 @@ router.post('/edit/:page', function(req, res) {
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+' '+today, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
 						});
 					});
 				}
@@ -470,7 +476,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+' '+today, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -505,11 +511,11 @@ router.get('/history/:page', function(req, res) {
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(exists) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
-			neoa = '<li><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a> '+ip+'</li>' + neoa;
+			neoa = '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td></tr></tbody></table>' + neoa;
 		}
 		else {
 			neoa = neoa + '</div>';
-			res.status(200).render('index', { title: req.params.page, content: neoa, License: licen ,wikiname: name});
+			res.status(200).render('history2', { title: req.params.page, content: neoa, License: licen ,wikiname: name});
 			break;
 			res.end()
 			return;
