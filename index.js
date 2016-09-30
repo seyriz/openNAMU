@@ -170,7 +170,8 @@ router.post('/topic/:page', function(req, res) {
   var plus = fs.readFileSync('./RecentDiscuss.txt', 'utf8');
   fs.writeFileSync('./RecentDiscuss.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/topic/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
   
-  req.body.content = req.body.content.replace(/<([^>]*)>/g, "");
+  req.body.content = req.body.content.replace(/</g, "《");
+  req.body.content = req.body.content.replace(/>/g, "》");
   req.body.content = req.body.content.replace(/(#[1-9]*[1-9])/g, "<a href=\"$1\">$1</a>");
   fs.exists(sfile, function (exists) {
 		if(!exists) {
@@ -289,7 +290,20 @@ router.post('/delete/:page', function(req, res) {
 	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
 	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
-	
+	var i = 0;
+	while(true) {
+		i = i + 1;
+		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+		if(!exists) {
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함', 'utf8');
+			});
+			break;
+		}
+	}
 	fs.unlink('./data/' + encodeURIComponent(req.params.page)+'.txt', function (err) {
 	});
 	res.redirect('/w/'+ encodeURIComponent(req.params.page))
@@ -324,7 +338,20 @@ router.post('/move/:page', function(req, res) {
 	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
 	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
-	
+	var i = 0;
+	while(true) {
+		i = i + 1;
+		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+		if(!exists) {
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+			});
+			break;
+		}
+	}
 	fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
 	});
 	res.redirect('/w/'+ encodeURIComponent(req.body.title))
