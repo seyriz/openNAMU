@@ -162,7 +162,7 @@ router.post('/topic/:page', function(req, res) {
   var today = getNow();
   
   var plus = fs.readFileSync('./RecentDiscuss.txt', 'utf8');
-  fs.writeFileSync('./RecentDiscuss.txt', '<li><a href="/topic/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>'+plus, 'utf8');
+  fs.writeFileSync('./RecentDiscuss.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/topic/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
   
   req.body.content = req.body.content.replace(/<([^>]*)>/g, "");
   req.body.content = req.body.content.replace(/(#[1-9]*[1-9])/g, "<a href=\"$1\">$1</a>");
@@ -282,7 +282,7 @@ router.post('/delete/:page', function(req, res) {
 	var today = getNow();
 	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' 문서를 삭제함</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
 	
 	fs.unlink('./data/' + encodeURIComponent(req.params.page)+'.txt', function (err) {
 	});
@@ -317,7 +317,7 @@ router.post('/move/:page', function(req, res) {
 	  var today = getNow();
 	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' <a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
 	
 	fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
 	});
@@ -407,7 +407,7 @@ router.post('/edit/:page', function(req, res) {
     req.connection.socket.remoteAddress;
 	var today = getNow();
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' '+req.body.send+'</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
