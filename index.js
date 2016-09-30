@@ -202,12 +202,12 @@ router.get('/ban', function(req, res, next) {
   fs.exists('./setting/IPban.txt', function (exists) {
 	  if(exists){
 		fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
-			res.status(200).render('index', { title: '아이피 밴 리스트', content: '<pre>' + data + '</pre>', wikiname: name });
+			res.status(200).render('ban', { title: '아이피 밴 리스트', content: '<pre>' + data + '</pre>', wikiname: name });
 			res.end()
 		})
 	  }
 	  else {
-		res.status(200).render('index', { title: '아이피 밴 리스트', content: '<pre>없음</pre>', wikiname: name });
+		res.status(404).render('ban', { title: '아이피 밴 리스트', content: '<pre>없음</pre>', wikiname: name });
 		res.end()
 	  }
   });
