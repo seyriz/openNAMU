@@ -406,6 +406,10 @@ router.post('/edit/:page', function(req, res) {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 	var today = getNow();
+	if(!req.body.send)
+	{
+		req.body.send = "<br>";
+	}
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
 	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
