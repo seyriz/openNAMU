@@ -407,7 +407,7 @@ router.post('/edit/:page', function(req, res) {
     req.connection.socket.remoteAddress;
 	var today = getNow();
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+'</li>'+plus, 'utf8');
+	fs.writeFileSync('./RecentChanges.txt', '<li><a href="/w/'+req.params.page+'">'+req.params.page+'</a> '+ip+' '+today+' '+req.body.send+'</li>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
