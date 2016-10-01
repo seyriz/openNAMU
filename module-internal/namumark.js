@@ -23,6 +23,21 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
   
+  var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
+  var read;
+  while(true)
+  {
+	  if(read = ohhhh.exec(six))
+	  {
+		read[1] = read[1].replace(/\n>\s?/, "\n");
+		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/, "<blockquote>" + read[1] + "</blockquote>");
+	  }
+	  else
+	  {
+		  break;
+	  }
+  }
+  
   var ohhh = /\{\{\{#!html(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
   while(true)
   {
@@ -51,21 +66,6 @@ module.exports = function(n, ba){
   six = six.replace(/{{{(#[0-9a-f-A-F]{3}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
-  
-  var ohhhh = /\n>\s?(([^\n]*)((\n*(.*))+))/;
-  var read;
-  while(true)
-  {
-	  if(read = ohhhh.exec(six))
-	  {
-		read[1] = read[1].replace(/\n>\s?/, "\n");
-		six = six.replace(/\n>\s?(([^\n]*)((\n*(.*))+))/, "<blockquote>" + read[1] + "</blockquote>");
-	  }
-	  else
-	  {
-		  break;
-	  }
-  }
   
   var live = /\{\{\{(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
   var sh;
