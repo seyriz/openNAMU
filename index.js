@@ -375,6 +375,7 @@ router.post('/move/:page', function(req, res) {
 			}
 		}
 		fs.rmdir('./history/' + encodeURIComponent(req.params.page), function(err) {
+		});
 			
 		fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
 		});
