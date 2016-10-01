@@ -229,7 +229,37 @@ s:hover, strike:hover, del:hover {
 .one-fifth.column {
     margin-bottom: 20px;
 	margin-top: -18px;
-	background: gray;
+	background: #569e3d;
+}
+
+.scroll-buttons a:link, .scroll-buttons a:visited {
+    color: #e0e0e0;
+}
+div.scroll-buttons a {
+    display: inline-block;
+    float: left;
+    width: 42px;
+    height: 42px;
+    padding: 5px 8px 9px 8px;
+    border: 1px solid #545454;
+    border-left: 0;
+    background: #dedede;
+    text-decoration: none;
+    text-align: center;
+    background: rgba(26,26,26,0.9);
+    border-bottom: 0;
+}
+
+div.scroll-buttons {
+    position: fixed;
+    float: right;
+    height: 42px;
+    text-align: right;
+    font-size: 1.7em;
+    z-index: 10000;
+    margin-bottom: -10px;
+    bottom: 10px;
+    right: 0px;
 }
 
 .four-fifths {
