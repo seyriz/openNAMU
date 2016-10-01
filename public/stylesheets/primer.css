@@ -17,6 +17,10 @@
        url(//fonts.gstatic.com/ea/nanumgothiccoding/v4/NanumGothicCoding-Regular.ttf) format('truetype');
 }
 
+#RecentChanges:hover {
+    text-decoration: none;
+}
+
 textarea, label, span, body, strong, b, div, h1, h2, h3, h4, h5, h6, h7, input {
 	font-family: 'Nanum Gothic', sans-serif;
 }
