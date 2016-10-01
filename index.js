@@ -109,6 +109,11 @@ router.get('/reset', function(req, res, next) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
     admin(ip);
 	
 	fs.mkdirSync('./history', 777);
@@ -131,6 +136,11 @@ router.get('/topic/:page/b:number', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
     admin(ip);
     var today = getNow();
   
@@ -164,6 +174,11 @@ router.post('/topic/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
   stop(ip);
   var today = getNow();
   
@@ -225,6 +240,11 @@ router.get('/ban/edit', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
     admin(ip);
     var today = getNow();
 	
@@ -265,6 +285,11 @@ router.get('/delete/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
 	stop(ip);
 	var today = getNow();
   
@@ -286,6 +311,11 @@ router.post('/delete/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
 	var today = getNow();
 	  
 	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
@@ -314,6 +344,11 @@ router.get('/move/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
     stop(ip);
     var today = getNow();
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
@@ -334,6 +369,12 @@ router.post('/move/:page', function(req, res) {
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
 	  var today = getNow();
+	  
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
 	  
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r1.txt');
 	if(exists)
@@ -437,6 +478,11 @@ router.get('/edit/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
     stop(ip);
     var today = getNow();
 	
@@ -466,6 +512,11 @@ router.post('/edit/:page', function(req, res) {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 	var today = getNow();
+	var love;
+	var live = /([^,]*),.*/;
+	if(love = live.exec(ip)) {
+		ip = love[1];
+	}
 	if(!req.body.send)
 	{
 		req.body.send = "<br>";
