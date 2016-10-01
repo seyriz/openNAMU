@@ -316,7 +316,6 @@ router.get('/move/:page', function(req, res) {
 	  req.connection.socket.remoteAddress;
     stop(ip);
     var today = getNow();
-
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			res.status(404).render('index', { title: req.params.page, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name});
@@ -336,24 +335,51 @@ router.post('/move/:page', function(req, res) {
 	  req.connection.socket.remoteAddress;
 	  var today = getNow();
 	  
-	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
-	var i = 0;
-	while(true) {
-		i = i + 1;
-		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
-		if(!exists) {
-			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
-			});
-			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
-			});
-			break;
-		}
+	var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r1.txt');
+	if(exists)
+	{
+		res.send('<script type="text/javascript">alert("이미 해당 문서가 존재 합니다.");</script>');
 	}
-	fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
-	});
+	else
+	{
+		var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
+		fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
+		var i = 0;
+		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
+		while(true) {
+			i=i+1
+			var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+			if(exists) {
+				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt', function (err) {
+				});
+				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-ip.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-ip.txt', function (err) {
+				});
+			}
+			else {
+				break;
+			}
+		}
+		
+		var j = 0;
+		while(true) {
+			j = j + 1;
+			var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt');
+			if(!exists) {
+				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt','w',function(err,fd){
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
+				});
+				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.params.page+'">'+req.params.page+'</a> 에서 <a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+				});
+				break;
+			}
+		}
+		fs.rmdir('./history/' + encodeURIComponent(req.params.page), function(err) {
+			
+		fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
+		});
+	}
+	
 	res.redirect('/w/'+ encodeURIComponent(req.body.title))
 });
 // 항목을 보여줍니다.
