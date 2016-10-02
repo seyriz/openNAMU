@@ -29,6 +29,9 @@
 ## 주의
 윈도우에서 구동시 일부 오류가 있을수 있으니 리눅스에서 돌리기를 권장합니다.
 
+## 라이선스
+* 파서로는 [NamuMarked](https://github.com/kkkyyy03/NamuMarked) 커스텀을 사용 했습니다.
+
 ## 기타
 * [deesle](https://github.com/deesle/deesle) - DB 버전 오픈나무
 

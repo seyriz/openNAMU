@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var parseNamu = require('./module-internal/namumark')
+var parseNamu = require('namumarked')
+var fs = require('fs');
 var fs = require('fs');
 var exists = fs.existsSync('./setting/License.txt');
 var licen;
@@ -434,10 +435,10 @@ router.get('/w/:page', function(req, res, next) {
 			return;
 		}
 		else {
-			parseNamu(data, function(cnt){
-				res.status(200).render('index', { title: req.params.page, content: cnt, License: licen , wikiname: name});
-				res.end()
-			})
+			var nomore = parseNamu(data);
+			nomore = nomore.replace(/\n/g, "<br>");
+			res.status(200).render('index', { title: req.params.page, content: nomore, License: licen , wikiname: name});
+			res.end()
 		}
 	})
   })
