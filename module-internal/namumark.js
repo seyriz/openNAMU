@@ -260,10 +260,10 @@ module.exports = function(n, ba){
   while(true)
   {
 	  match = b.exec(six);
-	  if(match == null)
+	  if(match === null)
 	  {
 		  tou = tou + '</div>';
-		  if(tou == "<hr id='footnote'><div class='wiki-macro-footnote'><br></div>")
+		  if(tou === "<hr id='footnote'><div class='wiki-macro-footnote'><br></div>")
 		  {
 			  tou = '';
 		  }
