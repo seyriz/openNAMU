@@ -263,7 +263,11 @@ module.exports = function(n, ba){
 	  if(match == null)
 	  {
 		  tou = tou + '</div>';
-		  break;
+		  if(tou = "<hr id='footnote'><div class='wiki-macro-footnote'><br></div>")
+		  {
+			  tou = '';
+		  }
+		  break; 
 	  }
 	  else
 	  {
