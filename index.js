@@ -505,6 +505,28 @@ router.post('/preview/:page', function(req, res) {
 		res.end()
 	});
 });
+// 미리보기
+router.get('/TitleIndex', function(req, res) {
+	var sun = fs.readdirSync('./data');
+	var shine = 0;
+	var ganba;
+	var ruby = '<div>';
+	var dayo = /(.*)\.txt/;
+	var hehe;
+	while(true) {
+		if(sun[shine]) {
+			hehe = decodeURIComponent(sun[shine]);
+			ganba = dayo.exec(hehe);
+			ruby = ruby + '<li>' + '<a href="/w/' + ganba[1] + '">' + ganba[1] + '</a></li>';
+		}
+		else {
+			ruby = ruby + '</div>';
+			break;
+		}
+		shine = shine + 1;
+	}
+	res.render('ban', { title: '모든 문서', content: ruby , wikiname: name});
+});
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	var ip = req.headers['x-forwarded-for'] ||
