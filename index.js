@@ -501,10 +501,10 @@ router.get('/edit/:page', function(req, res) {
 });
 // 미리보기
 router.post('/preview/:page', function(req, res) {
-	parseNamu(req.body.content, function(cnt){
-		res.render('preview', { title: req.params.page+' 미리보기', content: cnt , wikiname: name});
-		res.end()
-	});
+	var nomore = parseNamu(data);
+	nomore = nomore.replace(/\n/g, "<br>");
+	res.render('preview', { title: req.params.page+' 미리보기', content: nomore , wikiname: name});
+	res.end()
 });
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
