@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var parseNamu = require('namumarked')
-var fs = require('fs');
+var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
 var exists = fs.existsSync('./setting/License.txt');
 var licen;
@@ -435,10 +434,10 @@ router.get('/w/:page', function(req, res, next) {
 			return;
 		}
 		else {
-			var nomore = parseNamu(data);
-			nomore = nomore.replace(/\n/g, "<br>");
-			res.status(200).render('index', { title: req.params.page, content: nomore, License: licen , wikiname: name});
-			res.end()
+			parseNamu(data, function(cnt){
+				res.status(200).render('index', { title: req.params.page, content: cnt, License: licen , wikiname: name});
+				res.end()
+			})
 		}
 	})
   })
@@ -501,10 +500,10 @@ router.get('/edit/:page', function(req, res) {
 });
 // 미리보기
 router.post('/preview/:page', function(req, res) {
-	var nomore = parseNamu(req.body.content);
-	nomore = nomore.replace(/\n/g, "<br>");
-	res.render('preview', { title: req.params.page+' 미리보기', content: nomore , wikiname: name});
-	res.end()
+	parseNamu(req.body.content, function(cnt){
+		res.render('preview', { title: req.params.page+' 미리보기', content: cnt , wikiname: name});
+		res.end()
+	});
 });
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
