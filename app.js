@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -30,16 +31,23 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
 
-// development error handler
-// will print stacktrace
+// 에러 창
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
+	var exists = fs.existsSync('./setting/WikiName.txt');
+	var name;
+	if(exists) {
+		name = fs.readFileSync('./setting/WikiName.txt', 'utf8');
+	}
+	else {
+		name = "오픈나무";
+	}
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
-      error: err
+      error: err,
+	  wikiname: name
     });
   });
 }
