@@ -501,7 +501,7 @@ router.get('/edit/:page', function(req, res) {
 });
 // 미리보기
 router.post('/preview/:page', function(req, res) {
-	var nomore = parseNamu(data);
+	var nomore = parseNamu(req.body.content);
 	nomore = nomore.replace(/\n/g, "<br>");
 	res.render('preview', { title: req.params.page+' 미리보기', content: nomore , wikiname: name});
 	res.end()
