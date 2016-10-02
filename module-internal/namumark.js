@@ -255,18 +255,19 @@ module.exports = function(n, ba){
   
   var a = 1;
   var b = /\[\*\s((?:[^\[\]]+)*)\]/;
-  var tou = "<br>";
+  var tou = "<hr id='footnote'><div class='wiki-macro-footnote'><br>";
   
   while(true)
   {
 	  match = b.exec(six);
 	  if(match == null)
 	  {
+		  tou = tou + '</div>';
 		  break;
 	  }
 	  else
 	  {
-		tou = tou + "<a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "<br>";
+		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "</span><br>";
 		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\">[" + a + "]</a></sup>");
 		a = a + 1;
 	  }
@@ -287,7 +288,6 @@ module.exports = function(n, ba){
   six = six + tou;
   d('1: '+six)
   ba(six)
-  // 새 파서 테스트중 Beta 0.4 버전 //
   // Thank for 2DU, LiteHell //
 }
 function doNothing(a) {}

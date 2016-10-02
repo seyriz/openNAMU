@@ -250,6 +250,15 @@ div.scroll-buttons a {
     border-bottom: 0;
 }
 
+.footnote-list {
+    margin-bottom: -10px;
+    display: block;
+}
+
+#footnote {
+    margin-bottom: -10px;
+}
+
 div.scroll-buttons {
     position: fixed;
     float: right;

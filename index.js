@@ -505,7 +505,7 @@ router.post('/preview/:page', function(req, res) {
 		res.end()
 	});
 });
-// 미리보기
+// 모든 문서
 router.get('/TitleIndex', function(req, res) {
 	var sun = fs.readdirSync('./data');
 	var shine = 0;
