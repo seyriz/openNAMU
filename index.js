@@ -504,7 +504,7 @@ router.get('/edit/:page', function(req, res) {
 // 미리보기
 router.post('/preview/:page', function(req, res) {
 	parseNamu(req.body.content, function(cnt){
-		res.render('preview', { title: req.params.page+' 미리보기', content: cnt , wikiname: name});
+		res.render('preview', { title: req.params.page, content: cnt , wikiname: name});
 		res.end()
 	});
 });
@@ -645,7 +645,7 @@ router.get('/history/:page', function(req, res) {
 		}
 		else {
 			neoa = neoa + '</div>';
-			res.status(200).render('history2', { title: req.params.page + ' (문서 역사)', content: neoa, License: licen ,wikiname: name});
+			res.status(200).render('history2', { title: req.params.page, content: neoa, License: licen ,wikiname: name});
 			break;
 			res.end()
 			return;
