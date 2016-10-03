@@ -124,7 +124,7 @@ module.exports = function(n, ba){
 		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 			van = van + 'class="not_thing"';
 		}
-		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+match[1]+'">'+match[2]+'</a>');
+		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
 	}
 	else {
 		break;
@@ -136,7 +136,7 @@ module.exports = function(n, ba){
 		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 			van = van + 'class="not_thing"';
 		}
-		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+match[1]+'">'+match[1]+'</a>');
+		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
 	}
 	else {
 		break;
