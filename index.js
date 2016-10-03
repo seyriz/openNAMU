@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
+var htmlencode = require('htmlencode');
 var exists = fs.existsSync('./setting/License.txt');
 var licen;
 if(exists) {
@@ -148,12 +149,12 @@ router.get('/topic/:page/b:number', function(req, res) {
 	var sfile = './topic/' + encodeURIComponent(req.params.page)+'-starter.txt';
 	fs.exists(sfile, function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, content: "이 토론이 없습니다. <a href='/topic/"+req.params.page+"'>토론으로 가기</a>", License: licen, wikiname: name});
+			res.status(404).render('index', { title: req.params.page, title2: encodeURIComponent(req.params.page), content: "이 토론이 없습니다. <a href='/topic/"+encodeURIComponent(req.params.page)+"'>토론으로 가기</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
 		else {
-			res.status(200).render('btopic', { title: req.params.page, wikiname: name, number: req.params.number});
+			res.status(200).render('btopic', { title: req.params.page, title2: encodeURIComponent(req.params.page), wikiname: name, number: req.params.number});
 			res.end()
 		}
 	});
@@ -297,7 +298,7 @@ router.get('/delete/:page', function(req, res) {
   
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -390,7 +391,7 @@ router.post('/move/:page', function(req, res) {
 	else
 	{
 		var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-		fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+req.params.page+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.body.title+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
+		fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
 		var i = 0;
 		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
 		while(true) {
@@ -416,7 +417,7 @@ router.post('/move/:page', function(req, res) {
 					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
 				});
 				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+req.params.page+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
 				});
 				break;
 			}
@@ -450,7 +451,7 @@ router.get('/w/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -482,12 +483,12 @@ router.get('/raw/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen ,wikiname: name});
+			res.status(404).render('index', { title: req.params.page, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name});
 			res.end()
 			return;
 		}
 		else {
-			res.status(200).render('index', { title: req.params.page, content: '<pre>' + data + '</pre>', License: licen ,wikiname: name});
+			res.status(200).render('index', { title: req.params.page, content: '<pre>' + htmlencode.htmlEncode(data) + '</pre>', License: licen ,wikiname: name});
 			res.end()
 		}
 	})
@@ -641,7 +642,7 @@ router.get('/history/:page/:r', function(req, res) {
 	fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', function (hists) {
 		if(hists) {
 			var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
-			res.status(200).render('history', { title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: '<pre>' + neob + '</pre>', wikiname: name , License: licen});
+			res.status(200).render('history', { title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: '<pre>' + htmlencode.htmlEncode(neob) + '</pre>', wikiname: name , License: licen});
 			res.end()
 		}
 		else {
