@@ -75,7 +75,7 @@ module.exports = function(n, ba){
   {
 	if(sh = live.exec(six))
 	{
-		sh[1] = '<pre>'+encodeURIComponent(sh[1])+'</pre>';
+		sh[1] = '<pre>'+sh[1]+'</pre>';
 		six = six.replace(live, sh[1]);
 	}
 	else {
