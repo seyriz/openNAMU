@@ -375,7 +375,10 @@ router.post('/move/:page', function(req, res) {
 	  if(love = live.exec(ip)) {
 		ip = love[1];
 	  }
-	  
+	if(req.body.title === '')
+	{
+		res.send('<script type="text/javascript">alert("문서 이름 없음");</script>');
+	}
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r1.txt');
 	if(exists)
 	{
@@ -619,7 +622,7 @@ router.get('/history/:page/:r', function(req, res) {
 	fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', function (hists) {
 		if(hists) {
 			var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
-			res.status(200).render('history', { title: req.params.page, title2: req.params.page + ' ' + req.params.r, content: '<pre>' + neob + '</pre>', wikiname: name , License: licen});
+			res.status(200).render('history', { title: req.params.page, title2: req.params.page + ' (' + req.params.r + ' 판)', content: '<pre>' + neob + '</pre>', wikiname: name , License: licen});
 			res.end()
 		}
 		else {
@@ -642,7 +645,7 @@ router.get('/history/:page', function(req, res) {
 		}
 		else {
 			neoa = neoa + '</div>';
-			res.status(200).render('history2', { title: req.params.page, content: neoa, License: licen ,wikiname: name});
+			res.status(200).render('history2', { title: req.params.page + ' (문서 역사)', content: neoa, License: licen ,wikiname: name});
 			break;
 			res.end()
 			return;

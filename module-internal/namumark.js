@@ -265,7 +265,7 @@ module.exports = function(n, ba){
 		  tou = tou + '</div>';
 		  if(tou === "<hr id='footnote'><div class='wiki-macro-footnote'><br></div>")
 		  {
-			  tou = '';
+			  tou = "<div class='wiki-macro-footnote'><br></div>";
 		  }
 		  break; 
 	  }
