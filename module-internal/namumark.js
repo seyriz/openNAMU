@@ -4,6 +4,7 @@ module.exports = function(n, ba){
   var today = getNow();
   var parseNamu = require('./namumark')
   var d = require('debug')('openNAMU:parser');
+  var htmlencode = require('htmlencode');
   
   function getNow() {
   var today = new Date();
