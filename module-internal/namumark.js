@@ -23,14 +23,14 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
   
-  var ohhhh = /\n>\s?((.*)(((\n>)(.*))+)?)/;
+  var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
   var read;
   while(true)
   {
 	  if(read = ohhhh.exec(six))
 	  {
-		read[1] = read[1].replace(/\n>\s?/, "#left#br#right#");
-		six = six.replace(ohhhh, "#left#br#right# #left#blockquote#right#" + read[1] + "#left#/blockquote#right#");
+		read[1] = read[1].replace(/\n>\s?/g, "\n");
+		six = six.replace(ohhhh, "\n#left#blockquote#right#" + read[1] + "#left#/blockquote#right#");
 	  }
 	  else
 	  {
