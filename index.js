@@ -95,6 +95,46 @@ function admin(ip) {
 		res.send('error');
 	}
 }
+function rplus() {
+	var plusnumber = fs.readFileSync('./recent/RecentChanges-number.txt', 'utf8');
+	if(plusnumber) {
+		console.log(plusnumber);
+		if(Number(plusnumber) === 50) {
+			var plusnumber2 = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
+			fs.writeFileSync('./recent/RecentChanges-2.txt', plusnumber2, 'utf8');
+			fs.unlink('./recent/RecentChanges.txt', function (err) {
+			});
+			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
+			});
+			plusnumber = 0;
+		}
+		plusnumber = Number(plusnumber) + 1;
+		fs.writeFileSync('./recent/RecentChanges-number.txt', Number(plusnumber), 'utf8');
+	} else {
+		plusnumber = 0;
+		fs.writeFileSync('./recent/RecentChanges-number.txt', Number(plusnumber), 'utf8');
+	}
+}
+function tplus() {
+	var plusnumber = fs.readFileSync('./recent/RecentDiscuss-number.txt', 'utf8');
+	if(plusnumber) {
+		console.log(plusnumber);
+		if(Number(plusnumber) === 50) {
+			var plusnumber2 = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
+			fs.writeFileSync('./recent/RecentDiscuss-2.txt', plusnumber2, 'utf8');
+			fs.unlink('./recent/RecentDiscuss.txt', function (err) {
+			});
+			fs.open('./recent/RecentDiscuss.txt','w+',function(err,fd){
+			});
+			plusnumber = 0;
+		}
+		plusnumber = Number(plusnumber) + 1;
+		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
+	} else {
+		plusnumber = 0;
+		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
+	}
+}
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
@@ -184,8 +224,9 @@ router.post('/topic/:page', function(req, res) {
   stop(ip);
   var today = getNow();
   
-  var plus = fs.readFileSync('./RecentDiscuss.txt', 'utf8');
-  fs.writeFileSync('./RecentDiscuss.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/topic/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
+  var plus = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
+  tplus()
+  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/topic/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
   
   req.body.content = req.body.content.replace(/</g, "《");
   req.body.content = req.body.content.replace(/>/g, "》");
@@ -321,8 +362,9 @@ router.post('/delete/:page', function(req, res) {
 	  }
 	var today = getNow();
 	  
-	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
+	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
+	rplus();
+	fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
 	var i = 0;
 	while(true) {
 		i = i + 1;
@@ -390,8 +432,9 @@ router.post('/move/:page', function(req, res) {
 	}
 	else
 	{
-		var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-		fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
+		var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
+		rplus();
+		fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
 		var i = 0;
 		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
 		while(true) {
@@ -466,15 +509,29 @@ router.get('/w/:page', function(req, res, next) {
 });
 // 최근 바뀜을 보여줍니다.
 router.get('/RecentChanges', function(req, res, next) {
-  fs.readFile('./RecentChanges.txt', 'utf8', function(err, data) {
-		res.status(200).render('nope', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+  fs.readFile('./recent/RecentChanges.txt', 'utf8', function(err, data) {
+		res.status(200).render('re1', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+		res.end()
+  });
+});
+// 최근 바뀜 2를 보여줍니다.
+router.get('/RecentChanges2', function(req, res, next) {
+  fs.readFile('./recent/RecentChanges-2.txt', 'utf8', function(err, data) {
+		res.status(200).render('re2', { title: '최근 변경내역 2', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
-  fs.readFile('./RecentDiscuss.txt', 'utf8', function(err, data) {
-		res.status(200).render('nope', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
+  fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
+		res.status(200).render('re1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
+		res.end()
+  });
+});
+// 최근 토론 2를 보여줍니다.
+router.get('/RecentDiscuss', function(req, res, next) {
+  fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
+		res.status(200).render('re2', { title: '최근 토론내역 2', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
@@ -565,8 +622,9 @@ router.post('/edit/:page', function(req, res) {
 	{
 		req.body.send = "<br>";
 	}
-	var plus = fs.readFileSync('./RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
+	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
+	rplus();
+	fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
