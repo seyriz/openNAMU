@@ -201,9 +201,9 @@ module.exports = function(n, ba){
 		  }
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
 	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a> ' + head[2] + '<br>';
-		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '</a> $2</h'+wiki+'>\n');
+	      toc = toc.replace(/(.*)\./g, '$1');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[2] + '<br>';
+		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>\n');
 	  } else {
 		  rtoc = rtoc + '</div>';
 		  break;

@@ -230,7 +230,7 @@ router.post('/topic/:page', function(req, res) {
   
   req.body.content = req.body.content.replace(/</g, "《");
   req.body.content = req.body.content.replace(/>/g, "》");
-  req.body.content = req.body.content.replace(/(#[1-9]*[1-9])/g, "<a href=\"$1\">$1</a>");
+  req.body.content = req.body.content.replace(/(#[1-9]*)/g, "<a href=\"$1\">$1</a>");
   fs.exists(sfile, function (exists) {
 		if(!exists) {
 			fs.open(sfile,'w',function(err,fd){
