@@ -524,14 +524,14 @@ router.get('/RecentChanges2', function(req, res, next) {
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
   fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
-		res.status(200).render('re1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
+		res.status(200).render('de1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
 // 최근 토론 2를 보여줍니다.
 router.get('/RecentDiscuss2', function(req, res, next) {
-  fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
-		res.status(200).render('re2', { title: '최근 토론내역 2', content: data, License: licen , wikiname: name});
+  fs.readFile('./recent/RecentDiscuss-2.txt', 'utf8', function(err, data) {
+		res.status(200).render('de2', { title: '최근 토론내역 2', content: data, License: licen , wikiname: name});
 		res.end()
   });
 });
