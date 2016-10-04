@@ -144,64 +144,66 @@ module.exports = function(n, ba){
 	}
   }
   
-  var h0 = /======\s([^======]*)\s======\r\n/;
-  var h1 = /=====\s([^=====]*)\s=====\r\n/;
-  var h2 = /====\s([^====]*)\s====\r\n/;
-  var h3 = /===\s([^===]*)\s===\r\n/;
-  var h4 = /==\s([^==]*)\s==\r\n/;
-  var h5 = /=\s([^=]*)\s=\r\n/;
+  var h = /(={1,6})\s([^=]*)\s(?:={1,6})\r\n/;
   var h0c = 0;
   var h1c = 0;
   var h2c = 0;
   var h3c = 0;
   var h4c = 0;
   var h5c = 0;
+  var last = 0;
   var head;
   var toc;
+  var wiki;
   var rtoc = '<div id="toc"><span id="toc-name">목차</span><br><br>';
   while(true) {
-	  if(head = h5.exec(six)) {
-		  h0c = h0c + 1;
+	  if(head = h.exec(six)) {
+		  wiki = head[1].length;
+		  if(last < wiki) {
+			  last = wiki;
+		  }
+		  else {
+			  last = wiki;
+			  if(wiki === 1) {
+				h1c = 0;
+				h2c = 0;
+				h3c = 0;
+				h4c = 0;
+				h5c = 0;
+			  } else if(wiki === 2) {
+				h2c = 0;
+				h3c = 0;
+				h4c = 0;
+				h5c = 0;
+			  } else if(wiki === 3) {
+				h3c = 0;
+				h4c = 0;
+				h5c = 0;
+			  } else if(wiki === 4) {
+				h4c = 0;
+				h5c = 0;
+			  } else if(wiki === 5) {
+				h4c = 0;
+			  }
+		  }
+		  if(wiki === 1) {
+				h0c = h0c + 1;
+		  } else if(wiki === 2) {
+		        h1c = h1c + 1;
+		  } else if(wiki === 3) {
+		        h2c = h2c + 1;
+		  } else if(wiki === 4) {
+		        h3c = h3c + 1;
+		  } else if(wiki === 5) {
+		        h4c = h4c + 1;
+		  } else {
+		        h5c = h5c + 1;
+		  }
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
 	      toc = toc.replace(/0./g, '');
 	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a> ' + head[1] + '<br>';
-		  six = six.replace(/=\s([^=]*)\s=\r\n/, '<h1><a href="#toc" id="s-' + toc + '">' + toc + '</a> $1</h1>\n');
-	  } else if(head = h4.exec(six)) {
-		  h1c = h1c + 1;
-		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
-	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/==\s([^==]*)\s==\r\n/, '<h2><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h2>\n');
-	  } else if(head = h3.exec(six)) {
-		  h2c = h2c + 1;
-		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
-	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/===\s([^===]*)\s===\r\n/, '<h3><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h3>\n');
-	  } else if(head = h2.exec(six)) {
-		  h3c = h3c + 1;
-		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
-	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/====\s([^====]*)\s====\r\n/, '<h4><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h4>\n');
-	  } else if(head = h1.exec(six)) {  
-		  h4c = h4c + 1;
-		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
-	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/=====\s([^=====]*)\s=====\r\n/, '<h5><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h5>\n');
-	  } else if(head = h0.exec(six)) {
-		  h5c = h5c + 1;
-		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c;
-	      toc = toc.replace(/0./g, '');
-	      toc = toc.replace(/.0/g, '');
-		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[1] + '<br>';
-		  six = six.replace(/======\s([^======]*)\s======\r\n/, '<h6><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $1</h6>\n');
+		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a> ' + head[2] + '<br>';
+		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '</a> $2</h'+wiki+'>\n');
 	  } else {
 		  rtoc = rtoc + '</div>';
 		  break;
