@@ -1,0 +1,10 @@
+{
+  "plugin": [
+    "Advanced highligh",
+    "block"
+  ],
+  "pluginsrc": [
+    "ah",
+    "bb"
+  ]
+}
