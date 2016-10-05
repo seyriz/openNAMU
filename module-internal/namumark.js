@@ -126,7 +126,7 @@ module.exports = function(n, ba){
 		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 			van = van + 'class="not_thing"';
 		}
-		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
 	}
 	else {
 		break;
@@ -138,7 +138,7 @@ module.exports = function(n, ba){
 		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 			van = van + 'class="not_thing"';
 		}
-		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' href="/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
 	}
 	else {
 		break;
@@ -276,7 +276,7 @@ module.exports = function(n, ba){
 	  else
 	  {
 		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "</span><br>";
-		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\">[" + a + "]</a></sup>");
+		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\" title='"+htmlencode.htmlEncode(match[1])+"'>[" + a + "]</a></sup>");
 		a = a + 1;
 	  }
   }
