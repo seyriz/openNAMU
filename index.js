@@ -146,6 +146,7 @@ router.get('/Upload', function(req, res, next) {
 router.get('/setup', function(req, res, next) {
 	fs.exists('./recent/RecentChanges.txt', function (exists) {
 		if(!exists) {
+			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
 			fs.mkdirSync('./history', 777);
 			fs.mkdirSync('./data', 777);
 			fs.mkdirSync('./topic', 777);
@@ -164,7 +165,9 @@ router.get('/setup', function(req, res, next) {
 			});
 			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
 			});
-			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
+		}
+		else {
+			res.status(200).render('ban', { title: 'Setup', content: "이미 파일이 있습니다.", License: licen, wikiname: name});
 		}
 	});
 });
