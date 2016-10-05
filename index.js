@@ -611,7 +611,7 @@ router.get('/TitleIndex', function(req, res) {
 		}
 		shine = shine + 1;
 	}
-	res.render('ban', { title: '모든 문서', content: ruby , wikiname: name});
+	res.render('ban', { title: '모든 문서', content: ruby + '<br>' + shine + '개의 문서' , wikiname: name});
 });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
