@@ -98,7 +98,6 @@ function admin(ip) {
 function rplus() {
 	var plusnumber = fs.readFileSync('./recent/RecentChanges-number.txt', 'utf8');
 	if(plusnumber) {
-		console.log(plusnumber);
 		if(Number(plusnumber) === 50) {
 			var plusnumber2 = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
 			fs.writeFileSync('./recent/RecentChanges-2.txt', plusnumber2, 'utf8');
@@ -118,7 +117,6 @@ function rplus() {
 function tplus() {
 	var plusnumber = fs.readFileSync('./recent/RecentDiscuss-number.txt', 'utf8');
 	if(plusnumber) {
-		console.log(plusnumber);
 		if(Number(plusnumber) === 50) {
 			var plusnumber2 = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
 			fs.writeFileSync('./recent/RecentDiscuss-2.txt', plusnumber2, 'utf8');
