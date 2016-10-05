@@ -164,7 +164,7 @@ router.get('/setup', function(req, res, next) {
 			});
 			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
 			});
-			res.status(200).render('layout', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
+			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
 		}
 	});
 });
