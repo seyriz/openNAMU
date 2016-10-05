@@ -10,7 +10,7 @@
 [테스트 위키](https://www.namu.ml)
 
 ## 사용법
-오픈나무 폴더에서 node app.js로 실행 후 http://주소:3000/setup 에 접속해서 파일 생성 후 오픈나무 종료하고 폴더 localset에 있는 파일을 setting으로 이동 후 기타 세팅하고 재 실행
+오픈나무 폴더에서 node app.js로 실행 후 http://주소:3000/setup 에 접속해서 파일 생성 만약 세팅 변경하고 싶으면 setting 안에 파일을 고치세요.
 
 ## 기능
  * /w/문서명 - 문서보기
