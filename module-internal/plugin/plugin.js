@@ -1,7 +1,3 @@
-
-
-
-
 module.exports = function(six){
 
 var list = './plugin.json'
