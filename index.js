@@ -142,25 +142,31 @@ router.get('/Upload', function(req, res, next) {
 	res.status(200).render('upload', { title: '파일 업로드', wikiname: name });
 	res.end()
 });
-// 재 생성 테스트
-router.get('/reset', function(req, res, next) {
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
-    admin(ip);
-	
-	fs.mkdirSync('./history', 777);
-	fs.mkdirSync('./data', 777);
-	fs.mkdirSync('./topic', 777);
-	fs.mkdirSync('./setting', 777);
-	fs.mkdirSync('./images', 777);
-	res.redirect('/w/'+encodeURIComponent(FrontPage))
+// 생성
+router.get('/setup', function(req, res, next) {
+	fs.exists('./recent/RecentChanges.txt', function (exists) {
+		if(!exists) {
+			fs.mkdirSync('./history', 777);
+			fs.mkdirSync('./data', 777);
+			fs.mkdirSync('./topic', 777);
+			fs.mkdirSync('./setting', 777);
+			fs.mkdirSync('./images', 777);
+			fs.mkdirSync('./recent', 777);
+			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
+			});
+			fs.open('./recent/RecentChanges-2.txt','w+',function(err,fd){
+			});
+			fs.open('./recent/RecentChanges-number.txt','w+',function(err,fd){
+			});
+			fs.open('./recent/RecentDiscuss.txt','w+',function(err,fd){
+			});
+			fs.open('./recent/RecentDiscuss-2.txt','w+',function(err,fd){
+			});
+			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
+			});
+			res.status(200).render('layout', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
+		}
+	});
 });
 // 토론
 router.get('/topic/:page', function(req, res) {
