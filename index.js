@@ -161,18 +161,21 @@ router.get('/Upload', function(req, res, next) {
 });
 // 생성
 router.get('/setup', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	fs.exists('./recent/RecentChanges.txt', function (exists) {
 		if(!exists) {
+			licen = 'CC ZERO';
+			name = '오픈나무';
+			FrontPage = 'FrontPage';
+			
 			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
+			
 			fs.mkdirSync('./history', 777);
 			fs.mkdirSync('./data', 777);
 			fs.mkdirSync('./topic', 777);
 			fs.mkdirSync('./setting', 777);
 			fs.mkdirSync('./images', 777);
 			fs.mkdirSync('./recent', 777);
+			
 			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
 			});
 			fs.open('./recent/RecentChanges-2.txt','w+',function(err,fd){
@@ -185,8 +188,22 @@ router.get('/setup', function(req, res, next) {
 			});
 			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
 			});
+			
+			fs.rename('./localset/Admin.txt','./setting/Admin.txt', function (err) {
+			});
+			fs.rename('./localset/FrontPage.txt','./setting/FrontPage.txt', function (err) {
+			});
+			fs.rename('./localset/IPban.txt','./setting/IPban.txt', function (err) {
+			});
+			fs.rename('./localset/License.txt','./setting/License.txt', function (err) {
+			});
+			fs.rename('./localset/WikiName.txt','./setting/WikiName.txt', function (err) {
+			});
 		}
 		else {
+			licen = rlicen(licen);
+			name = rname(name);
+			FrontPage = rFrontPage(FrontPage);
 			res.status(200).render('ban', { title: 'Setup', content: "이미 파일이 있습니다.", License: licen, wikiname: name});
 		}
 	});
