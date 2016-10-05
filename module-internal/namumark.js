@@ -40,6 +40,10 @@ module.exports = function(n, ba){
 	  }
   }
   
+  six = six.replace(/<(-(?:[0-9]*))>/g,'#left#$1#right#');
+  six = six.replace(/<:>/g,'#left#:#right#');
+  six = six.replace(/<(table\s?(?:(?:width|height)=(?:[^>]*)))>/g,'#left#$1#right#');
+  
   var ohhh = /\{\{\{#!html(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
   while(true)
   {
@@ -287,6 +291,12 @@ module.exports = function(n, ba){
   six = six.replace(/\.gef/g, ".gif");
   six = six.replace(/\.jeg/g, ".jpg");
   six = six.replace(/\.jepg/g, ".jpeg");
+  
+  six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
+  six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
+  six = six.replace(/\|\|/g, "</td><td>");
+  six = six.replace(/<td>(<-([^>]*)>)?<:>/g, "<td style=\"text-align: center;\">$1");
+  six = six.replace(/(<td\s?([^>]*)?)><-([0-9]*)>/g, "$1 colspan=\"$3\">");
   
   six = six.replace(/\n/g, "<br>");
   six = six.replace(/<not_br><\/not_br>/g, "\n");

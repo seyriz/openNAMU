@@ -3,29 +3,40 @@ var router = express.Router();
 var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
 var htmlencode = require('htmlencode');
-var exists = fs.existsSync('./setting/License.txt');
 var licen;
-if(exists) {
-	licen = fs.readFileSync('./setting/License.txt', 'utf8');
-}
-else {
-	licen = "CC ZERO";
-}
-var exists = fs.existsSync('./setting/WikiName.txt');
 var name;
-if(exists) {
-	name = fs.readFileSync('./setting/WikiName.txt', 'utf8');
-}
-else {
-	name = "오픈나무";
-}
-var exists = fs.existsSync('./setting/FrontPage.txt');
 var FrontPage;
-if(exists) {
-	FrontPage = fs.readFileSync('./setting/FrontPage.txt', 'utf8');
+function rlicen(licen) {
+	var exists = fs.existsSync('./setting/License.txt');
+	if(exists) {
+		licen = fs.readFileSync('./setting/License.txt', 'utf8');
+	}
+	else {
+		licen = "CC ZERO";
+	}
+	return licen;
 }
-else {
-	FrontPage = "FrontPage";
+function rname(name) {
+	var exists = fs.existsSync('./setting/WikiName.txt');
+	if(exists) {
+		name = fs.readFileSync('./setting/WikiName.txt', 'utf8');
+	}
+	else {
+		name = "오픈나무";
+	}
+	return name;
+}
+
+function rFrontPage(FrontPage) {
+	var exists = fs.existsSync('./setting/FrontPage.txt');
+	
+	if(exists) {
+		FrontPage = fs.readFileSync('./setting/FrontPage.txt', 'utf8');
+	}
+	else {
+		FrontPage = "FrontPage";
+	}
+	return FrontPage;
 }
 function getNow() {
   var today = new Date();
@@ -135,15 +146,24 @@ function tplus() {
 }
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
 // 파일 업로드
 router.get('/Upload', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	res.status(200).render('upload', { title: '파일 업로드', wikiname: name });
 	res.end()
 });
 // 생성
 router.get('/setup', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	fs.exists('./recent/RecentChanges.txt', function (exists) {
 		if(!exists) {
 			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
@@ -173,6 +193,9 @@ router.get('/setup', function(req, res, next) {
 });
 // 토론
 router.get('/topic/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var title2 = encodeURIComponent(req.params.page);
   fs.readFile('./topic/'+ encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	res.status(200).render('topic', { title: req.params.page, title2:title2, content: data, wikiname: name });
@@ -181,6 +204,9 @@ router.get('/topic/:page', function(req, res) {
 });
 // 토론 블라인드
 router.get('/topic/:page/b:number', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
@@ -271,6 +297,9 @@ router.post('/topic/:page', function(req, res) {
 });
 // 아이피 밴
 router.get('/ban', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.exists('./setting/IPban.txt', function (exists) {
 	  if(exists){
 		fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
@@ -286,6 +315,9 @@ router.get('/ban', function(req, res, next) {
 });
 // 아이피 밴 수정
 router.get('/ban/edit', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
@@ -312,10 +344,16 @@ router.post('/ban/edit', function(req, res) {
 });
 // 리다이렉트.
 router.get('/w/', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
 // ver
 router.get('/ver', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
     res.render('ver', { title:'위키 버전', wikiname: name})
 });
 // 검색 결과를 보여줍니다.
@@ -331,6 +369,9 @@ router.post('/search', function(req, res) {
 });
 // 문서 삭제
 router.get('/delete/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
@@ -392,6 +433,9 @@ router.post('/delete/:page', function(req, res) {
 });
 // 문서 이동
 router.get('/move/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
@@ -483,6 +527,9 @@ router.post('/move/:page', function(req, res) {
 });
 // 항목을 보여줍니다.
 router.get('/w/:page', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   var testing = /\//;
   if(testing.exec(req.params.page)) {
 	  var zenkaino = /(.*)\/.*/;
@@ -516,6 +563,9 @@ router.get('/w/:page', function(req, res, next) {
 });
 // 최근 바뀜을 보여줍니다.
 router.get('/RecentChanges', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.readFile('./recent/RecentChanges.txt', 'utf8', function(err, data) {
 		res.status(200).render('re1', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
 		res.end()
@@ -523,6 +573,9 @@ router.get('/RecentChanges', function(req, res, next) {
 });
 // 최근 바뀜 2를 보여줍니다.
 router.get('/RecentChanges2', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.readFile('./recent/RecentChanges-2.txt', 'utf8', function(err, data) {
 		res.status(200).render('re2', { title: '최근 변경내역 2', content: data, License: licen , wikiname: name});
 		res.end()
@@ -530,6 +583,9 @@ router.get('/RecentChanges2', function(req, res, next) {
 });
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
 		res.status(200).render('de1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
 		res.end()
@@ -537,6 +593,9 @@ router.get('/RecentDiscuss', function(req, res, next) {
 });
 // 최근 토론 2를 보여줍니다.
 router.get('/RecentDiscuss2', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.readFile('./recent/RecentDiscuss-2.txt', 'utf8', function(err, data) {
 		res.status(200).render('de2', { title: '최근 토론내역 2', content: data, License: licen , wikiname: name});
 		res.end()
@@ -544,6 +603,9 @@ router.get('/RecentDiscuss2', function(req, res, next) {
 });
 // raw를 보여줍니다.
 router.get('/raw/:page', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
@@ -560,6 +622,9 @@ router.get('/raw/:page', function(req, res, next) {
 });
 // 편집 화면을 보여줍니다.
 router.get('/edit/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
@@ -586,6 +651,9 @@ router.get('/edit/:page', function(req, res) {
 });
 // 미리보기
 router.post('/preview/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	parseNamu(req.body.content, function(cnt){
 		res.render('preview', { title: req.params.page, content: cnt , wikiname: name});
 		res.end()
@@ -593,6 +661,9 @@ router.post('/preview/:page', function(req, res) {
 });
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var sun = fs.readdirSync('./data');
 	var shine = 0;
 	var ganba;
@@ -703,6 +774,9 @@ router.post('/edit/:page', function(req, res) {
 });
 // 역사 2
 router.get('/history/:page/:r', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var title3 = encodeURIComponent(req.params.page);
 	fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', function (hists) {
 		if(hists) {
@@ -719,6 +793,9 @@ router.get('/history/:page/:r', function(req, res) {
 });
 // 역사
 router.get('/history/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
 	var title2 = encodeURIComponent(req.params.page);
 	var i = 0;
 	var neoa = '<div id="history">';
