@@ -3,6 +3,7 @@ module.exports = function(n, ba){
   var six = n;
   var today = getNow();
   var parseNamu = require('./namumark')
+  var plugin = require('./plugin/plugin.js')
   var d = require('debug')('openNAMU:parser');
   var htmlencode = require('htmlencode');
   
@@ -19,7 +20,7 @@ module.exports = function(n, ba){
   }
   return yyyy+'/' + mm+'/'+dd;
   }
-  
+  six = plugin(six);
   six = six.replace(/<script>|<\/script>/g, "");
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
