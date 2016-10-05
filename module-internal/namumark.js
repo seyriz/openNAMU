@@ -110,7 +110,7 @@ module.exports = function(n, ba){
 	  }
   }
   
-  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\|(.*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$5</a>");
+  six = six.replace(/\[\[((?:https?:\/\/)(?:[^\]\]]*)\.(?:png|jpg|gif|jpeg))\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$2</a>");
   six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$1asdf</a>");
   
   var tong = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
