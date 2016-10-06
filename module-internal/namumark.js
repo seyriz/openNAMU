@@ -113,6 +113,41 @@ module.exports = function(n, ba){
 		  break;
 	  }
   }
+
+  six = six.replace(/\[\[((?:https?:\/\/)(?:[^\]\]]*)\.(?:png|jpg|gif|jpeg))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1asdf\"><span class#is#\"contect\">外</span>$2</a>");
+  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1asdf\"><span class#is#\"contect\">外</span>$1asdf</a>");
+  
+  var tong = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
+  var tang = /\[\[([^\]\]]*)\]\]/;
+  var match;
+  var van;
+  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
+  
+  while(true) {
+	if(match = tong.exec(six)) {
+		van = '';
+		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+			van = van + 'class="not_thing"';
+		}
+		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+	}
+	else {
+		break;
+	}
+  }
+  while(true) {
+	if(match = tang.exec(six)) {
+		van = '';
+		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+			van = van + 'class#is#"not_thing"';
+		}
+		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+	}
+	else {
+		break;
+	}
+  }
   
   var h = /(={1,6})\s([^=]*)\s(?:={1,6})\r\n/;
   var h0c = 0;
@@ -179,42 +214,9 @@ module.exports = function(n, ba){
 		  break;
 	  }
   }
-  
-  six = six.replace(/\[\[((?:https?:\/\/)(?:[^\]\]]*)\.(?:png|jpg|gif|jpeg))\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$2</a>");
-  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class=\"out_link\" href=\"$1asdf\"><span class=\"contect\">外</span>$1asdf</a>");
-  
-  var tong = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
-  var tang = /\[\[([^\]\]]*)\]\]/;
-  var match;
-  var van;
-  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$1$2</a>");
-  
-  while(true) {
-	if(match = tong.exec(six)) {
-		van = '';
-		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-			van = van + 'class="not_thing"';
-		}
-		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
-	}
-	else {
-		break;
-	}
-  }
-  while(true) {
-	if(match = tang.exec(six)) {
-		van = '';
-		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-			van = van + 'class="not_thing"';
-		}
-		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
-	}
-	else {
-		break;
-	}
-  }
-  
+
+  six = six.replace(/#is#/g, '=');
+
   six = six.replace(/\[목차\]/g, rtoc);
   
   six = six.replace(/<!--\s?([^--]*)\s?-->/g, "<not_del>$1</not_del>");
