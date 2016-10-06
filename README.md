@@ -35,8 +35,8 @@
 ## json 판
 <del>왜 필요한지 이해가 안돼지만</del> 필요하다면 [여기](https://github.com/teamatus/openNAMU/tree/945d7f6bd86217a25d701f8a1fcd9a1ae133d2e7)에서 받을 수 있습니다. 그리고 json 판은 공식적으로 개발 중지 됨을 알려드립니다.
 
-## 라이센스
-MIT 라이센스입니다.
+## 라이선스
+MIT 라이선스입니다.
 ```
 Copyright (c) 2016 Jeon-Sung
 
