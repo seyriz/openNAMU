@@ -151,6 +151,7 @@ table {
 
 .title {
     margin-bottom: 30px;
+	display: inline-block;
 }
 
 not_del {
