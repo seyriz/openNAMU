@@ -570,8 +570,56 @@ router.get('/w/:page', function(req, res, next) {
 			return;
 		}
 		else {
+			var redirect = /^#(?:넘겨주기|redirect) ([^\n]*)/g;
+			if(redirect.exec(data)) {
+				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/$1/redirect/"+req.params.page+"\" /></head><li>리다이렉트 [[$1]]</li>");
+				res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: data, License: licen , wikiname: name});
+				res.end()
+			}
+			else {
+				parseNamu(data, function(cnt){
+					res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name});
+					res.end()
+				})
+			}
+		}
+	})
+  })
+});
+
+router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+  var testing = /\//;
+  if(testing.exec(req.params.page)) {
+	  var zenkaino = /(.*)\/.*/;
+	  var lovelive;
+	  var subtitle = zenkaino.exec(req.params.page);
+	  if(subtitle[1] == '') {
+		  lovelive = req.params.page;
+	  } else {
+		  lovelive = subtitle[1];
+	  }
+  }
+  else {
+	  lovelive = req.params.page;
+  }
+  var title2 = encodeURIComponent(req.params.page);
+  fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
+	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+		if(!exists) {
+			res.status(404).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.end()
+			return;
+		}
+		else {
+			var redirect = /^#(?:넘겨주기|redirect) ([^\n]*)/g;
+			if(redirect.exec(data)) {
+				data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+			}
 			parseNamu(data, function(cnt){
-				res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name});
+				res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name});
 				res.end()
 			})
 		}
@@ -671,7 +719,10 @@ router.post('/preview/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	parseNamu(req.body.content, function(cnt){
+	var redirect = /^#(?:넘겨주기|redirect) ([^\n]*)/g;
+	var data = req.body.content;
+	data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+	parseNamu(data, function(cnt){
 		res.render('preview', { title: req.params.page, content: cnt , wikiname: name});
 		res.end()
 	});

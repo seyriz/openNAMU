@@ -86,11 +86,7 @@ module.exports = function(n, ba){
 	else {
 		break;
 	}
-  }
-  
-  six = six.replace(/^#redirect ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");
-  six = six.replace(/^#넘겨주기 ([^\n]*)/g, "<head><meta http-equiv=\"refresh\" content=\"3;url=/w/$1\" /></head><li>3초 후 [[$1]] 문서로 리다이렉트 합니다.</li>");  
-  
+  }  
   six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->");
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
