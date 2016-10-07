@@ -248,8 +248,8 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[youtube\(([^,]*),\s?width=([^,]*),\s?height=([^)]*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
   six = six.replace(/\[youtube\(([^,]*),\s?height=([^,]*),\s?width=([^)]*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\(([^,]*),\s?width=(([^)]*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\(([^,]*),\s?height=(([^)]*)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
+  six = six.replace(/\[youtube\(([^,]*),\s?width=([^)]*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
+  six = six.replace(/\[youtube\(([^,]*),\s?height=([^)]*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
   six = six.replace(/\[youtube\(([^)]*)\)]/g, "<iframe width=\"640px\" height=\"360px\" src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
   
   six = six.replace(/\[date]/g, today);
