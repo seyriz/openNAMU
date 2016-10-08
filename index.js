@@ -3,6 +3,7 @@ var router = express.Router();
 var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
 var htmlencode = require('htmlencode');
+var Diff = require('text-diff');
 var licen;
 var name;
 var FrontPage;
@@ -381,6 +382,49 @@ router.post('/search', function(req, res) {
 		}
 		else {
 			res.redirect('/edit/'+encodeURIComponent(req.body.name))
+		}
+	});
+});
+// diff
+router.get('/diff/:page/:r/:rr', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	var title2 = encodeURIComponent(req.params.page);
+	fs.exists('./history/' + encodeURIComponent(req.params.page)+'/r1.txt', function (exists) {
+		if(exists) {
+			fs.exists('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', function (exists) {
+				if(exists){
+						fs.exists('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', function (exists) {
+							if(exists) {
+								var sc = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', 'utf8');
+								var id = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.rr+'.txt', 'utf8');
+ 
+								var diff = new Diff(); // options may be passed to constructor; see below 
+								var textDiff = diff.main(sc, id); // produces diff array 
+								
+								
+								res.status(200).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, wikiname: name, License: licen, content: diff.prettyHtml(textDiff)});
+								res.end()
+							}
+							else {
+								res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.rr+" 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name});
+								res.end()
+								return;
+							}
+						});
+				}
+				else {
+					res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.r+"가 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name});
+					res.end()
+					return;
+				}
+			});
+		}
+		else {
+			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.end()
+			return;
 		}
 	});
 });

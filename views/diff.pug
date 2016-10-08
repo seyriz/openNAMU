@@ -1,0 +1,8 @@
+extends wiki
+block content
+  div(id='tool')
+    nav.menu
+      a.menu-item.selected(href='#', onclick='return false') 비교하기
+      a.menu-item(href='/w/' + title2) 문서로
+  h1.title= title
+  div!= content
