@@ -730,6 +730,10 @@ router.get('/raw/:page', function(req, res, next) {
 	})
   })
 });
+// 보냅니다.
+router.post('/history/:page', function(req, res, next) {
+	res.redirect('/diff/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.body.r) + '/' + encodeURIComponent(req.body.rr));
+});
 // 편집 화면을 보여줍니다.
 router.get('/edit/:page', function(req, res) {
 	licen = rlicen(licen);

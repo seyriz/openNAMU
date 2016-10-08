@@ -5,5 +5,11 @@ block content
       a.menu-item.selected(href='#', onclick='return false', aria-label='문서의 역사를 확인합니다.') 역사보기
       a.menu-item(href='/w/' + title2, aria-label="문서의 내용을 읽습니다.") 문서보기
   h1.title= title + ' (역사)'
+  br
+  form#usrform(method='POST', action='/history/' + title2)
+    input.form-control.input-sm(type='text', style='margin-right: 10px;', name='r')
+    input.form-control.input-sm(type='text', style='margin-right: 10px;', name='rr')
+    button.btn.btn-primary(type='submit') 리비전 비교
+  div(style="margin-top:30px")
   <table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%">넘버</td><td style="text-align: center;width:33.33%">아아피</td><td style="text-align: center;width:33.33%">시간</td></tr></tbody></table>
   div!= content
