@@ -395,7 +395,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 		if(exists) {
 			fs.exists('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', function (exists) {
 				if(exists){
-						fs.exists('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', function (exists) {
+						fs.exists('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.rr+'.txt', function (exists) {
 							if(exists) {
 								var sc = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', 'utf8');
 								var id = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.rr+'.txt', 'utf8');
@@ -408,16 +408,14 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 								res.end()
 							}
 							else {
-								res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.rr+" 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name});
+								res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.rr+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name });
 								res.end()
-								return;
 							}
 						});
 				}
 				else {
-					res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.r+"가 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name});
+					res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, content: "이 문서의 "+req.params.r+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name });
 					res.end()
-					return;
 				}
 			});
 		}
