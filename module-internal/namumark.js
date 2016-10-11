@@ -112,9 +112,6 @@ module.exports = function(n, ba){
 		  break;
 	  }
   }
-
-  six = six.replace(/\[\[((?:https?:\/\/)(?:[^\]\]]*)\.(?:png|jpg|gif|jpeg))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1asdf\"><span class#is#\"contect\">外</span>$2</a>");
-  six = six.replace(/\[\[((https?:\/\/)([^\]\]]*)\.(png|jpg|gif|jpeg))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1asdf\"><span class#is#\"contect\">外</span>$1asdf</a>");
   
   var tong = /\[\[([^\]\]]*)\|([^\]\]]*)\]\]/;
   var tang = /\[\[([^\]\]]*)\]\]/;
@@ -232,25 +229,9 @@ module.exports = function(n, ba){
   
   six = six.replace(/{{\|([^\|}}]*)\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  six = six.replace(/\.pngasdf/g, ".peg");
-  six = six.replace(/\.gifasdf/g, ".gef");
-  six = six.replace(/\.jpgasdf/g, ".jeg");
-  six = six.replace(/\.jpegasdf/g, ".jepg");
+  six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)&height=([^\n]*)/g, "<img src=\"$1\" width=\"$3\"  height=\"$4\">");
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)&width=([^\n]*)/g, "<img src=\"$1\" width=\"$3\" height=\"$4\">");
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?height=([^\n]*)/g, "<img src=\"$1\" height=\"$3\">");
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))\?width=([^\n]*)/g, "<img src=\"$1\" width=\"$3\">");
-  six = six.replace(/([^\n]*\.(jpeg|jpg|gif|png))/g, "<img src=\"$1\">");
-  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" width="([^\n]*)" height="([^\n]*)">/g, "<img src=\"$1\" width=\"$3\" height=\"$4\">");
-  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" width="([^\n]*)">/g, "<img src=\"$1\" width=\"$3\">");
-  six = six.replace(/<img src="<img src="([^\n]*\.(jpeg|jpg|gif|png))">" height="([^\n]*)">/g, "<img src=\"$1\" height=\"$3\">");
-  
-  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*),\s?height=(.*)\)]/g, "<iframe width=\"$2\" height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\(([^,]*),\s?height=(.*),\s?width=(.*)\)]/g, "<iframe width=\"$3\" height=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\(([^,]*),\s?width=(.*)\)]/g, "<iframe width=\"$2\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\(([^,]*),\s?height=(.*)\)]/g, "<iframe height=\"$3\" src=\"https:\/\/www.youtube.com\/embed\/$1\" frameborder=\"0\" allowfullscreen><\/iframe>");
-  six = six.replace(/\[youtube\((.*)\)]/g, "<iframe width=\"640px\" height=\"360px\" src=\"https://www.youtube.com/embed/$1\" frameborder=\"0\" allowfullscreen></iframe>");
+  six = six.replace(/\[youtube\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<iframe $2 $3 src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
   
   six = six.replace(/\[date]/g, today);
   six = six.replace(/\[datetime]/g, today);
@@ -287,11 +268,6 @@ module.exports = function(n, ba){
   }
   
   six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
-  
-  six = six.replace(/\.peg/g, ".png");
-  six = six.replace(/\.gef/g, ".gif");
-  six = six.replace(/\.jeg/g, ".jpg");
-  six = six.replace(/\.jepg/g, ".jpeg");
   
   six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
   six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
