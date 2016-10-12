@@ -35,7 +35,7 @@ module.exports = function(n, ba){
 	  if(read = ohhhh.exec(six))
 	  {
 		read[1] = read[1].replace(/\n>\s?/g, "\n");
-		six = six.replace(ohhhh, "\n#left#blockquote#right#" + read[1] + "#left#/blockquote#right#");
+		six = six.replace(ohhhh, "\n<blockquote>" + read[1] + "</blockquote>");
 	  }
 	  else
 	  {
@@ -43,29 +43,7 @@ module.exports = function(n, ba){
 	  }
   }
   
-  six = six.replace(/<(-(?:[0-9]*))>/g,'#left#$1#right#');
-  six = six.replace(/<:>/g,'#left#:#right#');
-  six = six.replace(/<(table\s?(?:(?:width|height)=(?:[^>]*)))>/g,'#left#$1#right#');
-  
-  var ohhh = /\{\{\{#!html(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
-  while(true)
-  {
-	  if(love = ohhh.exec(six))
-	  {
-		 love[1] = love[1].replace(/</g,'#left#');
-		 love[1] = love[1].replace(/>/g,'#right#');
-         six = six.replace(ohhh, love[1]);		 
-	  }
-	  else
-	  {
-		  break;
-	  }
-  }
-  six = six.replace(/</g, "《");
-  six = six.replace(/>/g, "》");
-  
-  six = six.replace(/#left#/g, "<");
-  six = six.replace(/#right#/g, ">");
+  six = six.replace(/\{\{\{#!html(?:\s?(([^}}}]*)\n?(?:(?:(?:(?:(?:[^}}}]*)(?:\n)?)+)))))}}}/g, "$1");
   
   six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
   
@@ -76,21 +54,21 @@ module.exports = function(n, ba){
   six = six.replace(/{{{(#[0-9a-f-A-F]{6}) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
   
-  var live = /\{\{\{(\s?([^}}}]*)\n?((((([^}}}]*)(\n)?)+))))}}}/;
+  var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
   var sh;
-  var nc;
   while(true)
   {
 	if(sh = live.exec(six))
 	{
-		sh[1] = '<pre>'+sh[1]+'</pre>';
-		six = six.replace(live, sh[1]);
+		sh[1] = htmlencode.htmlEncode(sh[1]);
+		six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
 	}
 	else {
 		break;
 	}
-  }  
-  six = six.replace(/##\s?([^\n]*)/g, "<!--$1-->");
+  }
+  
+  six = six.replace(/##\s?([^\n]*)/g, "<div style='display:none;'>$1</div>");
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
   
@@ -145,7 +123,7 @@ module.exports = function(n, ba){
 	}
   }
   
-  var h = /(={1,6})\s([^=]*)\s(?:={1,6})\r\n/;
+  var h = /(={1,6})\s?([^=]*)\s?(?:={1,6})\r\n/;
   var h0c = 0;
   var h1c = 0;
   var h2c = 0;
@@ -215,8 +193,6 @@ module.exports = function(n, ba){
 
   six = six.replace(/\[목차\]/g, rtoc);
   
-  six = six.replace(/<!--\s?([^--]*)\s?-->/g, "<not_del>$1</not_del>");
-  
   six = six.replace(/'''(.+?)'''(?!')/g,'<strong>$1</strong>');
   six = six.replace(/''(.+?)''(?!')/g,'<i>$1</i>');
   six = six.replace(/~~(.+?)~~(?!~)/g,'<s>$1</s>');
@@ -278,11 +254,25 @@ module.exports = function(n, ba){
   six = six.replace(/\n/g, "<br>");
   six = six.replace(/<not_br><\/not_br>/g, "\n");
   
+  var live = /\{\/\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}\/}/;
+  var sh;
+  while(true)
+  {
+	if(sh = live.exec(six))
+	{
+		six = six.replace(live, decodeURIComponent(sh[1]));
+	}
+	else {
+		break;
+	}
+  }
+  
   six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
   six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
   ba(six)
+  
   // Thank for 2DU, LiteHell //
 }
 function doNothing(a) {}
