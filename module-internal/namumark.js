@@ -204,7 +204,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[br\]/ig,'<br>');
   
-  six = six.replace(/{{\|([^\|}}]*)\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
+  six = six.replace(/{{\|((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
   six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
