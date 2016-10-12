@@ -190,6 +190,7 @@ module.exports = function(n, ba){
   }
 
   six = six.replace(/#is#/g, '=');
+  rtoc = rtoc.replace(/#is#/g, '=');
 
   six = six.replace(/\[목차\]/g, rtoc);
   
