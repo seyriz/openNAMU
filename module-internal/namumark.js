@@ -208,7 +208,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
-  six = six.replace(/\[youtube\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<iframe $2 $3 src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+  six = six.replace(/\[youtube\(([^,)]*)(?:,\s?((?:width|height)=(?:[^)][0-9]*)))?(?:,\s?((?:width|height)=(?:[^)][0-9]*)))?\)\]/g, '<iframe $2 $3 src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
   
   six = six.replace(/\[date]/g, today);
   six = six.replace(/\[datetime]/g, today);
