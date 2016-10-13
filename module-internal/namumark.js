@@ -67,7 +67,7 @@ module.exports = function(n, ba){
 	}
   }
   
-  six = six.replace(/##\s?([^\n]*)/g, "<div style='display:none;'>$1</div>");
+  six = six.replace(/##\s?([^\n]*)\n/g, "<div style='display:none;'>$1</div>");
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
   
