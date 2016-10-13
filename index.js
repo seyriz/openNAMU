@@ -4,6 +4,7 @@ var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
 var htmlencode = require('htmlencode');
 var Diff = require('text-diff');
+var sha3_512 = require('js-sha3').sha3_512;
 var licen;
 var name;
 var FrontPage;
@@ -145,6 +146,19 @@ function tplus() {
 		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
 	}
 }
+// 회원 가입
+router.get('/register', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	res.status(200).render('register', { wikiname: name, title: '회원가입' });
+	res.end()
+});
+// 가입 하기
+router.post('/register', function(req, res, next) {
+	fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
+	res.redirect('/w/')
+});
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
 	licen = rlicen(licen);
@@ -176,6 +190,7 @@ router.get('/setup', function(req, res, next) {
 			fs.mkdirSync('./setting', 777);
 			fs.mkdirSync('./images', 777);
 			fs.mkdirSync('./recent', 777);
+			fs.mkdirSync('./user', 777);
 			
 			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
 			});
