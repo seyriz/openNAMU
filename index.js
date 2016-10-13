@@ -770,7 +770,7 @@ router.post('/preview/:page', function(req, res) {
 	var data = req.body.content;
 	data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
 	parseNamu(data, function(cnt){
-		res.render('preview', { title: req.params.page, content: cnt , wikiname: name});
+		res.render('preview', { title: req.params.page,  title2: encodeURIComponent(req.params.page), data: data, content: cnt , wikiname: name});
 		res.end()
 	});
 });
