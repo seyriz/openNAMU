@@ -49,10 +49,43 @@ module.exports = function(n, ba){
   
   six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
   
-  six = six.replace(/{{{\+([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-$1">$2</span>');
-  six = six.replace(/{{{\-([1-5])\s?((([^}}}]*)*(\n)?)+)}}}(?!})/g,'<span class="font-size-small-$1">$2</span>');
-  
-  six = six.replace(/{{{#(\w+) +(.*?)}}}(?!})/g,'<span style="color:$1">$2</span>');
+  var mega = /{{{((?:(?:(?!{{{)(?!}}})).)*)}}}/;
+  var ton = /^\+([1-5])\s?(.*)/;
+  var big = /^\-([1-5])\s?(.*)/;
+  var yes = /#(\w+)\s?(.*)/;
+  var bim;
+  var bbim;
+  while(true) {
+	  if(bim = mega.exec(six)) {
+		  if(bbim = ton.exec(bim[1])) {
+			  six = six.replace(/{{{\+([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span class="font-size-'+bbim[1]+'">'+bbim[2]+'</span>');
+		  }
+		  else if(bbim = big.exec(bim[1])) {
+			  six = six.replace(/{{{\-([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span class="font-size-small-'+bbim[1]+'">'+bbim[2]+'</span>');
+		  }
+		  else if(bbim = yes.exec(bim[1])) {
+			  six = six.replace(/{{{#(\w+)\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
+		  }
+		  else {
+			  var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
+			  var sh;
+			  while(true)
+			  {
+				if(sh = live.exec(six))
+				{
+					sh[1] = htmlencode.htmlEncode(sh[1]);
+					six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
+				}
+				else {
+					break;
+				}
+			  }
+		  }
+	  }
+	  else {
+		  break;
+	  }
+  }
   
   var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
   var sh;
