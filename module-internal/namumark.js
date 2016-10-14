@@ -230,8 +230,6 @@ module.exports = function(n, ba){
 		  else {
 			  yth = 'height=300';
 		  }
-		  console.log(ytw);
-		  console.log(yth)
 		  six = six.replace(youtube, '<iframe '+ytw+' '+yth+' src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
 	  }
 	  else {
