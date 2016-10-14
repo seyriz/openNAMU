@@ -203,11 +203,41 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[br\]/ig,'<br>');
   
-  six = six.replace(/{{\|((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
+  six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
   six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
-  six = six.replace(/\[youtube\(([^,)]*)(?:,\s?((?:width|height)=(?:[^)][0-9]*)))?(?:,\s?((?:width|height)=(?:[^)][0-9]*)))?\)\]/g, '<iframe $2 $3 src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+  var youtube = /\[youtube\(([^,]*)(?:,([^)]*))?\)\]/;
+  var widthy = /width=([0-9]*)/;
+  var heighty = /height=([0-9]*)/;
+  var matchy;
+  var matchy2;
+  var matchy3;
+  
+  while(true) {
+	  if(matchy = youtube.exec(six)) {
+		  var ytw = 0;
+		  var yth = 0;
+		  if(matchy2 = widthy.exec(matchy)) {
+				ytw = 'width='+matchy2[1];
+		  }
+		  else {
+			  ytw = 'width=500';
+		  }
+		  if(matchy3 = heighty.exec(matchy)) {
+				yth = 'height='+matchy3[1];
+		  }
+		  else {
+			  yth = 'height=300';
+		  }
+		  console.log(ytw);
+		  console.log(yth)
+		  six = six.replace(youtube, '<iframe '+ytw+' '+yth+' src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe>');
+	  }
+	  else {
+		  break;
+	  }
+  }
   
   six = six.replace(/\[date]/g, today);
   six = six.replace(/\[datetime]/g, today);
