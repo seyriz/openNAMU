@@ -6,6 +6,7 @@ module.exports = function(n, ba){
   var plugin = require('./plugin/plugin.js')
   var d = require('debug')('openNAMU:parser');
   var htmlencode = require('htmlencode');
+  var katex = require('parse-katex');
   
   function getNow() {
   var today = new Date();
@@ -270,8 +271,22 @@ module.exports = function(n, ba){
 		a = a + 1;
 	  }
   }
+ 
+  var math = /<math>(((?!<math>).)*)<\/math>/;
+  var mathm;
+  var matht;
+  while(true)
+  {
+	  if(mathm = math.exec(six)) {	  
+		  mathm[1] = '$' + mathm[1] + '$'
+		  var matht = katex.renderLaTeX(mathm[1]);
+		  six = six.replace(math, matht)
+	  }
+	  else {
+		  break;
+	  }
+  }
   
-  six = six.replace(/<math>(((?!<math>).)*)<\/math>/g, "<img src=\"https:\/\/latex.codecogs.com/gif.latex?$1\" title=\"$1\" />")
   
   six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
   six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
