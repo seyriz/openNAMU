@@ -445,6 +445,18 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 		}
 	});
 });
+// 되돌리기
+router.post('/revert/:page', function(req, res) {
+	res.redirect('/revert/'+ encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.re))
+});
+// 되돌리기 2
+router.get('/revert/:page/:r', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	res.status(200).render('ban', { title: req.params.page, wikiname: name});
+	res.end()
+});
 // 문서 삭제
 router.get('/delete/:page', function(req, res) {
 	licen = rlicen(licen);
@@ -623,7 +635,6 @@ router.get('/w/:page', function(req, res, next) {
   else {
 	  var dis = 'none';
 	  lovelive = req.params.page;
-	  console.log(dis)
   }
   var title2 = encodeURIComponent(req.params.page);
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
@@ -671,7 +682,6 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
   else {
 	  var dis = 'none';
 	  lovelive = req.params.page;
-	  console.log(dis)
   }
   var title2 = encodeURIComponent(req.params.page);
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
