@@ -15,14 +15,14 @@ html
       div(id='top')
         a(href='/', id='logo')= wikiname
         div
-          a(href='/RecentChanges', id='RecentChanges') 최근 변경
-          a(href='/RecentDiscuss', id='RecentChanges') 최근 토론
+          a(href='/RecentChanges', id='RecentChanges') <i class="fa fa-refresh" aria-hidden="true"></i> 최근 변경
+          a(href='/RecentDiscuss', id='RecentChanges') <i class="fa fa-comment" aria-hidden="true"></i> 최근 토론
         block menu
         form(method='POST', action='/search', id='search')
           .input-group
             input.form-control(type='text', placeholder='문서명 또는 검색', name='name')
             span.input-group-button
-              button.btn 검색
+              button.btn <i class="fa fa-search" aria-hidden="true"></i>
     <div class="scroll-buttons"><a class="scroll-button" href="#top">▲</a><a class="scroll-bottom" href="#powered">▼</a></div>
     .four-fifths.column
       block content
