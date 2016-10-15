@@ -359,3 +359,21 @@ body {
 		width: auto;
 	}
 }
+
+#yosolo {
+    width: 33.33%;
+	text-align: center;
+}
+#toron {
+    width: 100%;
+}
+#toroncolorgreen {
+	background-color: #B0D3AD;
+}
+#toroncolor {
+	background-color: #d5d5d5;
+}
+#bb {
+    background: #a28a7e;
+    color: white;
+}

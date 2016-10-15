@@ -272,7 +272,7 @@ router.get('/topic/:page/b:number', function(req, res) {
 router.post('/topic/:page/b:number', function(req, res) {
 	var btopic = new RegExp('<td id="b'+req.params.number+'">([^>]*)</td>');
 	var topic = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-	topic = topic.replace(btopic, "<td style=\"background-color:gray;color:white;\">블라인드 되었습니다.</td>");
+	topic = topic.replace(btopic, "<td id='bb'>블라인드 되었습니다.</td>");
 	fs.writeFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', topic, 'utf8');
 	res.redirect('/topic/'+ encodeURIComponent(req.params.page))
 });
@@ -296,7 +296,7 @@ router.post('/topic/:page', function(req, res) {
   
   tplus()
   var plus = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
-  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/topic/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
+  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
   
   req.body.content = req.body.content.replace(/</g, "《");
   req.body.content = req.body.content.replace(/>/g, "》");
@@ -306,7 +306,7 @@ router.post('/topic/:page', function(req, res) {
 			fs.open(sfile,'w',function(err,fd){
 				fs.writeFileSync(sfile, ip, 'utf8');
 				fs.writeFileSync(nfile, 2, 'utf8');
-				fs.writeFileSync(file,'<table style="width:100%;"><tbody><tr><td style="background-color: #B0D3AD;"><a id="1">#1</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b1">' + req.body.content + '</td></tr></tbody></table><br>');
+				fs.writeFileSync(file,'<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="1">#1</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b1">' + req.body.content + '</td></tr></tbody></table><br>');
 			});
 			res.redirect('/topic/'+ encodeURIComponent(req.params.page))
 		}
@@ -316,14 +316,14 @@ router.post('/topic/:page', function(req, res) {
 			number = Number(number);
 			  var vip = new RegExp(ip);
 				if(vip.exec(starter)) {
-					fs.appendFile(file,'<table style="width:100%;"><tbody><tr><td style="background-color: #B0D3AD;"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
+					fs.appendFile(file,'<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
 						number = number + 1
 						fs.writeFileSync(nfile, number, 'utf8');
 						res.redirect('/topic/'+ encodeURIComponent(req.params.page))
 					});
 				}
 				else {
-					fs.appendFile(file,'<table style="width:100%;"><tbody><tr><td style="background-color: #d5d5d5;"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
+					fs.appendFile(file,'<table id="toron"><tbody><tr><td id="toroncolor"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
 						number = number + 1
 						fs.writeFileSync(nfile, number, 'utf8');
 						res.redirect('/topic/'+ encodeURIComponent(req.params.page))
@@ -490,7 +490,7 @@ router.post('/delete/:page', function(req, res) {
 	
 	rplus();
 	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
+	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
 	var i = 0;
 	while(true) {
 		i = i + 1;
@@ -563,7 +563,7 @@ router.post('/move/:page', function(req, res) {
 	{
 		rplus();
 		var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-		fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
+		fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
 		var i = 0;
 		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
 		while(true) {
@@ -589,7 +589,7 @@ router.post('/move/:page', function(req, res) {
 					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
 				});
 				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
 				});
 				break;
 			}
@@ -842,7 +842,7 @@ router.post('/edit/:page', function(req, res) {
 	}
 	rplus();
 	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./recent/RecentChanges.txt', '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
+	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
@@ -856,7 +856,7 @@ router.post('/edit/:page', function(req, res) {
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
 						});
 					});
 				}
@@ -870,7 +870,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -887,7 +887,7 @@ router.post('/edit/:page', function(req, res) {
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
 						});
 					});
 				}
@@ -901,7 +901,7 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">'+req.body.send, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -944,7 +944,7 @@ router.get('/history/:page', function(req, res) {
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(exists) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
-			neoa = '<table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%""><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a></td><td style="text-align: center;width:33.33%"">'+ip+'</td></tr></tbody></table>' + neoa;
+			neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a></td><td id="yosolo">'+ip+'</td></tr></tbody></table>' + neoa;
 		}
 		else {
 			neoa = neoa + '</div>';
