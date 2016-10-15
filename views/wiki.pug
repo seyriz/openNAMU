@@ -15,8 +15,8 @@ html
       div(id='top')
         a(href='/', id='logo')= wikiname
         div
-          a(href='/RecentChanges', id='RecentChanges') <i class="fa fa-refresh" aria-hidden="true"></i> 최근 변경
-          a(href='/RecentDiscuss', id='RecentChanges') <i class="fa fa-comment" aria-hidden="true"></i> 최근 토론
+          a(href='/RecentChanges', id='RecentChanges') <i class="fa fa-refresh" aria-hidden="true"></i> <span id='is_mobile'>최근 변경</span>
+          a(href='/RecentDiscuss', id='RecentChanges') <i class="fa fa-comment" aria-hidden="true"></i> <span id='is_mobile'>최근 토론</span>
         block menu
         form(method='POST', action='/search', id='search')
           .input-group

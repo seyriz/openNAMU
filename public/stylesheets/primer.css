@@ -17,8 +17,9 @@
        url(//fonts.gstatic.com/ea/nanumgothiccoding/v4/NanumGothicCoding-Regular.ttf) format('truetype');
 }
 
-#RecentChanges:hover {
+#RecentChanges:hover, #RecentChanges:focus {
     text-decoration: none;
+	color: #c7ecbb;
 }
 
 textarea, label, span, body, strong, b, div, h1, h2, h3, h4, h5, h6, h7, input {
@@ -346,4 +347,12 @@ body {
     float: left;
     margin-right: 10px;
     padding: 5px;
+}
+@media (max-width: 459px) {
+	#is_mobile {
+		display: none;
+	}
+	#RecentChanges {
+		width: auto;
+	}
 }
