@@ -259,7 +259,7 @@ router.get('/topic/:page/b:number', function(req, res) {
 	var sfile = './topic/' + encodeURIComponent(req.params.page)+'-starter.txt';
 	fs.exists(sfile, function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: encodeURIComponent(req.params.page), content: "이 토론이 없습니다. <a href='/topic/"+encodeURIComponent(req.params.page)+"'>토론으로 가기</a>", License: licen, wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: encodeURIComponent(req.params.page), content: "이 토론이 없습니다. <a href='/topic/"+encodeURIComponent(req.params.page)+"'>토론으로 가기</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -439,7 +439,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 			});
 		}
 		else {
-			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -465,7 +465,7 @@ router.get('/delete/:page', function(req, res) {
   
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -528,7 +528,7 @@ router.get('/move/:page', function(req, res) {
 	var title2 = encodeURIComponent(req.params.page);
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name});
 			res.end()
 			return;
 		}
@@ -615,18 +615,21 @@ router.get('/w/:page', function(req, res, next) {
 	  var subtitle = zenkaino.exec(req.params.page);
 	  if(subtitle[1] == '') {
 		  lovelive = req.params.page;
+		  var dis = 'none';
 	  } else {
 		  lovelive = subtitle[1];
 	  }
   }
   else {
+	  var dis = 'none';
 	  lovelive = req.params.page;
+	  console.log(dis)
   }
   var title2 = encodeURIComponent(req.params.page);
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -635,12 +638,12 @@ router.get('/w/:page', function(req, res, next) {
 			var dtest;
 			if(dtest = redirect.exec(data)) {
 				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 [[$1]]</li>");
-				res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: data, License: licen , wikiname: name});
+				res.status(200).render('index', { title: req.params.page, dis: dis, title2: title2, subtitle: encodeURIComponent(lovelive), content: data, License: licen , wikiname: name});
 				res.end()
 			}
 			else {
 				parseNamu(data, function(cnt){
-					res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name});
+					res.status(200).render('index', { title: req.params.page, dis: dis, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name});
 					res.end()
 				})
 			}
@@ -660,18 +663,21 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 	  var subtitle = zenkaino.exec(req.params.page);
 	  if(subtitle[1] == '') {
 		  lovelive = req.params.page;
+		  var dis = 'none';
 	  } else {
 		  lovelive = subtitle[1];
 	  }
   }
   else {
+	  var dis = 'none';
 	  lovelive = req.params.page;
+	  console.log(dis)
   }
   var title2 = encodeURIComponent(req.params.page);
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -681,7 +687,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
 			}
 			parseNamu(data, function(cnt){
-				res.status(200).render('index', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name});
+				res.status(200).render('index', { title: req.params.page, title2: title2, dis:dis, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name});
 				res.end()
 			})
 		}
@@ -736,12 +742,12 @@ router.get('/raw/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('index', { title: req.params.page, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name});
+			res.status(404).render('ban', { title: req.params.page, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name});
 			res.end()
 			return;
 		}
 		else {
-			res.status(200).render('index', { title: req.params.page, content: '<pre>' + htmlencode.htmlEncode(data) + '</pre>', License: licen ,wikiname: name});
+			res.status(200).render('ban', { title: req.params.page, content: '<pre>' + htmlencode.htmlEncode(data) + '</pre>', License: licen ,wikiname: name});
 			res.end()
 		}
 	})
