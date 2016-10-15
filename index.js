@@ -454,8 +454,50 @@ router.get('/revert/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	res.status(200).render('ban', { title: req.params.page, wikiname: name});
-	res.end()
+	var title2 = encodeURIComponent(req.params.page);
+	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
+	if(exists) {
+		res.status(200).render('ok', { title2: title2, title: req.params.page, wikiname: name, title3: req.params.r});
+		res.end()
+	}
+	else {
+		res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 리비전이 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+		res.end()
+		return;
+	}
+});
+// 되돌리기 3
+router.post('/revert/:page/:r', function(req, res) {
+	var ip = req.headers['x-forwarded-for'] ||
+ 	  req.connection.remoteAddress ||
+	  req.socket.remoteAddress ||
+	  req.connection.socket.remoteAddress;
+	  var love;
+	  var live = /([^,]*),.*/;
+	  if(love = live.exec(ip)) {
+		ip = love[1];
+	  }
+    var today = getNow();
+	rplus();
+	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
+	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.params.r+' 버전으로 되돌림</td></tr></tbody></table>'+plus, 'utf8');
+	var revert = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
+	fs.writeFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', revert, 'utf8');
+	res.redirect('/w/'+ encodeURIComponent(req.params.page))
+	var i = 0;
+	while(true) {
+		i = i + 1;
+		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+		if(!exists) {
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', revert, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.params.r+' 버전으로 되돌림', 'utf8');
+			});
+			break;
+		}
+	}
 });
 // 문서 삭제
 router.get('/delete/:page', function(req, res) {
@@ -512,7 +554,7 @@ router.post('/delete/:page', function(req, res) {
 				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 			});
 			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td style="text-align: center;width:33.33%"">'+today+'</td></tr><tr><td colspan="3" style="text-align: center;">문서를 삭제함', 'utf8');
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">문서를 삭제함', 'utf8');
 			});
 			break;
 		}
@@ -640,7 +682,7 @@ router.get('/w/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('ban', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('index', { title: req.params.page, dis: dis, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
@@ -687,7 +729,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('ban', { title: req.params.page, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
+			res.status(404).render('index', { title: req.params.page, dis: dis, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name});
 			res.end()
 			return;
 		}
