@@ -205,15 +205,19 @@ router.get('/setup', function(req, res, next) {
 			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
 			});
 			
-			fs.rename('./localset/Admin.txt','./setting/Admin.txt', function (err) {
+			fs.open('./setting/Admin.txt','w+', function (err,fd) {
+				fs.writeFileSync('./setting/Admin.txt', '::1\n127.0.0.1', 'utf8');
 			});
-			fs.rename('./localset/FrontPage.txt','./setting/FrontPage.txt', function (err) {
+			fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
+				fs.writeFileSync('./setting/FrontPage.txt', FrontPage, 'utf8');
 			});
-			fs.rename('./localset/IPban.txt','./setting/IPban.txt', function (err) {
+			fs.open('./setting/IPban.txt','w+', function (err,fd) {
 			});
-			fs.rename('./localset/License.txt','./setting/License.txt', function (err) {
+			fs.open('./setting/License.txt','w+', function (err,fd) {
+				fs.writeFileSync('./setting/License.txt', licen, 'utf8');
 			});
-			fs.rename('./localset/WikiName.txt','./setting/WikiName.txt', function (err) {
+			fs.open('./setting/WikiName.txt','w+', function (err,fd) {
+				fs.writeFileSync('./setting/WikiName.txt', name, 'utf8');
 			});
 		}
 		else {
