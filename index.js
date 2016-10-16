@@ -74,7 +74,12 @@ function getNow() {
   }
   return yyyy+'-' + mm+'-'+dd+' / '+nn+':'+aa+':'+ee;
 }
-
+function yourip() {
+	var ip = req.headers['x-forwarded-for'] ||
+ 	  req.connection.remoteAddress ||
+	  req.socket.remoteAddress ||
+	  req.connection.socket.remoteAddress;
+}
 function stop(ip) {
     var ipban;
     var vip = new RegExp(ip);
@@ -234,11 +239,16 @@ router.get('/topic/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+	
 	var title2 = encodeURIComponent(req.params.page);
-  fs.readFile('./topic/'+ encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
-	res.status(200).render('topic', { title: req.params.page, title2:title2, content: data, wikiname: name });
-	res.end()
-  })
+    fs.readFile('./topic/'+ encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
+		res.status(200).render('topic', { title: req.params.page, title2:title2, content: data, wikiname: name });
+		res.end()
+    })
 });
 // 토론 블라인드
 router.get('/topic/:page/b:number', function(req, res) {
@@ -786,6 +796,11 @@ router.get('/edit/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+	
 	var ip = req.headers['x-forwarded-for'] ||
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
