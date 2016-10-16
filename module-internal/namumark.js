@@ -219,7 +219,7 @@ module.exports = function(n, ba){
 	      toc = toc.replace(/0./g, '');
 	      toc = toc.replace(/(.*)\./g, '$1');
 		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[2] + '<br>';
-		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>\n');
+		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>');
 	  } else {
 		  rtoc = rtoc + '</div>';
 		  break;
