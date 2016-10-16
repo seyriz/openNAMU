@@ -27,12 +27,26 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
   
+  var live = /\{\{\{((?:[^}]*)\n(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
+  var sh;
+  while(true)
+  {
+	if(sh = live.exec(six))
+	{
+		sh[1] = htmlencode.htmlEncode(sh[1]);
+		six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
+	}
+	else {
+		break;
+	}
+  }
+  
   var mega = /{{{((?:(?:(?!{{{)(?!}}})).)*)}}}/;
   var ton = /^\+([1-5])\s?(.*)/;
   var big = /^\-([1-5])\s?(.*)/;
-  var yes = /#(\w+)\s?(.*)/;
-  var yesn = /(#[0-9a-f-A-F]{3})\s?(.*)/;
-  var yesno = /(#[0-9a-f-A-F]{6})\s?(.*)/;
+  var yes = /^#(\w+)\s?(.*)/;
+  var yesn = /^(#[0-9a-f-A-F]{3})\s?(.*)/;
+  var yesno = /^(#[0-9a-f-A-F]{6})\s?(.*)/;
   var bim;
   var bbim;
   while(true) {
@@ -71,24 +85,6 @@ module.exports = function(n, ba){
 	  else {
 		  break;
 	  }
-  }
-  
-  six = six.replace(/\{\{\{#!html(?:\s?(([^}}}]*)\n?(?:(?:(?:(?:(?:[^}}}]*)(?:\n)?)+)))))}}}/g, "$1");
-  
-  six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
-  
-  var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
-  var sh;
-  while(true)
-  {
-	if(sh = live.exec(six))
-	{
-		sh[1] = htmlencode.htmlEncode(sh[1]);
-		six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
-	}
-	else {
-		break;
-	}
   }
   
   six = six.replace(/\[yt\(([^)]*)\)\]/g, "[youtube($1)]");
@@ -249,7 +245,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
-  var youtube = /\[youtube\(([^,]*)(?:,([^)]*))?\)\]/;
+  var youtube = /\[youtube\(([^,\n]*)(?:,([^)\n]*))?\)\]/;
   var widthy = /width=([0-9]*)/;
   var heighty = /height=([0-9]*)/;
   var matchy;
@@ -283,8 +279,6 @@ module.exports = function(n, ba){
   six = six.replace(/\[datetime]/g, today);
   
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
-  
-  six = six.replace(/\s\*\s([^\n]*)\n/g, "<li>$1</li><not_br></not_br>");
   six = six.replace(/\s\*\s([^\n]*)/g, "<li>$1</li>");
   
   six = six.replace(/-{4,11}/g, "<hr>");
@@ -329,7 +323,6 @@ module.exports = function(n, ba){
   }
   
   six = six.replace(/\n/g, "<br>");
-  six = six.replace(/<not_br><\/not_br>/g, "\n");
   
   var live = /\{\/\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}\/}/;
   var sh;
