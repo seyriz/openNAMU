@@ -74,6 +74,7 @@ function getNow() {
   }
   return yyyy+'-' + mm+'-'+dd+' / '+nn+':'+aa+':'+ee;
 }
+
 function stop(ip) {
     var ipban;
     var vip = new RegExp(ip);
@@ -248,11 +249,6 @@ router.get('/topic/:page/b:number', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
     admin(ip);
     var today = getNow();
   
@@ -286,11 +282,7 @@ router.post('/topic/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
   stop(ip);
   var today = getNow();
   
@@ -360,11 +352,7 @@ router.get('/ban/edit', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
     admin(ip);
     var today = getNow();
 	
@@ -473,11 +461,7 @@ router.post('/revert/:page/:r', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
     var today = getNow();
 	rplus();
 	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
@@ -509,11 +493,7 @@ router.get('/delete/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
 	stop(ip);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
@@ -536,11 +516,7 @@ router.post('/delete/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
 	var today = getNow();
 	
 	rplus();
@@ -573,11 +549,7 @@ router.get('/move/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
     stop(ip);
     var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
@@ -600,11 +572,6 @@ router.post('/move/:page', function(req, res) {
 	  req.connection.socket.remoteAddress;
 	  var today = getNow();
 	  
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
 	if(req.body.title === '')
 	{
 		res.send('<script type="text/javascript">alert("문서 이름 없음");</script>');
@@ -823,11 +790,7 @@ router.get('/edit/:page', function(req, res) {
  	  req.connection.remoteAddress ||
 	  req.socket.remoteAddress ||
 	  req.connection.socket.remoteAddress;
-	  var love;
-	  var live = /([^,]*),.*/;
-	  if(love = live.exec(ip)) {
-		ip = love[1];
-	  }
+
     stop(ip);
     var today = getNow();
 	
@@ -888,11 +851,7 @@ router.post('/edit/:page', function(req, res) {
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress;
 	var today = getNow();
-	var love;
-	var live = /([^,]*),.*/;
-	if(love = live.exec(ip)) {
-		ip = love[1];
-	}
+
 	if(!req.body.send)
 	{
 		req.body.send = "<br>";
