@@ -31,18 +31,26 @@ module.exports = function(n, ba){
   var ton = /^\+([1-5])\s?(.*)/;
   var big = /^\-([1-5])\s?(.*)/;
   var yes = /#(\w+)\s?(.*)/;
+  var yesn = /(#[0-9a-f-A-F]{3})\s?(.*)/;
+  var yesno = /(#[0-9a-f-A-F]{6})\s?(.*)/;
   var bim;
   var bbim;
   while(true) {
 	  if(bim = mega.exec(six)) {
 		  if(bbim = ton.exec(bim[1])) {
-			  six = six.replace(/{{{\+([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span class="font-size-'+bbim[1]+'">'+bbim[2]+'</span>');
+			  six = six.replace(/{{{\+([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span class="font-size-'+bbim[1]+'">'+bbim[2]+'</span>');
 		  }
 		  else if(bbim = big.exec(bim[1])) {
-			  six = six.replace(/{{{\-([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span class="font-size-small-'+bbim[1]+'">'+bbim[2]+'</span>');
+			  six = six.replace(/{{{\-([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span class="font-size-small-'+bbim[1]+'">'+bbim[2]+'</span>');
+		  }
+		  else if(bbim = yesno.exec(bim[1])) {
+			  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
+		  }
+		  else if(bbim = yesn.exec(bim[1])) {
+			  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
 		  }
 		  else if(bbim = yes.exec(bim[1])) {
-			  six = six.replace(/{{{#(\w+)\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/g,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
+			  six = six.replace(/{{{#(\w+)\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
 		  }
 		  else {
 			  var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
@@ -319,13 +327,6 @@ module.exports = function(n, ba){
 		  break;
 	  }
   }
-  
-  
-  six = six.replace(/\|\|(<table\s?((width|height)=([^>]*))>)?(<table\s?((width|height)=([^>]*))>)?((\s?)*(([^||]*)*(\|\|)*(\s?))*)\|\|((((\n\|\|)*((\s?)*(([^||]*)*(\|\|)*(\s?))*))+)\|\|)?/g, '<table $2 $6><tbody><tr><td>$9</td></tr></tbody></table>');
-  six = six.replace(/\|\|\r\n\|\|/g, "</td></tr><not_br></not_br><tr><td>");
-  six = six.replace(/\|\|/g, "</td><td>");
-  six = six.replace(/<td>(<-([^>]*)>)?<:>/g, "<td style=\"text-align: center;\">$1");
-  six = six.replace(/(<td\s?([^>]*)?)><-([0-9]*)>/g, "$1 colspan=\"$3\">");
   
   six = six.replace(/\n/g, "<br>");
   six = six.replace(/<not_br><\/not_br>/g, "\n");
