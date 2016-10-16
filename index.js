@@ -553,12 +553,8 @@ router.get('/move/:page', function(req, res) {
 	})
 });
 router.post('/move/:page', function(req, res) {
-	if(encodeURIComponent(req.body.title).length > 255) {
-		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
-	}
-	
 	var ip = yourip(req);
-	  var today = getNow();
+	var today = getNow();
 	  
 	if(req.body.title === '')
 	{
