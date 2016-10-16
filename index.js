@@ -74,11 +74,9 @@ function getNow() {
   }
   return yyyy+'-' + mm+'-'+dd+' / '+nn+':'+aa+':'+ee;
 }
-function yourip() {
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+function yourip(req) {
+	return (req.headers['x-forwarded-for'] || '').split(',')[0] 
+        || req.connection.remoteAddress;;
 }
 function stop(ip) {
     var ipban;
@@ -255,10 +253,7 @@ router.get('/topic/:page/b:number', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
     admin(ip);
     var today = getNow();
   
@@ -288,10 +283,7 @@ router.post('/topic/:page', function(req, res) {
   var sfile = './topic/' + encodeURIComponent(req.params.page)+'-starter.txt';
   var nfile = './topic/' + encodeURIComponent(req.params.page)+'-number.txt';
   
-  var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+  var ip = yourip(req);
 
   stop(ip);
   var today = getNow();
@@ -358,10 +350,7 @@ router.get('/ban/edit', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
     admin(ip);
     var today = getNow();
@@ -467,10 +456,7 @@ router.get('/revert/:page/:r', function(req, res) {
 });
 // 되돌리기 3
 router.post('/revert/:page/:r', function(req, res) {
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
     var today = getNow();
 	rplus();
@@ -499,10 +485,7 @@ router.get('/delete/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
 	stop(ip);
 	var today = getNow();
@@ -522,10 +505,7 @@ router.get('/delete/:page', function(req, res) {
 });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
 	var today = getNow();
 	
@@ -555,10 +535,7 @@ router.get('/move/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
     stop(ip);
     var today = getNow();
@@ -580,10 +557,7 @@ router.post('/move/:page', function(req, res) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
 	
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 	  var today = getNow();
 	  
 	if(req.body.title === '')
@@ -805,10 +779,7 @@ router.get('/edit/:page', function(req, res) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
 	
-	var ip = req.headers['x-forwarded-for'] ||
- 	  req.connection.remoteAddress ||
-	  req.socket.remoteAddress ||
-	  req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 
     stop(ip);
     var today = getNow();
@@ -865,10 +836,7 @@ router.get('/TitleIndex', function(req, res) {
 });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
-	var ip = req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress;
+	var ip = yourip(req);
 	var today = getNow();
 
 	if(!req.body.send)
