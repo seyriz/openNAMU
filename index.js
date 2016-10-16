@@ -340,12 +340,13 @@ router.get('/ban', function(req, res, next) {
   fs.exists('./setting/IPban.txt', function (exists) {
 	  if(exists){
 		fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
-			res.status(200).render('ban', { title: '아이피 밴 리스트', content: '<pre>' + data + '</pre>', wikiname: name });
+			data = data.replace(/\n/g, '<br>');
+			res.status(200).render('ban', { title: '아이피 밴 리스트', content: data, wikiname: name });
 			res.end()
 		})
 	  }
 	  else {
-		res.status(404).render('ban', { title: '아이피 밴 리스트', content: '<pre>없음</pre>', wikiname: name });
+		res.status(404).render('ban', { title: '아이피 밴 리스트', content: '없음', wikiname: name });
 		res.end()
 	  }
   });
@@ -799,7 +800,11 @@ router.get('/raw/:page', function(req, res, next) {
 			return;
 		}
 		else {
-			res.status(200).render('ban', { title: req.params.page, content: '<pre>' + htmlencode.htmlEncode(data) + '</pre>', License: licen ,wikiname: name});
+			data = data.replace(/<br>/g, '[br]')
+			data = data.replace(/\n/g, '<br>')
+			var raw = htmlencode.htmlEncode(data);
+			raw = raw.replace(/;&lt;br&gt;/g, '<br>');
+			res.status(200).render('ban', { title: req.params.page, content: raw, License: licen ,wikiname: name});
 			res.end()
 		}
 	})
@@ -973,7 +978,11 @@ router.get('/history/:page/:r', function(req, res) {
 	fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', function (hists) {
 		if(hists) {
 			var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
-			res.status(200).render('history', { title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: '<pre>' + htmlencode.htmlEncode(neob) + '</pre>', wikiname: name , License: licen});
+			neob = neob.replace(/<br>/g, '[br]')
+			neob = neob.replace(/\n/g, '<br>')
+			var raw = htmlencode.htmlEncode(neob);
+			raw = raw.replace(/;&lt;br&gt;/g, '<br>');
+			res.status(200).render('history', { title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: raw, wikiname: name , License: licen});
 			res.end()
 		}
 		else {
