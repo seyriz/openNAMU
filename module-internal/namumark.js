@@ -27,28 +27,6 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
   six = six.replace(/javascript:/g, "");
   
-  six = six.replace(/\[yt\(([^)]*)\)\]/g, "[youtube($1)]");
-  six = six.replace(/\[in\(([^)]*)\)\]/g, "[include($1)]");
-  
-  var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
-  var read;
-  while(true)
-  {
-	  if(read = ohhhh.exec(six))
-	  {
-		read[1] = read[1].replace(/\n>\s?/g, "\n");
-		six = six.replace(ohhhh, "\n<blockquote>" + read[1] + "</blockquote>");
-	  }
-	  else
-	  {
-		  break;
-	  }
-  }
-  
-  six = six.replace(/\{\{\{#!html(?:\s?(([^}}}]*)\n?(?:(?:(?:(?:(?:[^}}}]*)(?:\n)?)+)))))}}}/g, "$1");
-  
-  six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
-  
   var mega = /{{{((?:(?:(?!{{{)(?!}}})).)*)}}}/;
   var ton = /^\+([1-5])\s?(.*)/;
   var big = /^\-([1-5])\s?(.*)/;
@@ -87,6 +65,10 @@ module.exports = function(n, ba){
 	  }
   }
   
+  six = six.replace(/\{\{\{#!html(?:\s?(([^}}}]*)\n?(?:(?:(?:(?:(?:[^}}}]*)(?:\n)?)+)))))}}}/g, "$1");
+  
+  six = six.replace(/\{\{\{#!wiki ([^\n]*)\n(((((.*)(\n)?)+)))}}}/g, "<div $1>$2</div>");
+  
   var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
   var sh;
   while(true)
@@ -99,6 +81,24 @@ module.exports = function(n, ba){
 	else {
 		break;
 	}
+  }
+  
+  six = six.replace(/\[yt\(([^)]*)\)\]/g, "[youtube($1)]");
+  six = six.replace(/\[in\(([^)]*)\)\]/g, "[include($1)]");
+  
+  var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
+  var read;
+  while(true)
+  {
+	  if(read = ohhhh.exec(six))
+	  {
+		read[1] = read[1].replace(/\n>\s?/g, "\n");
+		six = six.replace(ohhhh, "\n<blockquote>" + read[1] + "</blockquote>");
+	  }
+	  else
+	  {
+		  break;
+	  }
   }
   
   six = six.replace(/##\s?([^\n]*)\n/g, "<div style='display:none;'>$1</div>");
