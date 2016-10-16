@@ -279,7 +279,21 @@ module.exports = function(n, ba){
   six = six.replace(/\[datetime]/g, today);
   
   six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
-  six = six.replace(/\s\*\s([^\n]*)/g, "<li>$1</li>");
+  
+  var bad = /((?:(?:\s\*\s[^\n]*)\n?)+)/;
+  var apple;
+  var reimu = /\s\*\s([^\n]*)/g;
+  
+  while(true) {
+	  if(apple = bad.exec(six)) {
+		  apple[1] = apple[1].replace(reimu, '<li>$1</li>');
+		  apple[1] = apple[1].replace(/\n/g, '');
+		  six = six.replace(bad, '<ul id="list">'+apple[1]+'</ul>');
+	  }
+	  else {
+		  break;
+	  }
+  }
   
   six = six.replace(/-{4,11}/g, "<hr>");
   

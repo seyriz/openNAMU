@@ -380,3 +380,8 @@ body {
 #history {
 	margin-right: 10px;
 }
+
+#list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
