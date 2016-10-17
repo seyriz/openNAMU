@@ -17,6 +17,9 @@ html
         div
           a(href='/RecentChanges', id='RecentChanges') <i class="fa fa-refresh" aria-hidden="true"></i> <span id='is_mobile'>최근 변경</span>
           a(href='/RecentDiscuss', id='RecentChanges') <i class="fa fa-comment" aria-hidden="true"></i> <span id='is_mobile'>최근 토론</span>
+		  a(href='/login', id='log') <i class="fa fa-sign-in" aria-hidden="true"></i>
+		  a(href='/logout', id='log') <i class="fa fa-sign-out" aria-hidden="true"></i>
+		  a(href='/register', id='log') <i class="fa fa-user-plus" aria-hidden="true"></i>
         block menu
         form(method='POST', action='/search', id='search')
           .input-group
