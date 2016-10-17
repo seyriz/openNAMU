@@ -245,13 +245,15 @@ router.get('/topic/:page', function(req, res) {
   licen = rlicen(licen);
   name = rname(name);
   FrontPage = rFrontPage(FrontPage);
-	
-  var topic = fs.readdirSync('./topic/' + encodeURIComponent(req.params.page));
-  var title2 = encodeURIComponent(req.params.page);
-  var i = 0;
-  var add = '<div id="all_topic">';
   
-  while(true) {
+  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/yes.txt');
+  if(exists) {
+	var topic = fs.readdirSync();
+	var title2 = encodeURIComponent(req.params.page);
+    var i = 0;
+    var add = '<div id="all_topic">';
+  
+    while(true) {
 	  j = i + 1;
 	  
 	  if(topic[i] === 'yes.txt') {
@@ -271,6 +273,11 @@ router.get('/topic/:page', function(req, res) {
 	  }
 	  
 	  i = i + 1;
+    }
+  }
+  else {
+	var title2 = encodeURIComponent(req.params.page);
+	var add;
   }
   
   res.status(200).render('new-topic', { title: req.params.page, title2: title2, content: add, wikiname: name });
