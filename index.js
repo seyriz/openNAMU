@@ -246,10 +246,11 @@ router.get('/topic/:page', function(req, res) {
   name = rname(name);
   FrontPage = rFrontPage(FrontPage);
   
+  var title2 = encodeURIComponent(req.params.page);
+  
   var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/yes.txt');
   if(exists) {
-	var topic = fs.readdirSync();
-	var title2 = encodeURIComponent(req.params.page);
+	var topic = fs.readdirSync('./topic/' + encodeURIComponent(req.params.page) + '/');
     var i = 0;
     var add = '<div id="all_topic">';
   
@@ -276,8 +277,7 @@ router.get('/topic/:page', function(req, res) {
     }
   }
   else {
-	var title2 = encodeURIComponent(req.params.page);
-	var add;
+	var add = '';
   }
   
   res.status(200).render('new-topic', { title: req.params.page, title2: title2, content: add, wikiname: name });
