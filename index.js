@@ -264,7 +264,7 @@ router.get('/topic/:page', function(req, res) {
 		  break;
 	  }
 	  else {
-		  add = add + '<h2><a href="/topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '">' + j + '. ' + topic[i] + '</a></h2>';
+		  add = add + '<h2><a href="/topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '">' + j + '. ' + decodeURIComponent(topic[i]) + '</a></h2>';
 		  
 		  var data = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1.txt', 'utf8');
 		  var ip = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-ip.txt', 'utf8');
