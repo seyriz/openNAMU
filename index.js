@@ -8,6 +8,7 @@ var sha3_512 = require('js-sha3').sha3_512;
 var licen;
 var name;
 var FrontPage;
+// 라이선스
 function rlicen(licen) {
 	var exists = fs.existsSync('./setting/License.txt');
 	if(exists) {
@@ -18,6 +19,7 @@ function rlicen(licen) {
 	}
 	return licen;
 }
+// 위키 이름
 function rname(name) {
 	var exists = fs.existsSync('./setting/WikiName.txt');
 	if(exists) {
@@ -28,7 +30,7 @@ function rname(name) {
 	}
 	return name;
 }
-
+// 대문
 function rFrontPage(FrontPage) {
 	var exists = fs.existsSync('./setting/FrontPage.txt');
 	
@@ -40,6 +42,7 @@ function rFrontPage(FrontPage) {
 	}
 	return FrontPage;
 }
+// 시간
 function getNow() {
   var today = new Date();
   var dd = today.getDate();
@@ -74,10 +77,12 @@ function getNow() {
   }
   return yyyy+'-' + mm+'-'+dd+' / '+nn+':'+aa+':'+ee;
 }
+// 아이피
 function yourip(req) {
 	return (req.headers['x-forwarded-for'] || '').split(',')[0] 
         || req.connection.remoteAddress;;
 }
+// 밴
 function stop(ip) {
     var ipban;
     var vip = new RegExp(ip);
@@ -92,6 +97,7 @@ function stop(ip) {
 		res.send('error');
 	}
 }
+// 어드민
 function admin(ip) {
     var ipban;
     var vip = new RegExp(ip);
@@ -112,6 +118,7 @@ function admin(ip) {
 		res.send('error');
 	}
 }
+// 최근 바뀜 추가
 function rplus() {
 	var plusnumber = fs.readFileSync('./recent/RecentChanges-number.txt', 'utf8');
 	if(plusnumber) {
@@ -131,6 +138,7 @@ function rplus() {
 		fs.writeFileSync('./recent/RecentChanges-number.txt', Number(plusnumber), 'utf8');
 	}
 }
+// 최근 토론 추가
 function tplus() {
 	var plusnumber = fs.readFileSync('./recent/RecentDiscuss-number.txt', 'utf8');
 	if(plusnumber) {
@@ -234,22 +242,46 @@ router.get('/setup', function(req, res, next) {
 });
 // 토론
 router.get('/topic/:page', function(req, res) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
+  licen = rlicen(licen);
+  name = rname(name);
+  FrontPage = rFrontPage(FrontPage);
 	
-	if(encodeURIComponent(req.params.page).length > 255) {
-		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
-	}
-	
-	var title2 = encodeURIComponent(req.params.page);
-    fs.readFile('./topic/'+ encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
-		res.status(200).render('topic', { title: req.params.page, title2:title2, content: data, wikiname: name });
-		res.end()
-    })
+  var topic = fs.readdirSync('./topic/' + encodeURIComponent(req.params.page));
+  var title2 = encodeURIComponent(req.params.page);
+  var i = 0;
+  var add = '<div id="all_topic">';
+  
+  while(true) {
+	  j = i + 1;
+	  
+	  if(topic[i] === 'yes.txt') {
+		  
+	  }
+	  else if(!topic[i]) {
+		  break;
+	  }
+	  else {
+		  add = add + '<h2><a href="/topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '">' + j + '. ' + topic[i] + '</a></h2>';
+		  
+		  var data = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1.txt', 'utf8');
+		  var ip = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-ip.txt', 'utf8');
+		  var today = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-today.txt', 'utf8');
+		  
+		  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+	  }
+	  
+	  i = i + 1;
+  }
+  
+  res.status(200).render('new-topic', { title: req.params.page, title2: title2, content: add, wikiname: name });
+  res.end()
+});
+// 토론으로 보냄
+router.post('/topic/:page', function(req, res) {
+  res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.body.topic));
 });
 // 토론 블라인드
-router.get('/topic/:page/b:number', function(req, res) {
+router.get('/topic/:page/:topic/b:number', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
@@ -270,60 +302,125 @@ router.get('/topic/:page/b:number', function(req, res) {
 		}
 	});
 });
-router.post('/topic/:page/b:number', function(req, res) {
+// 블라인드 처리
+router.post('/topic/:page/:topic/b:number', function(req, res) {
 	var btopic = new RegExp('<td id="b'+req.params.number+'">([^>]*)</td>');
 	var topic = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 	topic = topic.replace(btopic, "<td id='bb'>블라인드 되었습니다.</td>");
 	fs.writeFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', topic, 'utf8');
 	res.redirect('/topic/'+ encodeURIComponent(req.params.page))
 });
-// post
-router.post('/topic/:page', function(req, res) {
-  var file = './topic/' + encodeURIComponent(req.params.page)+'.txt';
-  var sfile = './topic/' + encodeURIComponent(req.params.page)+'-starter.txt';
-  var nfile = './topic/' + encodeURIComponent(req.params.page)+'-number.txt';
+// 토론 명
+router.get('/topic/:page/:topic', function(req, res) {
+  licen = rlicen(licen);
+  name = rname(name);
+  FrontPage = rFrontPage(FrontPage);
   
-  var ip = yourip(req);
-
-  stop(ip);
-  var today = getNow();
+  var title2 = encodeURIComponent(req.params.page);
+  var title3 = encodeURIComponent(req.params.topic);
   
-  tplus()
-  var plus = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
-  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>'+plus, 'utf8');
+  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
+  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/yes.txt';
   
-  req.body.content = req.body.content.replace(/</g, "《");
-  req.body.content = req.body.content.replace(/>/g, "》");
-  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
-  fs.exists(sfile, function (exists) {
-		if(!exists) {
-			fs.open(sfile,'w',function(err,fd){
-				fs.writeFileSync(sfile, ip, 'utf8');
-				fs.writeFileSync(nfile, 2, 'utf8');
-				fs.writeFileSync(file,'<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="1">#1</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b1">' + req.body.content + '</td></tr></tbody></table><br>');
-			});
-			res.redirect('/topic/'+ encodeURIComponent(req.params.page))
+  var exists = fs.existsSync(rfile);
+  if(!exists) {
+	res.status(404).render('topic', { title: req.params.page, title2: title2, title3: req.params.topic, title4: title3, wikiname: name });
+	res.end()	  
+  }
+  else {		
+	if(encodeURIComponent(req.params.topic + '-10000-today').length > 255) {
+		res.send('<script type="text/javascript">alert("토론 명이 너무 깁니다.");</script>')
+	}
+	  
+	var number = fs.readFileSync(nfile, 'utf8');
+	number = Number(number);
+	var starter = fs.readFileSync(sfile, 'utf8');
+	var i = 0;
+	var add = '<div id="new_game">';
+	  
+	while(true) {
+		i = i + 1;
+		  
+		if(number === i) {
+		add = add + '</div>';
+	  
+		break;
 		}
 		else {
-			var starter = fs.readFileSync(sfile, 'utf8');
-			var number = fs.readFileSync(nfile, 'utf8');
-			number = Number(number);
-			  var vip = new RegExp(ip);
-				if(vip.exec(starter)) {
-					fs.appendFile(file,'<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
-						number = number + 1
-						fs.writeFileSync(nfile, number, 'utf8');
-						res.redirect('/topic/'+ encodeURIComponent(req.params.page))
-					});
-				}
-				else {
-					fs.appendFile(file,'<table id="toron"><tbody><tr><td id="toroncolor"><a id="'+number+'">#'+number+'</a> '+ ip + '<span style="float:right;">'+today+'</span></td></tr><tr><td id="b'+number+'">' + req.body.content + '</td></tr></tbody></table><br>',function(err){
-						number = number + 1
-						fs.writeFileSync(nfile, number, 'utf8');
-						res.redirect('/topic/'+ encodeURIComponent(req.params.page))
-				});
+			var data = fs.readFileSync(file + '/' + i + '.txt', 'utf8');
+			var ip = fs.readFileSync(file + '/' + i + '-ip.txt', 'utf8');
+			var today = fs.readFileSync(file + '/' + i + '-today.txt', 'utf8');
+			  
+			if(ip === starter) {
+				add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>'
+			}
+			else {
+			    add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>'
 			}
 		}
+	}
+	res.status(200).render('topic', { title: req.params.page, title2: title2, title3: req.params.topic, title4: title3, content: add, wikiname: name });
+	res.end()	  
+  }
+});
+// post
+router.post('/topic/:page/:topic', function(req, res) {
+  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
+  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/yes.txt';
+  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/yes.txt';
+  
+  var exists = fs.existsSync(yfile);
+  if(!exists) {
+	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
+	fs.open(yfile,'w',function(err,fd){
+	});
+  }
+  
+  var exists = fs.existsSync(rfile);
+  if(!exists) {
+	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
+	fs.open(rfile,'w',function(err,fd){
+	});
+  }
+  else {
+	var number = fs.readFileSync(nfile, 'utf8');;
+  }
+  
+  var ip = yourip(req);
+  stop(ip);
+  
+  var today = getNow();
+
+  tplus()
+  var plus = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
+  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '">' + req.params.page + ' / ' + req.params.topic + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today + '</td></tr></tbody></table>' + plus, 'utf8');
+  
+  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
+  fs.exists(sfile, function (exists) {
+	if(!exists) {
+		fs.open(sfile,'w',function(err,fd){
+		});
+		var number = 1;
+		fs.writeFileSync(sfile, ip, 'utf8');
+		fs.writeFileSync(nfile, number + 1, 'utf8');
+		fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+		fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+		fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
+	}
+	else {
+		var number = fs.readFileSync(nfile, 'utf8');
+		number = Number(number);
+		fs.writeFileSync(nfile, number + 1, 'utf8');
+		fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+		fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+		fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
+	}
   });
 });
 // 아이피 밴
@@ -552,6 +649,7 @@ router.get('/move/:page', function(req, res) {
 		}
 	})
 });
+// post
 router.post('/move/:page', function(req, res) {
 	var ip = yourip(req);
 	var today = getNow();
@@ -656,7 +754,7 @@ router.get('/w/:page', function(req, res, next) {
 	})
   })
 });
-
+// 리다이렉트 w
 router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
@@ -761,7 +859,7 @@ router.get('/raw/:page', function(req, res, next) {
 	})
   })
 });
-// 보냅니다.
+// diff로 보냅니다.
 router.post('/history/:page', function(req, res, next) {
 	res.redirect('/diff/' + encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.r) + '/r' + encodeURIComponent(req.body.rr));
 });
