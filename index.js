@@ -4,6 +4,8 @@ var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
 var htmlencode = require('htmlencode');
 var Diff = require('text-diff');
+var Cokies = require( "js-cookie" )
+var Cookies = require( "cookies" )
 var sha3_512 = require('js-sha3').sha3_512;
 var licen;
 var name;
@@ -78,9 +80,18 @@ function getNow() {
   return yyyy+'-' + mm+'-'+dd+' / '+nn+':'+aa+':'+ee;
 }
 // 아이피
-function yourip(req) {
-	return (req.headers['x-forwarded-for'] || '').split(',')[0] 
-        || req.connection.remoteAddress;;
+function yourip(req, res) {
+	var test = (req.headers['x-forwarded-for'] || '').split(',')[0] 
+        || req.connection.remoteAddress;
+		
+	var cookies = new Cookies( req, res )
+	, AqoursGanbaRuby, WikiID
+	
+	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+		out = cookies.get( "WikiID" );
+		test = out;
+	}
+	return test;
 }
 // 밴
 function stop(ip) {
@@ -158,19 +169,89 @@ function tplus() {
 		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
 	}
 }
+
 // 회원 가입
 router.get('/register', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
 	res.status(200).render('register', { wikiname: name, title: '회원가입' });
 	res.end()
 });
 // 가입 하기
 router.post('/register', function(req, res, next) {
-	fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
-	res.redirect('/w/')
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
+	if(!exists) {
+		fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
+		res.redirect('/w/')
+	}
+	else {
+		res.send('<script type="text/javascript">alert("이미 있는 계정 입니다.");</script>')
+	}
 });
+
+// 로그아웃
+router.get('/logout', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	var cookies = new Cookies( req, res )
+	, AqoursGanbaRuby, WikiID
+			
+	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+		cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
+		cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+		res.status(200).render('ban', { title: '로그아웃', content: "로그아웃 했습니다.", License: licen, wikiname: name });
+		res.end()
+	}
+	else {
+		res.redirect('/login')
+	}
+});
+
+// 로그인
+router.get('/login', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	var cookies = new Cookies( req, res )
+	, AqoursGanbaRuby, WikiID
+			
+	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+		res.status(200).render('ban', { title: '로그인', content: "이미 로그인 되어 있습니다.", License: licen, wikiname: name });
+		res.end()	
+	}
+	else {
+		res.status(200).render('login', { wikiname: name, title: '로그인' });
+		res.end()	
+	}
+});
+// 로그인 하기
+router.post('/login', function(req, res, next) {
+	FrontPage = rFrontPage(FrontPage);
+	
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
+	if(exists) {
+		var pass = fs.readFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', 'utf8');
+		var test = sha3_512(req.body.pw);
+
+		if(pass === test) {
+			var cookies = new Cookies( req, res )
+			, AqoursGanbaRuby, WikiID
+			cookies.set( "AqoursGanbaRuby", test, { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "WikiID", req.body.id, { maxAge: 60 * 60 * 24 * 7 } )
+		}
+		else {
+			res.send('<script type="text/javascript">alert("암호가 틀렸습니다!");</script>')
+		}
+	}
+	else {
+		res.send('<script type="text/javascript">alert("계정이 없습니다!");</script>')
+	}
+	res.redirect('/w/'+encodeURIComponent(FrontPage))
+});
+
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
 	licen = rlicen(licen);
@@ -287,12 +368,13 @@ router.get('/topic/:page', function(req, res) {
 router.post('/topic/:page', function(req, res) {
   res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.body.topic));
 });
+/*
 // 토론 블라인드
 router.get('/topic/:page/:topic/b:number', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = yourip(req);
+	var ip = yourip(req,res);
     admin(ip);
     var today = getNow();
   
@@ -317,6 +399,7 @@ router.post('/topic/:page/:topic/b:number', function(req, res) {
 	fs.writeFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', topic, 'utf8');
 	res.redirect('/topic/'+ encodeURIComponent(req.params.page))
 });
+*/
 // 토론 명
 router.get('/topic/:page/:topic', function(req, res) {
   licen = rlicen(licen);
@@ -397,7 +480,7 @@ router.post('/topic/:page/:topic', function(req, res) {
 	var number = fs.readFileSync(nfile, 'utf8');;
   }
   
-  var ip = yourip(req);
+  var ip = yourip(req,res);
   stop(ip);
   
   var today = getNow();
@@ -454,7 +537,7 @@ router.get('/ban/edit', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
     admin(ip);
     var today = getNow();
@@ -560,7 +643,7 @@ router.get('/revert/:page/:r', function(req, res) {
 });
 // 되돌리기 3
 router.post('/revert/:page/:r', function(req, res) {
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
     var today = getNow();
 	rplus();
@@ -589,7 +672,7 @@ router.get('/delete/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
 	stop(ip);
 	var today = getNow();
@@ -609,7 +692,7 @@ router.get('/delete/:page', function(req, res) {
 });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
 	var today = getNow();
 	
@@ -639,7 +722,7 @@ router.get('/move/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
     stop(ip);
     var today = getNow();
@@ -658,7 +741,7 @@ router.get('/move/:page', function(req, res) {
 });
 // post
 router.post('/move/:page', function(req, res) {
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 	var today = getNow();
 	  
 	if(req.body.title === '')
@@ -880,7 +963,7 @@ router.get('/edit/:page', function(req, res) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
 	
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 
     stop(ip);
     var today = getNow();
@@ -937,7 +1020,7 @@ router.get('/TitleIndex', function(req, res) {
 });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
-	var ip = yourip(req);
+	var ip = yourip(req,res);
 	var today = getNow();
 
 	if(!req.body.send)

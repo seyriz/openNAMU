@@ -1,0 +1,17 @@
+extends wiki
+block content
+  div(id='tool') 
+   nav.menu
+    a.menu-item.selected(href='#', onclick='return false') 로그인
+    a.menu-item(href='/w/') 대문
+  h1= '로그인'
+  form#usrform(name='f1', method='POST', action='/login')
+    dl.form-group
+      dt
+      dd
+        p 아이디
+        input(name='id', type="text")
+        p 비밀번호
+        input(name='pw', type="password")
+        .form-actions
+          button.btn.btn-primary(type='submit') 로그인
