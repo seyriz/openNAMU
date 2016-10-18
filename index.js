@@ -574,10 +574,7 @@ router.get('/w/', function(req, res) {
 });
 // ver
 router.get('/ver', function(req, res) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-    res.render('ver', { title:'위키 버전', wikiname: name})
+	res.redirect('https://namu.ml/w/%EC%9C%84%ED%82%A4%20%EB%B2%84%EC%A0%84')
 });
 // 검색 결과를 보여줍니다.
 router.post('/search', function(req, res) {
