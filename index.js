@@ -382,38 +382,35 @@ router.get('/topic/:page', function(req, res) {
 router.post('/topic/:page', function(req, res) {
   res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.body.topic));
 });
-/*
 // 토론 블라인드
 router.get('/topic/:page/:topic/b:number', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
 	var ip = yourip(req,res);
     admin(ip);
-    var today = getNow();
   
-	var sfile = './topic/' + encodeURIComponent(req.params.page)+'-starter.txt';
+    var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+	var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+	
 	fs.exists(sfile, function (exists) {
 		if(!exists) {
-			res.status(404).render('ban', { title: req.params.page, title2: encodeURIComponent(req.params.page), content: "이 토론이 없습니다. <a href='/topic/"+encodeURIComponent(req.params.page)+"'>토론으로 가기</a>", License: licen, wikiname: name});
-			res.end()
-			return;
+			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
 		}
 		else {
-			res.status(200).render('btopic', { title: req.params.page, title2: encodeURIComponent(req.params.page), wikiname: name, number: req.params.number});
-			res.end()
+			fs.exists(file + '/' + req.params.number + '.txt', function (exists) {
+				if(!exists) {
+					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+				}
+				else {
+					fs.writeFileSync(file + '/' + req.params.number + '.txt', '블라인드 되었습니다.');
+					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+				}
+			});
 		}
 	});
 });
-// 블라인드 처리
-router.post('/topic/:page/:topic/b:number', function(req, res) {
-	var btopic = new RegExp('<td id="b'+req.params.number+'">([^>]*)</td>');
-	var topic = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-	topic = topic.replace(btopic, "<td id='bb'>블라인드 되었습니다.</td>");
-	fs.writeFileSync('./topic/' + encodeURIComponent(req.params.page)+'.txt', topic, 'utf8');
-	res.redirect('/topic/'+ encodeURIComponent(req.params.page))
-});
-*/
 // 토론 명
 router.get('/topic/:page/:topic', function(req, res) {
   licen = rlicen(licen);
