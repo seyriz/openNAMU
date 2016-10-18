@@ -88,8 +88,26 @@ function yourip(req, res) {
 	, AqoursGanbaRuby, WikiID
 	
 	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		out = cookies.get( "WikiID" );
-		test = out;
+		id = cookies.get( "WikiID" );
+		pw = cookies.get( "AqoursGanbaRuby" );
+		
+		var exists = fs.existsSync('./user/' + encodeURIComponent(id) + '.txt');
+		if(exists) {
+			var pass = fs.readFileSync('./user/' + encodeURIComponent(id) + '.txt', 'utf8');
+			var test = pw;
+
+			if(pass === test) {
+				test = id;
+			}
+			else {
+				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
+				cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+			}
+		}
+		else {
+			cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+		}
 	}
 	return test;
 }
@@ -169,7 +187,6 @@ function tplus() {
 		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
 	}
 }
-
 // 회원 가입
 router.get('/register', function(req, res, next) {
 	licen = rlicen(licen);
@@ -190,7 +207,6 @@ router.post('/register', function(req, res, next) {
 		res.send('<script type="text/javascript">alert("이미 있는 계정 입니다.");</script>')
 	}
 });
-
 // 로그아웃
 router.get('/logout', function(req, res, next) {
 	licen = rlicen(licen);
@@ -209,7 +225,6 @@ router.get('/logout', function(req, res, next) {
 		res.redirect('/login')
 	}
 });
-
 // 로그인
 router.get('/login', function(req, res, next) {
 	licen = rlicen(licen);
@@ -251,7 +266,6 @@ router.post('/login', function(req, res, next) {
 	}
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
-
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
 	licen = rlicen(licen);
