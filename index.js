@@ -97,7 +97,7 @@ function yourip(req, res) {
 			var test = pw;
 
 			if(pass === test) {
-				test = id;
+				test = decodeURIComponent(id);
 			}
 			else {
 				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
@@ -263,7 +263,7 @@ router.post('/login', function(req, res, next) {
 			var cookies = new Cookies( req, res )
 			, AqoursGanbaRuby, WikiID
 			cookies.set( "AqoursGanbaRuby", test, { maxAge: 60 * 60 * 24 * 7 } )
-			cookies.set( "WikiID", req.body.id, { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "WikiID", encodeURIComponent(req.body.id), { maxAge: 60 * 60 * 24 * 7 } )
 		}
 		else {
 			res.send('<script type="text/javascript">alert("암호가 틀렸습니다!");</script>')
