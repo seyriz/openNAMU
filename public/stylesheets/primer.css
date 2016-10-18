@@ -330,6 +330,13 @@ div.scroll-buttons {
 		width: 100%;
 	}
 }
+@media (max-width: 1919px) {
+	@media (min-width: 459px) {
+		#top {
+			width: 70%;
+		}
+	}
+}
 @media (max-width: 459px) {
 	#search {
 		float: left;
@@ -371,11 +378,6 @@ body {
 	}
 	#RecentChanges {
 		width: auto;
-	}
-}
-@media (max-width: 1919px) {
-	#top {
-		width: 70%;
 	}
 }
 
