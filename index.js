@@ -91,9 +91,9 @@ function yourip(req, res) {
 		id = cookies.get( "WikiID" );
 		pw = cookies.get( "AqoursGanbaRuby" );
 		
-		var exists = fs.existsSync('./user/' + encodeURIComponent(id) + '.txt');
+		var exists = fs.existsSync('./user/' + id + '.txt');
 		if(exists) {
-			var pass = fs.readFileSync('./user/' + encodeURIComponent(id) + '.txt', 'utf8');
+			var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
 			var test = pw;
 
 			if(pass === test) {
