@@ -112,18 +112,26 @@ function yourip(req, res) {
 	return test;
 }
 // 밴
-function stop(ip) {
+function stop(ip, page) {
     var ipban;
     var vip = new RegExp(ip);
 	var exists = fs.existsSync('./setting/IPban.txt');
+	
 	if(exists) {
 		ipban = fs.readFileSync('./setting/IPban.txt', 'utf8');
 	}
 	else {
 		ipban = "";
 	}
+	
 	if(vip.exec(ipban)) {
-		res.send('error');
+		res.send('Ban');
+	}
+	
+	var exists = fs.existsSync('./data/' + encodeURIComponent(page) + '-stop.txt');
+	
+	if(exists) {
+		admin(ip);
 	}
 }
 // 어드민
@@ -492,7 +500,8 @@ router.post('/topic/:page/:topic', function(req, res) {
   }
   
   var ip = yourip(req,res);
-  stop(ip);
+  var page = req.params.page;
+  stop(ip, page);
   
   var today = getNow();
 
@@ -548,10 +557,10 @@ router.get('/ban/edit', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
 	var ip = yourip(req,res);
 
     admin(ip);
-    var today = getNow();
 	
 	fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
 		res.render('ipban', { title: req.params.page, content: data, wikiname: name });
@@ -564,6 +573,27 @@ router.post('/ban/edit', function(req, res) {
 		fs.writeFileSync('./setting/IPban.txt', req.body.content, 'utf8');
 	});
 	res.redirect('/ban')
+});
+// ACL
+router.get('/acl/:page', function(req, res, next) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	
+	var ip = yourip(req,res);
+
+    admin(ip);
+	
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
+	if(exists) {
+		fs.unlink('./data/' + encodeURIComponent(req.params.page) + '-stop.txt', function (err) {
+		});
+	}
+	else {
+		fs.open('./data/' + encodeURIComponent(req.params.page) + '-stop.txt','w',function(err,fd){
+		});
+	}
+	res.redirect('/w/'+encodeURIComponent(req.params.page))
 });
 // 리다이렉트.
 router.get('/w/', function(req, res) {
@@ -681,8 +711,9 @@ router.get('/delete/:page', function(req, res) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	var ip = yourip(req,res);
-
-	stop(ip);
+	var page = req.params.page;
+	
+	stop(ip, page);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
   
@@ -731,8 +762,9 @@ router.get('/move/:page', function(req, res) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	var ip = yourip(req,res);
-
-    stop(ip);
+	var page = req.params.page;
+	
+    stop(ip, page);
     var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
@@ -972,8 +1004,9 @@ router.get('/edit/:page', function(req, res) {
 	}
 	
 	var ip = yourip(req,res);
+	var page = req.params.page;
 
-    stop(ip);
+    stop(ip, page);
     var today = getNow();
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
