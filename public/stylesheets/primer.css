@@ -373,6 +373,11 @@ body {
 		width: auto;
 	}
 }
+@media (max-width: 1919px) {
+	#top {
+		width: 70%;
+	}
+}
 
 #yosolo {
     width: 33.33%;
