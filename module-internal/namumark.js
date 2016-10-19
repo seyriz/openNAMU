@@ -316,7 +316,7 @@ module.exports = function(n, ba){
 	  else
 	  {
 		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "</span><br>";
-		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href=\"#fn-" + a + "\" id=\"rfn-" + a + "\" title='"+htmlencode.htmlEncode(match[1])+"'>[" + a + "]</a></sup>");
+		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href='javascript:void(0);' id=\"rfn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a></sup><span class='foot' id='footnote_"+a+"' style='display:none;'><a href=\"#fn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[1] + "</span>");
 		a = a + 1;
 	  }
   }
