@@ -554,12 +554,10 @@ router.get('/ban/:ip', function(req, res) {
 			});
 		}
 	}
-	res.redirect('/w/'+encodeURIComponent(req.params.page))
+	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
 // ACL
 router.get('/acl/:page', function(req, res, next) {
-	FrontPage = rFrontPage(FrontPage);
-	
 	var ip = yourip(req,res);
 
     admin(ip);
