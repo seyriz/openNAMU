@@ -112,7 +112,7 @@ function yourip(req, res) {
 	return test;
 }
 // 밴
-function stop(ip, page) {
+function stop(ip) {
     var ipban;
     var vip = new RegExp(ip);
 	var exists = fs.existsSync('./setting/IPban.txt');
@@ -127,7 +127,8 @@ function stop(ip, page) {
 	if(vip.exec(ipban)) {
 		res.send('Ban');
 	}
-	
+}
+function editstop(ip, page) {
 	var exists = fs.existsSync('./data/' + encodeURIComponent(page) + '-stop.txt');
 	
 	if(exists) {
@@ -373,6 +374,11 @@ router.get('/topic/:page', function(req, res) {
 		  var ip = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-ip.txt', 'utf8');
 		  var today = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-today.txt', 'utf8');
 		  
+		  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-stop.txt');
+		  if(exists) {
+			  data = '블라인드 되었습니다.';
+		  }
+		  
 		  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 	  }
 	  
@@ -412,7 +418,16 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
 				}
 				else {
-					fs.writeFileSync(file + '/' + req.params.number + '.txt', '블라인드 되었습니다.');
+					fs.exists(file + '/' + req.params.number + '-stop.txt', function (exists) {
+						if(exists) {
+							fs.unlink(file + '/' + req.params.number + '-stop.txt', function (err) {
+							});
+						}
+						else {
+							fs.open(file + '/' + req.params.number + '-stop.txt','w',function(err,fd){
+							});
+						}
+					});
 					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
 				}
 			});
@@ -461,7 +476,12 @@ router.get('/topic/:page/:topic', function(req, res) {
 			var data = fs.readFileSync(file + '/' + i + '.txt', 'utf8');
 			var ip = fs.readFileSync(file + '/' + i + '-ip.txt', 'utf8');
 			var today = fs.readFileSync(file + '/' + i + '-today.txt', 'utf8');
-			  
+			
+			var exists = fs.existsSync(file + '/' + i + '-stop.txt');
+			if(exists) {
+				data = '블라인드 되었습니다.';
+			}
+			
 			if(ip === starter) {
 				add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>'
 			}
@@ -501,7 +521,7 @@ router.post('/topic/:page/:topic', function(req, res) {
   
   var ip = yourip(req,res);
   var page = req.params.page;
-  stop(ip, page);
+  stop(ip);
   
   var today = getNow();
 
@@ -713,7 +733,7 @@ router.get('/delete/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	
-	stop(ip, page);
+	stop(ip);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
   
@@ -764,7 +784,7 @@ router.get('/move/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	
-    stop(ip, page);
+    stop(ip);
     var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
@@ -1006,7 +1026,8 @@ router.get('/edit/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 
-    stop(ip, page);
+    stop(ip);
+	editstop(ip, page);
     var today = getNow();
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
@@ -1180,6 +1201,10 @@ router.get('/history/:page', function(req, res) {
 		}
 		else {
 			neoa = neoa + '</div>';
+			var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
+			if(exists) {
+				neoa = '<table id="toron"><tbody><td id="yosolo">관리자만 편집 가능한 문서 입니다.</td></tr></tbody></table>' + neoa;
+			}
 			res.status(200).render('history2', { title: req.params.page, title2:title2, content: neoa, License: licen ,wikiname: name});
 			break;
 			res.end()
