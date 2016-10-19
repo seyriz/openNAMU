@@ -305,8 +305,6 @@ router.get('/setup', function(req, res, next) {
 			fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
 				fs.writeFileSync('./setting/FrontPage.txt', FrontPage, 'utf8');
 			});
-			fs.open('./setting/IPban.txt','w+', function (err,fd) {
-			});
 			fs.open('./setting/License.txt','w+', function (err,fd) {
 				fs.writeFileSync('./setting/License.txt', licen, 'utf8');
 			});
@@ -555,6 +553,31 @@ router.get('/ban/:ip', function(req, res) {
 		}
 	}
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
+});
+// 밴 리스트
+router.get('/ban', function(req, res, next) {
+	name = rname(name);
+	var sun = fs.readdirSync('./user');
+	var shine = 0;
+	var ganba;
+	var ruby = '<div>';
+	var dayo = /([^-]*)-ban\.txt/;
+	var hehe;
+	while(true) {
+		if(sun[shine]) {
+			hehe = decodeURIComponent(sun[shine]);
+			if(ganba = dayo.exec(hehe)) {
+				ruby = ruby + '<li>' + ganba[1] + '</a></li>';
+			}
+		}
+		else {
+			ruby = ruby + '</div>';
+			break;
+		}
+		shine = shine + 1;
+	}
+	res.status(200).render('ban', { title: '밴 목록', content: ruby , wikiname: name});
+	res.end()
 });
 // ACL
 router.get('/acl/:page', function(req, res, next) {

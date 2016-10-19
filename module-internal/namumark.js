@@ -116,11 +116,11 @@ module.exports = function(n, ba){
 		  if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(data, function(cnt){
-			six = six.replace(/\[include\(([^)]*)\)\]/g, cnt);
+			six = six.replace(/\[include\(([^)]*)\)\]/, cnt);
 			})
 		  }
 		  else {
-			  six = six.replace(/\[include\(([^)]*)\)\]/g, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>");
+			  six = six.replace(/\[include\(([^)]*)\)\]/, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>");
 		  }
 	  }
 	  else {
