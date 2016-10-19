@@ -113,19 +113,9 @@ function yourip(req, res) {
 }
 // 밴
 function stop(ip) {
-    var ipban;
-    var vip = new RegExp(ip);
-	var exists = fs.existsSync('./setting/IPban.txt');
-	
+    var exists = fs.existsSync('./user/' + ip + '-ban.txt');
 	if(exists) {
-		ipban = fs.readFileSync('./setting/IPban.txt', 'utf8');
-	}
-	else {
-		ipban = "";
-	}
-	
-	if(vip.exec(ipban)) {
-		res.send('Ban');
+		res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.");</script>')
 	}
 }
 function editstop(ip, page) {
@@ -137,23 +127,9 @@ function editstop(ip, page) {
 }
 // 어드민
 function admin(ip) {
-    var ipban;
-    var vip = new RegExp(ip);
-	var exists = fs.existsSync('./setting/Admin.txt');
-	if(exists) {
-		ipban = fs.readFileSync('./setting/Admin.txt', 'utf8');
-	}
-	else {
-		var exists = fs.existsSync('./localset/Admin.txt');
-		if(exists) {
-			ipban = fs.readFileSync('./localset/Admin.txt', 'utf8');
-		}
-		else {
-			ipban = "";
-		}
-	}
-	if(!vip.exec(ipban)) {
-		res.send('error');
+	var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+	if(!exists) {
+		res.send('<script type="text/javascript">alert("어드민이 아닙니다.");</script>')
 	}
 }
 // 최근 바뀜 추가
@@ -239,6 +215,9 @@ router.get('/login', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
+	stop(ip)
+	
 	var cookies = new Cookies( req, res )
 	, AqoursGanbaRuby, WikiID
 			
@@ -321,9 +300,6 @@ router.get('/setup', function(req, res, next) {
 			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
 			});
 			
-			fs.open('./setting/Admin.txt','w+', function (err,fd) {
-				fs.writeFileSync('./setting/Admin.txt', '::1\n127.0.0.1', 'utf8');
-			});
 			fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
 				fs.writeFileSync('./setting/FrontPage.txt', FrontPage, 'utf8');
 			});
@@ -553,46 +529,27 @@ router.post('/topic/:page/:topic', function(req, res) {
 	}
   });
 });
-// 아이피 밴
-router.get('/ban', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-  fs.exists('./setting/IPban.txt', function (exists) {
-	  if(exists){
-		fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
-			data = data.replace(/\n/g, '<br>');
-			res.status(200).render('ban', { title: '아이피 밴 리스트', content: data, wikiname: name });
-			res.end()
-		})
-	  }
-	  else {
-		res.status(404).render('ban', { title: '아이피 밴 리스트', content: '없음', wikiname: name });
-		res.end()
-	  }
-  });
-});
-// 아이피 밴 수정
-router.get('/ban/edit', function(req, res) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-	
+// 밴 추가
+router.get('/ban/:ip', function(req, res) {
 	var ip = yourip(req,res);
-
-    admin(ip);
 	
-	fs.readFile('./setting/IPban.txt', 'utf8', function(err, data) {
-		res.render('ipban', { title: req.params.page, content: data, wikiname: name });
-		res.end()
-	})
-});
-// 아아피 밴 저장
-router.post('/ban/edit', function(req, res) {
-	fs.open('./setting/IPban.txt','w+',function(err,fd){
-		fs.writeFileSync('./setting/IPban.txt', req.body.content, 'utf8');
-	});
-	res.redirect('/ban')
+	admin(ip);
+	
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.page) + '-ban.txt');
+	if(exists) {
+		fs.unlink('./user/' + encodeURIComponent(req.params.page) + '-ban.txt', function (err) {
+		});
+	}
+	else {
+		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.page) + '-admin.txt');
+		if(exists) {
+			res.send('<script type="text/javascript">alert("관리자는 차단 할 수 없습니다.");</script>')
+		}
+		else {
+			fs.open('./user/' + encodeURIComponent(req.params.page) + '-ban.txt','w',function(err,fd){
+			});
+		}
+	}
 });
 // ACL
 router.get('/acl/:page', function(req, res, next) {
