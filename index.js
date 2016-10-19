@@ -133,44 +133,38 @@ function admin(ip) {
 	}
 }
 // 최근 바뀜 추가
-function rplus() {
-	var plusnumber = fs.readFileSync('./recent/RecentChanges-number.txt', 'utf8');
-	if(plusnumber) {
-		if(Number(plusnumber) === 50) {
-			var plusnumber2 = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-			fs.writeFileSync('./recent/RecentChanges-2.txt', plusnumber2, 'utf8');
-			fs.unlink('./recent/RecentChanges.txt', function (err) {
-			});
-			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
-			});
-			plusnumber = 0;
-		}
-		plusnumber = Number(plusnumber) + 1;
-		fs.writeFileSync('./recent/RecentChanges-number.txt', Number(plusnumber), 'utf8');
-	} else {
-		plusnumber = 0;
-		fs.writeFileSync('./recent/RecentChanges-number.txt', Number(plusnumber), 'utf8');
-	}
+function rplus(ip, today, name, rtitle) {
+	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
+	fs.writeFileSync('./recent/RC-number.txt', Number(number)+1, 'utf8');
+	fs.open('./recent/RC-' + number + '.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RC-' + number + '.txt', name, 'utf8');
+	});
+	fs.open('./recent/RC-' + number + '-title.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RC-' + number + '-title.txt', rtitle, 'utf8');
+	});
+	fs.open('./recent/RC-' + number + '-ip.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RC-' + number + '-ip.txt', ip, 'utf8');
+	});
+	fs.open('./recent/RC-' + number + '-today.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RC-' + number + '-today.txt', today, 'utf8');
+	});	
 }
 // 최근 토론 추가
-function tplus() {
-	var plusnumber = fs.readFileSync('./recent/RecentDiscuss-number.txt', 'utf8');
-	if(plusnumber) {
-		if(Number(plusnumber) === 50) {
-			var plusnumber2 = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
-			fs.writeFileSync('./recent/RecentDiscuss-2.txt', plusnumber2, 'utf8');
-			fs.unlink('./recent/RecentDiscuss.txt', function (err) {
-			});
-			fs.open('./recent/RecentDiscuss.txt','w+',function(err,fd){
-			});
-			plusnumber = 0;
-		}
-		plusnumber = Number(plusnumber) + 1;
-		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
-	} else {
-		plusnumber = 0;
-		fs.writeFileSync('./recent/RecentDiscuss-number.txt', Number(plusnumber), 'utf8');
-	}
+function tplus(ip, today, name, name2) {
+	var number = fs.readFileSync('./recent/RD-number.txt', 'utf8');
+	fs.writeFileSync('./recent/RD-number.txt', Number(number)+1, 'utf8');
+	fs.open('./recent/RD-' + number + '.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RD-' + number + '.txt', name, 'utf8');
+	});
+	fs.open('./recent/RD-' + number + '-title.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RD-' + number + '-title.txt', name2, 'utf8');
+	});
+	fs.open('./recent/RD-' + number + '-ip.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RD-' + number + '-ip.txt', ip, 'utf8');
+	});
+	fs.open('./recent/RD-' + number + '-today.txt','w+',function(err,fd){
+		fs.writeFileSync('./recent/RD-' + number + '-today.txt', today, 'utf8');
+	});	
 }
 // 회원 가입
 router.get('/register', function(req, res, next) {
@@ -214,7 +208,6 @@ router.get('/logout', function(req, res, next) {
 router.get('/login', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
 	var ip = yourip(req,res);
 	
@@ -234,8 +227,6 @@ router.get('/login', function(req, res, next) {
 });
 // 로그인 하기
 router.post('/login', function(req, res, next) {
-	FrontPage = rFrontPage(FrontPage);
-	
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
 	if(exists) {
 		var pass = fs.readFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', 'utf8');
@@ -254,12 +245,10 @@ router.post('/login', function(req, res, next) {
 	else {
 		res.send('<script type="text/javascript">alert("계정이 없습니다!");</script>')
 	}
-	res.redirect('/w/'+encodeURIComponent(FrontPage))
+	res.redirect('/w/')
 });
 // 대문으로 이동합니다.
 router.get('/', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
@@ -289,17 +278,11 @@ router.get('/setup', function(req, res, next) {
 			fs.mkdirSync('./recent', 777);
 			fs.mkdirSync('./user', 777);
 			
-			fs.open('./recent/RecentChanges.txt','w+',function(err,fd){
+			fs.open('./recent/RC-number.txt','w+',function(err,fd){
+				fs.writeFileSync('./recent/RC-number.txt', 1, 'utf8');
 			});
-			fs.open('./recent/RecentChanges-2.txt','w+',function(err,fd){
-			});
-			fs.open('./recent/RecentChanges-number.txt','w+',function(err,fd){
-			});
-			fs.open('./recent/RecentDiscuss.txt','w+',function(err,fd){
-			});
-			fs.open('./recent/RecentDiscuss-2.txt','w+',function(err,fd){
-			});
-			fs.open('./recent/RecentDiscuss-number.txt','w+',function(err,fd){
+			fs.open('./recent/RD-number.txt','w+',function(err,fd){
+				fs.writeFileSync('./recent/RD-number.txt', 1, 'utf8');
 			});
 			
 			fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
@@ -500,18 +483,17 @@ router.post('/topic/:page/:topic', function(req, res) {
   stop(ip);
   
   var today = getNow();
-
-  tplus()
-  var plus = fs.readFileSync('./recent/RecentDiscuss.txt', 'utf8');
-  fs.writeFileSync('./recent/RecentDiscuss.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '">' + req.params.page + ' / ' + req.params.topic + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today + '</td></tr></tbody></table>' + plus, 'utf8');
+  var name = req.params.page;
+  var name2 = req.params.topic;
+  tplus(ip, today, name, name2)
   
   req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
   fs.exists(sfile, function (exists) {
 	if(!exists) {
 		fs.open(sfile,'w',function(err,fd){
+			fs.writeFileSync(sfile, ip, 'utf8');
 		});
 		var number = 1;
-		fs.writeFileSync(sfile, ip, 'utf8');
 		fs.writeFileSync(nfile, number + 1, 'utf8');
 		fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
 		fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
@@ -531,8 +513,6 @@ router.post('/topic/:page/:topic', function(req, res) {
 });
 // 밴 추가
 router.get('/ban/:ip', function(req, res) {
-	FrontPage = rFrontPage(FrontPage);
-	
 	var ip = yourip(req,res);
 	
 	admin(ip);
@@ -552,7 +532,7 @@ router.get('/ban/:ip', function(req, res) {
 			});
 		}
 	}
-	res.redirect('/w/'+encodeURIComponent(FrontPage))
+	res.redirect('/w/')
 });
 // 밴 리스트
 router.get('/ban', function(req, res, next) {
@@ -598,8 +578,6 @@ router.get('/acl/:page', function(req, res, next) {
 });
 // 리다이렉트.
 router.get('/w/', function(req, res) {
-	licen = rlicen(licen);
-	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
 });
@@ -685,9 +663,9 @@ router.post('/revert/:page/:r', function(req, res) {
 	var ip = yourip(req,res);
 
     var today = getNow();
-	rplus();
-	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.params.r+' 버전으로 되돌림</td></tr></tbody></table>'+plus, 'utf8');
+	var rtitle = req.params.r + ' 버전으로 되돌림';
+	var name = req.params.page;
+	rplus(ip, today, name, rtitle);
 	var revert = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
 	fs.writeFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', revert, 'utf8');
 	res.redirect('/w/'+ encodeURIComponent(req.params.page))
@@ -735,10 +713,9 @@ router.post('/delete/:page', function(req, res) {
 	var ip = yourip(req,res);
 
 	var today = getNow();
-	
-	rplus();
-	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">문서를 삭제함</td></tr></tbody></table>'+plus, 'utf8');
+	var rtitle = '문서를 삭제함';
+	var name = req.params.page;
+	rplus(ip, today, name, rtitle);
 	var i = 0;
 	while(true) {
 		i = i + 1;
@@ -796,9 +773,9 @@ router.post('/move/:page', function(req, res) {
 	}
 	else
 	{
-		rplus();
-		var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-		fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo"><a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함</td></tr></tbody></table>'+plus, 'utf8');
+		var rtitle = '<a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함';
+		var name = req.params.page;
+		rplus(ip, today, name, rtitle);
 		var i = 0;
 		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
 		while(true) {
@@ -842,7 +819,6 @@ router.post('/move/:page', function(req, res) {
 router.get('/w/:page', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
   var testing = /\//;
   if(testing.exec(req.params.page)) {
 	  var zenkaino = /(.*)\/.*/;
@@ -889,7 +865,6 @@ router.get('/w/:page', function(req, res, next) {
 router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
   var testing = /\//;
   if(testing.exec(req.params.page)) {
 	  var zenkaino = /(.*)\/.*/;
@@ -931,41 +906,85 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 router.get('/RecentChanges', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-  fs.readFile('./recent/RecentChanges.txt', 'utf8', function(err, data) {
-		res.status(200).render('re1', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
-		res.end()
-  });
-});
-// 최근 바뀜 2를 보여줍니다.
-router.get('/RecentChanges2', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-  fs.readFile('./recent/RecentChanges-2.txt', 'utf8', function(err, data) {
-		res.status(200).render('re2', { title: '최근 변경내역 2', content: data, License: licen , wikiname: name});
-		res.end()
-  });
+	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
+	var i = 0;
+	var data = '';
+	while(true) {
+		if(Number(number) < 51) {
+			i = i + 1;
+			var exists = fs.existsSync('./recent/RC-' + i + '.txt');
+			if(exists) {
+				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+			}
+			else {
+				break;
+			}
+		}
+		else {
+			if (i === 0) {
+				i = Number(number) - 50;
+			}
+			else if (i === Number(number)) {
+				break;
+			}
+			else {
+				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+			}
+			i = i + 1;
+		}
+	}
+  	res.status(200).render('re1', { title: '최근 변경내역', content: data, License: licen , wikiname: name});
+	res.end()
 });
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-  fs.readFile('./recent/RecentDiscuss.txt', 'utf8', function(err, data) {
-		res.status(200).render('de1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
-		res.end()
-  });
-});
-// 최근 토론 2를 보여줍니다.
-router.get('/RecentDiscuss2', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-  fs.readFile('./recent/RecentDiscuss-2.txt', 'utf8', function(err, data) {
-		res.status(200).render('de2', { title: '최근 토론내역 2', content: data, License: licen , wikiname: name});
-		res.end()
-  });
+	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
+	var i = 0;
+	var data = '';
+	while(true) {
+		if(Number(number) < 51) {
+			i = i + 1;
+			var exists = fs.existsSync('./recent/RD-' + i + '.txt');
+			if(exists) {
+				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+page+' ('+title+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
+			}
+			else {
+				break;
+			}
+		}
+		else {
+			if (i === 0) {
+				i = Number(number) - 50;
+			}
+			else if (i === Number(number)) {
+				break;
+			}
+			else {
+				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+page+' ('+title+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
+			}
+			i = i + 1;
+		}
+	}
+  	res.status(200).render('de1', { title: '최근 토론내역', content: data, License: licen , wikiname: name});
+	res.end()
 });
 // raw를 보여줍니다.
 router.get('/raw/:page', function(req, res, next) {
@@ -1070,9 +1089,9 @@ router.post('/edit/:page', function(req, res) {
 	{
 		req.body.send = "<br>";
 	}
-	rplus();
-	var plus = fs.readFileSync('./recent/RecentChanges.txt', 'utf8');
-	fs.writeFileSync('./recent/RecentChanges.txt', '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send+'</td></tr></tbody></table>'+plus, 'utf8');
+	var rtitle = req.body.send;
+	var name = req.params.page;
+	rplus(ip, today, name, rtitle);
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
