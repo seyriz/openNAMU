@@ -216,6 +216,8 @@ router.get('/login', function(req, res, next) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	
+	var ip = yourip(req,res);
+	
 	stop(ip)
 	
 	var cookies = new Cookies( req, res )
@@ -531,30 +533,31 @@ router.post('/topic/:page/:topic', function(req, res) {
 });
 // 밴 추가
 router.get('/ban/:ip', function(req, res) {
+	FrontPage = rFrontPage(FrontPage);
+	
 	var ip = yourip(req,res);
 	
 	admin(ip);
 	
-	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.page) + '-ban.txt');
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
 	if(exists) {
-		fs.unlink('./user/' + encodeURIComponent(req.params.page) + '-ban.txt', function (err) {
+		fs.unlink('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt', function (err) {
 		});
 	}
 	else {
-		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.page) + '-admin.txt');
+		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt');
 		if(exists) {
 			res.send('<script type="text/javascript">alert("관리자는 차단 할 수 없습니다.");</script>')
 		}
 		else {
-			fs.open('./user/' + encodeURIComponent(req.params.page) + '-ban.txt','w',function(err,fd){
+			fs.open('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt','w',function(err,fd){
 			});
 		}
 	}
+	res.redirect('/w/'+encodeURIComponent(req.params.page))
 });
 // ACL
 router.get('/acl/:page', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	
 	var ip = yourip(req,res);
