@@ -348,6 +348,8 @@ module.exports = function(n, ba){
 	  }
   }
   
+  six = six.replace(/\r\n\s/g, '<br><span id="in"></span>');
+  
   six = six.replace(/\n/g, "<br>");
   
   var live = /\{\/\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}\/}/;

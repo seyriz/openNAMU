@@ -25,6 +25,10 @@
     color: #c7ecbb;
 }
 
+#in {
+    margin-left: 10px;
+}
+
 #log {
     line-height: 32px;
     width: 20px;
