@@ -87,8 +87,16 @@ module.exports = function(n, ba){
 	  }
   }
   
-  six = six.replace(/\[yt\(([^)]*)\)\]/g, "[youtube($1)]");
-  six = six.replace(/\[in\(([^)]*)\)\]/g, "[include($1)]");
+  six = six.replace(/\[\[[Yy][Oo][Uu][Tt][Uu][Bb][Ee]\(([^)]*)\)\]\]/g, "[youtube($1)]");
+  six = six.replace(/\[\[[Ii][Nn][Cc][Ll][Uu][Dd][Ee]\(([^)]*)\)\]\]/g, "[include($1)]");
+  
+  six = six.replace(/\[\[목차\]\]/g, "[목차]");
+  six = six.replace(/\[\[각주\]\]/g, "[각주]");
+  
+  six = six.replace(/[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt]:((?:[^.]*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, "[img(http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1)]");
+  
+  six = six.replace(/\[[Yy][Tt]\(([^)]*)\)\]/g, "[youtube($1)]");
+  six = six.replace(/\[[Ii][Nn]\(([^)]*)\)\]/g, "[include($1)]");
   
   var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
   var read;
@@ -243,7 +251,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  six = six.replace(/\[img\(([^,]*)(?:,\s?((?:width|height)=(?:[0-9]*)))?(?:,\s?((?:width|height)=(?:[0-9]*)))?\)\]/g, '<img src="$1" $2 $3>');
+  six = six.replace(/\[img\(([^,][^\n]*)(?:,\s?((?:width|height)=(?:[0-9][^\n]*)))?(?:,\s?((?:width|height)=(?:[0-9][^\n]*)))?\)\]/g, '<img src="$1" $2 $3>');
   
   var youtube = /\[youtube\(([^,\n]*)(?:,([^)\n]*))?\)\]/;
   var widthy = /width=([0-9]*)/;
@@ -275,10 +283,10 @@ module.exports = function(n, ba){
 	  }
   }
   
-  six = six.replace(/\[date]/g, today);
-  six = six.replace(/\[datetime]/g, today);
+  six = six.replace(/\[[Dd][Aa][Tt][Ee]\]/g, today);
+  six = six.replace(/\[[Dd][Aa][Tt][Ee][Tt][Ii][Mm][Ee]\]/g, today);
   
-  six = six.replace(/\[anchor\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
+  six = six.replace(/\[[Aa][Nn][Cc][Hh][Oo][Rr]\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
   
   var bad = /((?:(?:\s\*\s[^\n]*)\n?)+)/;
   var apple;
@@ -298,7 +306,7 @@ module.exports = function(n, ba){
   six = six.replace(/-{4,11}/g, "<hr>");
   
   var a = 1;
-  var b = /\[\*\s((?:[^\[\]]+)*)\]/;
+  var b = /\[\*([^\s]*)\s((?:[^\[\]]+)*)\]/;
   var tou = "<hr id='footnote'><div class='wiki-macro-footnote'><br>";
   
   while(true)
@@ -313,15 +321,19 @@ module.exports = function(n, ba){
 		  }
 		  break; 
 	  }
+	  else if(match[1]) {
+		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + htmlencode.htmlEncode(match[1]) + "\" id=\"fn-" + a + "\">[" + htmlencode.htmlEncode(match[1]) + "]</a> " + match[2] + "</span><br>";
+		six = six.replace(b, "<sup><a href='javascript:void(0);' id=\"rfn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a></sup><span class='foot' id='footnote_"+htmlencode.htmlEncode(match[1])+"' style='display:none;'><a href=\"#fn-" + htmlencode.htmlEncode(match[1]) + "\" onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[2] + "</span>");
+	  }
 	  else
 	  {
-		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[1] + "</span><br>";
-		six = six.replace(/\[\*\s((?:[^\[\]]+)*)\]/, "<sup><a href='javascript:void(0);' id=\"rfn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a></sup><span class='foot' id='footnote_"+a+"' style='display:none;'><a href=\"#fn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[1] + "</span>");
+		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + a + "]</a> " + match[2] + "</span><br>";
+		six = six.replace(b, "<sup><a href='javascript:void(0);' id=\"rfn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a></sup><span class='foot' id='footnote_"+a+"' style='display:none;'><a href=\"#fn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + a + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[2] + "</span>");
 		a = a + 1;
 	  }
   }
  
-  var math = /<math>(((?!<math>).)*)<\/math>/;
+  var math = /<[Mm][Aa][Tt][Hh]>(((?!<math>).)*)<\/[Mm][Aa][Tt][Hh]>/;
   var mathm;
   var matht;
   while(true)
@@ -344,7 +356,7 @@ module.exports = function(n, ba){
   {
 	if(sh = live.exec(six))
 	{
-		six = six.replace(live, decodeURIComponent(sh[1]));
+		six = six.replace(live, '<code>' + decodeURIComponent(sh[1]) + '</code>');
 	}
 	else {
 		break;
