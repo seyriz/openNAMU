@@ -33,6 +33,8 @@ module.exports = function(n, ba){
   {
 	if(sh = live.exec(six))
 	{
+		sh[1] = sh[1].replace(/--/g, '#del#');
+		sh[1] = sh[1].replace(/~~/g, '#del2#');
 		sh[1] = htmlencode.htmlEncode(sh[1]);
 		six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
 	}
@@ -74,6 +76,8 @@ module.exports = function(n, ba){
 				if(sh = live.exec(six))
 				{
 					sh[1] = htmlencode.htmlEncode(sh[1]);
+					sh[1] = sh[1].replace(/--/g, '#del#');
+					sh[1] = sh[1].replace(/~~/g, '#del2#');
 					six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
 				}
 				else {
@@ -358,7 +362,10 @@ module.exports = function(n, ba){
   {
 	if(sh = live.exec(six))
 	{
-		six = six.replace(live, '<code>' + decodeURIComponent(sh[1]) + '</code>');
+		var test = decodeURIComponent(sh[1]);
+		test = test.replace(/#del#/g, '--');
+		test = test.replace(/#del2#/g, '~~');
+		six = six.replace(live, '<code>' + test + '</code>');
 	}
 	else {
 		break;
