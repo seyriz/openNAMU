@@ -144,6 +144,9 @@ module.exports = function(n, ba){
   var tang = /\[\[([^\]\]]*)\]\]/;
   var match;
   var van;
+  six = six.replace(/\[\[(?:((?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(?:((?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
+	
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
   
@@ -255,7 +258,12 @@ module.exports = function(n, ba){
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  six = six.replace(/\[img\(([^,][^\n]*)(?:,\s?((?:width|height)=(?:[0-9][^\n]*)))?(?:,\s?((?:width|height)=(?:[0-9][^\n]*)))?\)\]/g, '<img src="$1" $2 $3>');
+  six = six.replace(/((?:(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, '<img src="$1">');
+  
+  six = six.replace(/#([Jj][Pp][Gg])#/g, '.$1');
+  six = six.replace(/#([Jj][Ee][Pp][Gg])#/g, '.$1');
+  six = six.replace(/#([Pp][Nn][Gg])#/g, '.$1');
+  six = six.replace(/#([Gg][Ii][Ff])#/g, '.$1');
   
   var youtube = /\[youtube\(([^,\n]*)(?:,([^)\n]*))?\)\]/;
   var widthy = /width=([0-9]*)/;
