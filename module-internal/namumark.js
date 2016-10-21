@@ -27,70 +27,6 @@ module.exports = function(n, ba){
   six = six.replace(/<(.*) [Oo][Nn](.*)="(.*)">/g, "");
   six = six.replace(/[Jj][Aa][Vv][Aa][Ss][Cc][Rr][Ii][Pp][Tt]:/g, "");
   
-  var live = /\{\{\{((?:[^}]*)\n(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
-  var sh;
-  while(true)
-  {
-	if(sh = live.exec(six))
-	{
-		sh[1] = sh[1].replace(/--/g, '#del#');
-		sh[1] = sh[1].replace(/~~/g, '#del2#');
-		sh[1] = htmlencode.htmlEncode(sh[1]);
-		six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
-	}
-	else {
-		break;
-	}
-  }
-  
-  var mega = /{{{((?:(?:(?!{{{)(?!}}})).)*)}}}/;
-  var ton = /^\+([1-5])\s?(.*)/;
-  var big = /^\-([1-5])\s?(.*)/;
-  var yes = /^#(\w+)\s?(.*)/;
-  var yesn = /^(#[0-9a-f-A-F]{3})\s?(.*)/;
-  var yesno = /^(#[0-9a-f-A-F]{6})\s?(.*)/;
-  var bim;
-  var bbim;
-  while(true) {
-	  if(bim = mega.exec(six)) {
-		  if(bbim = ton.exec(bim[1])) {
-			  six = six.replace(/{{{\+([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span class="font-size-'+bbim[1]+'">'+bbim[2]+'</span>');
-		  }
-		  else if(bbim = big.exec(bim[1])) {
-			  six = six.replace(/{{{\-([1-5])\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span class="font-size-small-'+bbim[1]+'">'+bbim[2]+'</span>');
-		  }
-		  else if(bbim = yesno.exec(bim[1])) {
-			  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
-		  }
-		  else if(bbim = yesn.exec(bim[1])) {
-			  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
-		  }
-		  else if(bbim = yes.exec(bim[1])) {
-			  six = six.replace(/{{{#(\w+)\s?((?:(?:(?!{{{)(?!}}})).)*)}}}/,'<span style="color:'+bbim[1]+'">'+bbim[2]+'</span>');
-		  }
-		  else {
-			  var live = /\{\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
-			  var sh;
-			  while(true)
-			  {
-				if(sh = live.exec(six))
-				{
-					sh[1] = htmlencode.htmlEncode(sh[1]);
-					sh[1] = sh[1].replace(/--/g, '#del#');
-					sh[1] = sh[1].replace(/~~/g, '#del2#');
-					six = six.replace(live, '{/{{'+encodeURIComponent(sh[1])+'}}/}');
-				}
-				else {
-					break;
-				}
-			  }
-		  }
-	  }
-	  else {
-		  break;
-	  }
-  }
-  
   /* 모니위키 및 추가 파싱 부분 */
   
   six = six.replace(/\[\[[Yy][Oo][Uu][Tt][Uu][Bb][Ee]\(([^)]*)\)\]\]/g, "[youtube($1)]");
@@ -369,22 +305,6 @@ module.exports = function(n, ba){
   six = six.replace(/\r\n\s/g, '<br><span id="in"></span>');
   
   six = six.replace(/\n/g, "<br>");
-  
-  var live = /\{\/\{\{((?:[^}]*)\n?(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}\/}/;
-  var sh;
-  while(true)
-  {
-	if(sh = live.exec(six))
-	{
-		var test = decodeURIComponent(sh[1]);
-		test = test.replace(/#del#/g, '--');
-		test = test.replace(/#del2#/g, '~~');
-		six = six.replace(live, '<code>' + test + '</code>');
-	}
-	else {
-		break;
-	}
-  }
   
   six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
   six = six.replace(/\[각주\]/g, "<br>" + tou);
