@@ -209,6 +209,10 @@ router.get('/register', function(req, res, next) {
 });
 // 가입 하기
 router.post('/register', function(req, res, next) {
+	var nope = /-/;
+	if(nope.exec(req.body.id)) {
+		res.send('<script type="text/javascript">alert("닉네임에 -은 들어 갈 수 없습니다.");</script>')
+	}
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
 	if(!exists) {
 		fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
