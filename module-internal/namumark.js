@@ -235,7 +235,9 @@ module.exports = function(n, ba){
 		        h5c = h5c + 1;
 		  }
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
+		  toc = toc.replace(/10./g, 'ten.');
 	      toc = toc.replace(/0./g, '');
+		  toc = toc.replace(/ten./g, '10.');
 	      toc = toc.replace(/(.*)\./g, '$1');
 		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[2] + '<br>';
 		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>');
