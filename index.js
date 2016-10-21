@@ -1002,7 +1002,7 @@ router.get('/RecentDiscuss', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var dis2 = loginy(req,res)
-	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
+	var number = fs.readFileSync('./recent/RD-number.txt', 'utf8');
 	var i = 0;
 	var data = '';
 	while(true) {
