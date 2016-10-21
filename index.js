@@ -333,6 +333,10 @@ router.get('/setup', function(req, res, next) {
 			fs.open('./setting/WikiName.txt','w+', function (err,fd) {
 				fs.writeFileSync('./setting/WikiName.txt', name, 'utf8');
 			});
+			fs.open('./setting/CapSec.txt','w+', function (err,fd) {
+			});
+			fs.open('./setting/CapPub.txt.txt','w+', function (err,fd) {
+			});
 		}
 		else {
 			licen = rlicen(licen);
