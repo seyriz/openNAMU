@@ -1,4 +1,4 @@
-module.exports = function(n, ba){
+module.exports = function(n, req, ba){
   var fs = require('fs');
   var six = n;
   var today = getNow();
@@ -9,17 +9,17 @@ module.exports = function(n, ba){
   var katex = require('parse-katex');
   
   function getNow() {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; 
-  var yyyy = today.getFullYear();
-  if(dd<10) {
-      dd='0'+dd;
-  }
-  if(mm<10) {
-      mm='0'+mm;
-  }
-  return yyyy+'/' + mm+'/'+dd;
+	  var today = new Date();
+	  var dd = today.getDate();
+	  var mm = today.getMonth()+1; 
+	  var yyyy = today.getFullYear();
+	  if(dd<10) {
+		  dd='0'+dd;
+	  }
+	  if(mm<10) {
+		  mm='0'+mm;
+	  }
+	  return yyyy+'/' + mm+'/'+dd;
   }
   six = plugin(six);
   six = six + '\r\n';
@@ -65,7 +65,10 @@ module.exports = function(n, ba){
   var under;
   while(true) {
 	  if(under = include.exec(six)) {
-		  if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
+		  if(under[1] === req.params.page) {
+			  six = six.replace(include, "<a href=\"/w/$1\">$1</a>");
+		  }
+		  else if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(data, function(cnt){
 			six = six.replace(include, cnt);
