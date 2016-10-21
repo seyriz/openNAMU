@@ -91,6 +91,8 @@ module.exports = function(n, ba){
 	  }
   }
   
+  /* 모니위키 및 추가 파싱 부분 */
+  
   six = six.replace(/\[\[[Yy][Oo][Uu][Tt][Uu][Bb][Ee]\(([^)]*)\)\]\]/g, "[youtube($1)]");
   six = six.replace(/\[\[[Ii][Nn][Cc][Ll][Uu][Dd][Ee]\(([^)]*)\)\]\]/g, "[include($1)]");
   
@@ -101,6 +103,8 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[[Yy][Tt]\(([^)]*)\)\]/g, "[youtube($1)]");
   six = six.replace(/\[[Ii][Nn]\(([^)]*)\)\]/g, "[include($1)]");
+  
+  /* 끝 */
   
   var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
   var read;
