@@ -1,4 +1,4 @@
-module.exports = function(n, req, ba){
+module.exports = function(n, page){
   var fs = require('fs');
   var six = n;
   var today = getNow();
@@ -65,7 +65,7 @@ module.exports = function(n, req, ba){
   var under;
   while(true) {
 	  if(under = include.exec(six)) {
-		  if(under[1] === req.params.page) {
+		  if(under[1] === page) {
 			  six = six.replace(include, "<a href=\"/w/$1\">$1</a>");
 		  }
 		  else if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
@@ -312,8 +312,8 @@ module.exports = function(n, req, ba){
   six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
   six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
-  d('1: '+six)
-  ba(six)
+
+  return six;
   
   // Thank for 2DU, LiteHell //
 }
