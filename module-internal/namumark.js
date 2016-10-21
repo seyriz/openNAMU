@@ -23,9 +23,9 @@ module.exports = function(n, ba){
   }
   six = plugin(six);
   six = six + '\r\n';
-  six = six.replace(/<script>|<\/script>/g, "");
-  six = six.replace(/<(.*) on(.*)="(.*)">/g, "");
-  six = six.replace(/javascript:/g, "");
+  six = six.replace(/<[Ss][Cc][Rr][Ii][Pp][Tt]>|<\/[Ss][Cc][Rr][Ii][Pp][Tt]>/g, "");
+  six = six.replace(/<(.*) [Oo][Nn](.*)="(.*)">/g, "");
+  six = six.replace(/[Jj][Aa][Vv][Aa][Ss][Cc][Rr][Ii][Pp][Tt]:/g, "");
   
   var live = /\{\{\{((?:[^}]*)\n(?:(?:(?:(?:(?:[^}]*)(?:\n)?)+))))}}}/;
   var sh;
@@ -97,7 +97,7 @@ module.exports = function(n, ba){
   six = six.replace(/\[\[목차\]\]/g, "[목차]");
   six = six.replace(/\[\[각주\]\]/g, "[각주]");
   
-  six = six.replace(/[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt]:((?:[^.]*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, "[img(http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1)]");
+  six = six.replace(/[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt]:((?:[^.]*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, "http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1");
   
   six = six.replace(/\[[Yy][Tt]\(([^)]*)\)\]/g, "[youtube($1)]");
   six = six.replace(/\[[Ii][Nn]\(([^)]*)\)\]/g, "[include($1)]");
@@ -121,18 +121,18 @@ module.exports = function(n, ba){
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
   
-  var include = /\[include\(([^)]*)\)\]/;
+  var include = /\[[Ii][Nn][Cc][Ll][Uu][Dd][Ee]\(([^)]*)\)\]/;
   var under;
   while(true) {
 	  if(under = include.exec(six)) {
 		  if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(data, function(cnt){
-			six = six.replace(/\[include\(([^)]*)\)\]/, cnt);
+			six = six.replace(include, cnt);
 			})
 		  }
 		  else {
-			  six = six.replace(/\[include\(([^)]*)\)\]/, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>");
+			  six = six.replace(include, "<a class=\"not_thing\" href=\"/w/$1\">$1</a>");
 		  }
 	  }
 	  else {
@@ -144,11 +144,11 @@ module.exports = function(n, ba){
   var tang = /\[\[([^\]\]]*)\]\]/;
   var match;
   var van;
-  six = six.replace(/\[\[(?:((?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[(?:((?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
+  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
 	
-  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
+  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
   
   while(true) {
 	if(match = tong.exec(six)) {
@@ -254,11 +254,11 @@ module.exports = function(n, ba){
   six = six.replace(/\^\^(.+?)\^\^(?!\^)/g,'<sup>$1</sup>');
   six = six.replace(/,,(.+?),,(?!,)/g,'<sub>$1</sub>');
   
-  six = six.replace(/\[br\]/ig,'<br>');
+  six = six.replace(/\[[Bb][Rr]\]/ig,'<br>');
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  six = six.replace(/((?:(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, '<img src="$1">');
+  six = six.replace(/([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/g, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
   
   six = six.replace(/#([Jj][Pp][Gg])#/g, '.$1');
   six = six.replace(/#([Jj][Ee][Pp][Gg])#/g, '.$1');
