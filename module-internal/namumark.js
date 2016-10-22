@@ -200,7 +200,7 @@ module.exports = function(n, ba){
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  six = six.replace(/([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/g, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
+  six = six.replace(/([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?:(?!\.[Jj][Pp][Gg]|\.[Pp][Nn][Gg]|\.[Gg][Ii][Ff]|\.[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/g, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
   
   six = six.replace(/#([Jj][Pp][Gg])#/g, '.$1');
   six = six.replace(/#([Jj][Ee][Pp][Gg])#/g, '.$1');
