@@ -239,7 +239,7 @@ s:hover, strike:hover, del:hover {
 }
 
 .scroll-buttons a:link, .scroll-buttons a:visited {
-    color: #e0e0e0;
+    color: white;
 	background: #008275;
 }
 div.scroll-buttons a {
