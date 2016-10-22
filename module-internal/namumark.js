@@ -1,4 +1,4 @@
-module.exports = function(n, ba){
+module.exports = function(req, n, ba){
   var fs = require('fs');
   var six = n;
   var today = getNow();
@@ -65,7 +65,10 @@ module.exports = function(n, ba){
   var under;
   while(true) {
 	  if(under = include.exec(six)) {
-		  if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
+		  if(req.params.page === under[1]) {
+			  six = six.replace(include, "<a href=\"/w/$1\">$1</a>");
+		  }
+		  else if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(data, function(cnt){
 			six = six.replace(include, cnt);
