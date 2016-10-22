@@ -117,26 +117,7 @@ function loginy(req,res) {
 	, AqoursGanbaRuby, WikiID
 	
 	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		id = cookies.get( "WikiID" );
-		pw = cookies.get( "AqoursGanbaRuby" );
-		
-		var exists = fs.existsSync('./user/' + id + '.txt');
-		if(exists) {
-			var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
-			var test = pw;
-
-			if(pass === test) {
-				var dis2 = 'none';
-			}
-			else {
-				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-				cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
-			}
-		}
-		else {
-			cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-			cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
-		}
+		var dis2 = 'none';
 	}
 	return dis2;
 }
@@ -298,6 +279,92 @@ router.get('/Upload', function(req, res, next) {
 	
 	res.status(200).render('upload', { title: '파일 업로드', dis2:dis2, wikiname: name });
 	res.end()
+});
+// 사용자 문서
+router.get('/user/:user', function(req, res) {
+  licen = rlicen(licen);
+  name = rname(name);
+  var title2 = encodeURIComponent(req.params.user)
+  var dis2 = loginy(req,res)
+  var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+  if(!exists) {
+	  res.status(200).render('user', { title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: '이 문서가 없습니다.', License: licen , wikiname: name});
+	  res.end()
+  } else {
+	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+	  var redirect = /^#(?:넘겨주기|redirect) ([^\n]*)/g;
+	  if(redirect.exec(data)) {
+		data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+	  }
+	  parseNamu(data, function(cnt){
+			res.status(200).render('user', { title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: cnt, License: licen , wikiname: name});
+			res.end()
+	  })
+  }
+});
+// 사용자 편집
+router.get('/edit/user/:user', function(req, res) {
+  licen = rlicen(licen);
+  name = rname(name);
+  var ip = yourip(req,res);
+  var title2 = encodeURIComponent(req.params.user)
+  var dis2 = loginy(req,res)
+  var cookies = new Cookies( req, res )
+  , AqoursGanbaRuby, WikiID
+	
+  if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+	id = cookies.get( "WikiID" );
+	pw = cookies.get( "AqoursGanbaRuby" );
+		
+	var exists = fs.existsSync('./user/' + id + '.txt');
+	if(exists) {
+		var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
+		var test = pw;
+
+		if(pass === test) {
+			if(req.params.user === id) {
+				
+			} else {
+				res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
+			}
+		}
+		else {
+			cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+		}
+	}
+	else {
+		cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
+		cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+	}
+  } else {
+	  res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
+  }
+  
+  var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+  if(!exists) {
+	  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: '', License: licen , wikiname: name});
+	  res.end()
+  } else {
+	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+	  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: data, License: licen , wikiname: name});
+	  res.end()
+  }
+});
+router.post('/edit/user/:user', function(req, res) {
+  licen = rlicen(licen);
+  name = rname(name);
+  var title2 = encodeURIComponent(req.params.user)
+  var dis2 = loginy(req,res)
+  var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+  if(exists) {
+	  fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+  } else {
+	  fs.open('./user/' + encodeURIComponent(req.params.user) + '-page.txt','w+',function(err,fd){
+		fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+	  });
+  }
+  res.redirect('/user/'+encodeURIComponent(req.params.user))
 });
 // 생성
 router.get('/setup', function(req, res, next) {
