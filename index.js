@@ -447,7 +447,7 @@ router.get('/topic/:page', function(req, res) {
   
   var title2 = encodeURIComponent(req.params.page);
   
-  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/yes.txt');
+  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/');
   if(exists) {
 	var topic = fs.readdirSync('./topic/' + encodeURIComponent(req.params.page) + '/');
     var i = 0;
@@ -456,10 +456,7 @@ router.get('/topic/:page', function(req, res) {
     while(true) {
 	  j = i + 1;
 	  
-	  if(topic[i] === 'yes.txt') {
-		  
-	  }
-	  else if(!topic[i]) {
+	  if(!topic[i]) {
 		  break;
 	  }
 	  else {
@@ -543,7 +540,7 @@ router.get('/topic/:page/:topic', function(req, res) {
   var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
   var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
   var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
-  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/yes.txt';
+  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
   
   var exists = fs.existsSync(rfile);
   if(!exists) {
@@ -596,21 +593,17 @@ router.post('/topic/:page/:topic', function(req, res) {
   var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
   var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
   var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
-  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/yes.txt';
-  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/yes.txt';
+  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
+  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/';
   
   var exists = fs.existsSync(yfile);
   if(!exists) {
 	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
-	fs.open(yfile,'w',function(err,fd){
-	});
   }
   
   var exists = fs.existsSync(rfile);
   if(!exists) {
 	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
-	fs.open(rfile,'w',function(err,fd){
-	});
   }
   else {
 	var number = fs.readFileSync(nfile, 'utf8');;
