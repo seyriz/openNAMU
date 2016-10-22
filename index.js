@@ -368,7 +368,7 @@ router.post('/edit/user/:user', function(req, res) {
 });
 // 생성
 router.get('/setup', function(req, res, next) {
-	fs.exists('./recent/RecentChanges.txt', function (exists) {
+	fs.exists('./recent/RC-number.txt', function (exists) {
 		if(!exists) {
 			licen = 'CC ZERO';
 			name = '오픈나무';
