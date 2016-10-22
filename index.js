@@ -1189,12 +1189,17 @@ router.get('/TitleIndex', function(req, res) {
 	var ganba;
 	var ruby = '<div>';
 	var dayo = /(.*)\.txt/;
+	var haha = /-stop$/;
 	var hehe;
 	while(true) {
 		if(sun[shine]) {
 			hehe = decodeURIComponent(sun[shine]);
 			ganba = dayo.exec(hehe);
-			ruby = ruby + '<li>' + '<a href="/w/' + encodeURIComponent(ganba[1]) + '">' + ganba[1] + '</a></li>';
+			if(haha.exec(ganba[1])) {
+				
+			} else {
+				ruby = ruby + '<li>' + '<a href="/w/' + encodeURIComponent(ganba[1]) + '">' + ganba[1] + '</a></li>';
+			}
 		}
 		else {
 			ruby = ruby + '</div>';
