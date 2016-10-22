@@ -368,50 +368,74 @@ router.post('/edit/user/:user', function(req, res) {
 });
 // 생성
 router.get('/setup', function(req, res, next) {
-	fs.exists('./recent/RC-number.txt', function (exists) {
-		if(!exists) {
-			licen = 'CC ZERO';
-			name = '오픈나무';
-			FrontPage = 'FrontPage';
-			
-			res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
-			
-			fs.mkdirSync('./history', 777);
-			fs.mkdirSync('./data', 777);
-			fs.mkdirSync('./topic', 777);
-			fs.mkdirSync('./setting', 777);
-			fs.mkdirSync('./images', 777);
-			fs.mkdirSync('./recent', 777);
-			fs.mkdirSync('./user', 777);
-			
-			fs.open('./recent/RC-number.txt','w+',function(err,fd){
-				fs.writeFileSync('./recent/RC-number.txt', 1, 'utf8');
-			});
-			fs.open('./recent/RD-number.txt','w+',function(err,fd){
-				fs.writeFileSync('./recent/RD-number.txt', 1, 'utf8');
-			});
-			
-			fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
-				fs.writeFileSync('./setting/FrontPage.txt', FrontPage, 'utf8');
-			});
-			fs.open('./setting/License.txt','w+', function (err,fd) {
-				fs.writeFileSync('./setting/License.txt', licen, 'utf8');
-			});
-			fs.open('./setting/WikiName.txt','w+', function (err,fd) {
-				fs.writeFileSync('./setting/WikiName.txt', name, 'utf8');
-			});
-			fs.open('./setting/CapSec.txt','w+', function (err,fd) {
-			});
-			fs.open('./setting/CapPub.txt.txt','w+', function (err,fd) {
-			});
-		}
-		else {
-			licen = rlicen(licen);
-			name = rname(name);
-			FrontPage = rFrontPage(FrontPage);
-			res.status(200).render('ban', { title: 'Setup', content: "이미 파일이 있습니다.", License: licen, wikiname: name});
-		}
-	});
+	licen = 'CC ZERO';
+	name = '오픈나무';
+	FrontPage = 'FrontPage';
+	var exists = fs.existsSync('./user/');
+	if(!exists) {
+		fs.mkdirSync('./user', 777);
+	}
+	var exists = fs.existsSync('./topic/');
+	if(!exists) {
+		fs.mkdirSync('./topic', 777);
+	}
+	var exists = fs.existsSync('./data/');
+	if(!exists) {
+		fs.mkdirSync('./data', 777);
+	}
+	var exists = fs.existsSync('./recent/');
+	if(!exists) {
+		fs.mkdirSync('./recent', 777);
+	}
+	var exists = fs.existsSync('./setting/');
+	if(!exists) {
+		fs.mkdirSync('./setting', 777);
+	}
+	var exists = fs.existsSync('./history/');
+	if(!exists) {
+		fs.mkdirSync('./history', 777);
+	}
+	var exists = fs.existsSync('./recent/RC-number.txt');
+	if(!exists) {
+		fs.open('./recent/RC-number.txt','w+',function(err,fd){
+			fs.writeFileSync('./recent/RC-number.txt', 1, 'utf8');
+		});
+	}
+	var exists = fs.existsSync('./recent/RD-number.txt');
+	if(!exists) {
+		fs.open('./recent/RD-number.txt','w+',function(err,fd){
+			fs.writeFileSync('./recent/RD-number.txt', 1, 'utf8');
+		});
+	}
+	var exists = fs.existsSync('./setting/FrontPage.txt');
+	if(!exists) {
+		fs.open('./setting/FrontPage.txt','w+', function (err,fd) {
+			fs.writeFileSync('./setting/FrontPage.txt', FrontPage, 'utf8');
+		});
+	}
+	var exists = fs.existsSync('./setting/License.txt');
+	if(!exists) {
+		fs.open('./setting/License.txt','w+', function (err,fd) {
+			fs.writeFileSync('./setting/License.txt', licen, 'utf8');
+		});
+	}
+	var exists = fs.existsSync('./setting/WikiName.txt');
+	if(!exists) {
+		fs.open('./setting/WikiName.txt','w+', function (err,fd) {
+			fs.writeFileSync('./setting/WikiName.txt', name, 'utf8');
+		});
+	}
+	var exists = fs.existsSync('./setting/CapSec.txt');
+	if(!exists) {
+		fs.open('./setting/CapSec.txt','w+', function (err,fd) {
+		});
+	}
+	var exists = fs.existsSync('./setting/CapSec.txt');
+	if(!exists) {
+		fs.open('./setting/CapPub.txt.txt','w+', function (err,fd) {
+		});
+	}
+	res.status(200).render('ban', { title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name});
 });
 // 토론
 router.get('/topic/:page', function(req, res) {
