@@ -1226,6 +1226,32 @@ router.get('/TitleIndex', function(req, res) {
 	}
 	res.render('ban', { title: '모든 문서', dis2:dis2, content: ruby + '<br>' + shine + '개의 문서' , wikiname: name});
 });
+// 랜덤
+router.get('/random', function(req, res) {
+	var sun = fs.readdirSync('./data');
+	var shine = 0;
+	var ganba;
+	var dayo = /(.*)\.txt/;
+	var haha = /-stop$/;
+	var hehe;
+	while(true) {
+		if(sun[shine]) {
+			shine = shine + 1;
+		}
+		else {
+			break;
+		}
+	}
+	var random = Math.floor(Math.random() * (shine - 0)) + 0;
+	console.log(random)
+	var test = dayo.exec(sun[random])
+	if(haha.exec(test[1])) {
+		res.redirect('/random');
+	}
+	else {
+		res.redirect('/w/' + test[1]);
+	}
+});
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	var ip = yourip(req,res);
