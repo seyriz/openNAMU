@@ -1243,7 +1243,6 @@ router.get('/random', function(req, res) {
 		}
 	}
 	var random = Math.floor(Math.random() * (shine - 0)) + 0;
-	console.log(random)
 	var test = dayo.exec(sun[random])
 	if(haha.exec(test[1])) {
 		res.redirect('/random');
