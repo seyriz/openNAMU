@@ -1101,6 +1101,9 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 router.get('/RecentChanges', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
+	
+	var admin = yourip(req, res);
+	
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
 	var i = 0;
 	var data = '';
@@ -1110,10 +1113,24 @@ router.get('/RecentChanges', function(req, res, next) {
 			i = i + 1;
 			var exists = fs.existsSync('./recent/RC-' + i + '.txt');
 			if(exists) {
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				
 				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+				}
+				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			else {
@@ -1128,10 +1145,24 @@ router.get('/RecentChanges', function(req, res, next) {
 				break;
 			}
 			else {
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				
 				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+				}
+				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+page+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
@@ -1144,6 +1175,9 @@ router.get('/RecentChanges', function(req, res, next) {
 router.get('/RecentDiscuss', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
+	
+	var admin = yourip(req, res);
+	
 	var dis2 = loginy(req,res)
 	var number = fs.readFileSync('./recent/RD-number.txt', 'utf8');
 	var i = 0;
@@ -1153,10 +1187,24 @@ router.get('/RecentDiscuss', function(req, res, next) {
 			i = i + 1;
 			var exists = fs.existsSync('./recent/RD-' + i + '.txt');
 			if(exists) {
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				
 				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+				}
+				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+page+' ('+title+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
 			}
 			else {
@@ -1171,10 +1219,24 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				break;
 			}
 			else {
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				
 				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+				}
+				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+page+' ('+title+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
