@@ -97,7 +97,7 @@ function yourip(req, res) {
 			var test = pw;
 
 			if(pass === test) {
-				test = decodeURIComponent(id);
+				encodeURIComponent(test) = id;
 			}
 			else {
 				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
@@ -123,7 +123,7 @@ function loginy(req,res) {
 }
 // 밴
 function stop(ip) {
-    var exists = fs.existsSync('./user/' + ip + '-ban.txt');
+    var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 	
 	if(exists) {
 		res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.");</script>')
@@ -139,7 +139,7 @@ function editstop(ip, page) {
 }
 // 어드민
 function admin(ip) {
-	var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+	var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-admin.txt');
 	
 	if(!exists) {
 		res.send('<script type="text/javascript">alert("어드민이 아닙니다.");</script>')
@@ -193,16 +193,26 @@ router.get('/register', function(req, res, next) {
 // 가입 하기
 router.post('/register', function(req, res, next) {
 	var nope = /-/;
+	var nope2 = /:/;
+	var nope3 = /./;
 	if(nope.exec(req.body.id)) {
-		res.send('<script type="text/javascript">alert("닉네임에 -은 들어 갈 수 없습니다.");</script>')
+		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
 	}
-	var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
-	if(!exists) {
-		fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
-		res.redirect('/w/')
+	else if(nope2.exec(req.body.id)) {
+		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
 	}
-	else {
-		res.send('<script type="text/javascript">alert("이미 있는 계정 입니다.");</script>')
+	else if(nope3.exec(req.body.id)) {
+		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
+	}
+	else { 
+		var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
+		if(!exists) {
+			fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
+			res.redirect('/w/')
+		}
+		else {
+			res.send('<script type="text/javascript">alert("이미 있는 계정 입니다.");</script>')
+		}
 	}
 });
 // 로그아웃
@@ -325,7 +335,15 @@ router.get('/edit/user/:user', function(req, res) {
 
 		if(pass === test) {
 			if(req.params.user === id) {
-				
+				var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+				if(!exists) {
+				  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: '', License: licen , wikiname: name});
+				  res.end()
+				} else {
+				  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+				  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: data, License: licen , wikiname: name});
+				  res.end()
+				}
 			} else {
 				res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
 			}
@@ -341,16 +359,6 @@ router.get('/edit/user/:user', function(req, res) {
 	}
   } else {
 	  res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
-  }
-  
-  var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-  if(!exists) {
-	  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: '', License: licen , wikiname: name});
-	  res.end()
-  } else {
-	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-	  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: data, License: licen , wikiname: name});
-	  res.end()
   }
 });
 router.post('/edit/user/:user', function(req, res) {
@@ -548,6 +556,12 @@ router.get('/topic/:page/:topic', function(req, res) {
   
   var exists = fs.existsSync(rfile);
   if(!exists) {
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+	else if(encodeURIComponent(req.params.topic) + '-10000-today'.length > 255) {
+		res.send('<script type="text/javascript">alert("토론 명이 너무 깁니다.");</script>')
+	}
 	res.status(404).render('topic', { title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, wikiname: name });
 	res.end()	  
   }
@@ -933,64 +947,66 @@ router.post('/move/:page', function(req, res) {
 	{
 		res.send('<script type="text/javascript">alert("문서 이름 없음");</script>');
 	}
-	var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r1.txt');
-	if(exists)
-	{
-		res.send('<script type="text/javascript">alert("이미 해당 문서가 존재 합니다.");</script>');
-	}
-	else
-	{
-		var rtitle = '<a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함';
-		var name = req.params.page;
-		rplus(ip, today, name, rtitle);
-		var i = 0;
-		fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
-		while(true) {
-			i=i+1
-			var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
-			if(exists) {
-				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt', function (err) {
-				});
-				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-ip.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-ip.txt', function (err) {
-				});
-				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-today.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-today.txt', function (err) {
-				});
-				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-send.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-send.txt', function (err) {
-				});
+	else {
+		var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r1.txt');
+		if(exists)
+		{
+			res.send('<script type="text/javascript">alert("이미 해당 문서가 존재 합니다.");</script>');
+		}
+		else
+		{
+			var rtitle = '<a href="/w/'+encodeURIComponent(req.body.title)+'">'+req.body.title+'</a> 문서로 문서를 이동함';
+			var name = req.params.page;
+			rplus(ip, today, name, rtitle);
+			var i = 0;
+			fs.mkdirSync('./history/' + encodeURIComponent(req.body.title), 777);
+			while(true) {
+				i=i+1
+				var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+				if(exists) {
+					fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt', function (err) {
+					});
+					fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-ip.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-ip.txt', function (err) {
+					});
+					fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-today.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-today.txt', function (err) {
+					});
+					fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-send.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-send.txt', function (err) {
+					});
+				}
+				else {
+					break;
+				}
 			}
-			else {
-				break;
+			
+			var j = 0;
+			while(true) {
+				j = j + 1;
+				var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt');
+				if(!exists) {
+					fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt','w',function(err,fd){
+						fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
+					});
+					fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
+						fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip, 'utf8');
+					});
+					fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt','w',function(err,fd){
+						fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt', today, 'utf8');
+					});
+					fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt','w',function(err,fd){
+						fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt', '<a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+					});
+					break;
+				}
 			}
+			fs.rmdir('./history/' + encodeURIComponent(req.params.page), function(err) {
+			});
+				
+			fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
+			});
 		}
 		
-		var j = 0;
-		while(true) {
-			j = j + 1;
-			var exists = fs.existsSync('./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'.txt');
-			if(!exists) {
-				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
-				});
-				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip, 'utf8');
-				});
-				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt', today, 'utf8');
-				});
-				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt', '<a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
-				});
-				break;
-			}
-		}
-		fs.rmdir('./history/' + encodeURIComponent(req.params.page), function(err) {
-		});
-			
-		fs.rename('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt', function (err) {
-		});
+		res.redirect('/w/'+ encodeURIComponent(req.body.title))
 	}
-	
-	res.redirect('/w/'+ encodeURIComponent(req.body.title))
 });
 // 항목을 보여줍니다.
 router.get('/w/:page', function(req, res, next) {
@@ -1426,11 +1442,14 @@ router.get('/history/:page/:r', function(req, res) {
 router.get('/history/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
+	
+	var admin = yourip(req, res);
+	
 	var dis2 = loginy(req,res)
 	var title2 = encodeURIComponent(req.params.page);
 	var i = 0;
 	var neoa = '<div id="history">';
+	
 	while(true) {
 		i = i + 1;
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
@@ -1438,7 +1457,20 @@ router.get('/history/:page', function(req, res) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
 			var today = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', 'utf8');
 			var send = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', 'utf8');
-			neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+			var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+			if(exists) {
+				var exists = fs.existsSync('./user/' + ip + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+			}
+			else {
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+			}
 		}
 		else {
 			neoa = neoa + '</div>';
