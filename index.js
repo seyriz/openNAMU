@@ -1112,7 +1112,12 @@ router.get('/RecentChanges', function(req, res, next) {
 		if(Number(number) < 51) {
 			i = i + 1;
 			var exists = fs.existsSync('./recent/RC-' + i + '.txt');
-			if(exists) {
+			if(exists) {			
+				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
@@ -1120,11 +1125,6 @@ router.get('/RecentChanges', function(req, res, next) {
 				else {
 					var ban = '차단';
 				}
-				
-				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
-				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
-				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
-				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
@@ -1145,6 +1145,11 @@ router.get('/RecentChanges', function(req, res, next) {
 				break;
 			}
 			else {
+				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
@@ -1152,11 +1157,6 @@ router.get('/RecentChanges', function(req, res, next) {
 				else {
 					var ban = '차단';
 				}
-				
-				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
-				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
-				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
-				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
@@ -1186,7 +1186,12 @@ router.get('/RecentDiscuss', function(req, res, next) {
 		if(Number(number) < 51) {
 			i = i + 1;
 			var exists = fs.existsSync('./recent/RD-' + i + '.txt');
-			if(exists) {
+			if(exists) {				
+				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
@@ -1194,11 +1199,6 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				else {
 					var ban = '차단';
 				}
-				
-				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
-				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
-				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
-				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
@@ -1218,7 +1218,12 @@ router.get('/RecentDiscuss', function(req, res, next) {
 			else if (i === Number(number)) {
 				break;
 			}
-			else {
+			else {			
+				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
+				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
+				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
+				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
@@ -1226,11 +1231,6 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				else {
 					var ban = '차단';
 				}
-				
-				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
-				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
-				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
-				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
