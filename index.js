@@ -124,6 +124,7 @@ function loginy(req,res) {
 // 밴
 function stop(ip) {
     var exists = fs.existsSync('./user/' + ip + '-ban.txt');
+	
 	if(exists) {
 		res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.");</script>')
 	}
@@ -139,6 +140,7 @@ function editstop(ip, page) {
 // 어드민
 function admin(ip) {
 	var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+	
 	if(!exists) {
 		res.send('<script type="text/javascript">alert("어드민이 아닙니다.");</script>')
 	}
@@ -534,6 +536,8 @@ router.get('/topic/:page/:topic', function(req, res) {
   
   var dis2 = loginy(req,res)
   
+  var admin = yourip(req, res);
+  
   var title2 = encodeURIComponent(req.params.page);
   var title3 = encodeURIComponent(req.params.topic);
   
@@ -562,25 +566,39 @@ router.get('/topic/:page/:topic', function(req, res) {
 		i = i + 1;
 		  
 		if(number === i) {
-		add = add + '</div>';
-	  
-		break;
+			add = add + '</div>';
+			break;
 		}
 		else {
 			var data = fs.readFileSync(file + '/' + i + '.txt', 'utf8');
 			var ip = fs.readFileSync(file + '/' + i + '-ip.txt', 'utf8');
 			var today = fs.readFileSync(file + '/' + i + '-today.txt', 'utf8');
 			
+			var bl = '블라인드';
+			
 			var exists = fs.existsSync(file + '/' + i + '-stop.txt');
 			if(exists) {
 				data = '블라인드 되었습니다.';
+				bl = '해제';
 			}
-			
+				
 			if(ip === starter) {
-				add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>'
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+				}
+				else {
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+				}
 			}
 			else {
-			    add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>'
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				if(exists) {
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+				}
+				else {
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+				}
 			}
 		}
 	}
