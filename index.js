@@ -97,7 +97,7 @@ function yourip(req, res) {
 			var test = pw;
 
 			if(pass === test) {
-				encodeURIComponent(test) = id;
+				test = decodeURIComponent(id);
 			}
 			else {
 				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
@@ -192,16 +192,16 @@ router.get('/register', function(req, res, next) {
 });
 // 가입 하기
 router.post('/register', function(req, res, next) {
-	var nope = /-/;
-	var nope2 = /:/;
-	var nope3 = /./;
+	var nope = /\-/;
+	var nnope = /\:/;
+	var nnnope = /\./;
 	if(nope.exec(req.body.id)) {
 		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
 	}
-	else if(nope2.exec(req.body.id)) {
+	else if(nnope.exec(req.body.id)) {
 		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
 	}
-	else if(nope3.exec(req.body.id)) {
+	else if(nnnope.exec(req.body.id)) {
 		res.send('<script type="text/javascript">alert("닉네임에 - . :은 들어 갈 수 없습니다.");</script>')
 	}
 	else { 
@@ -1459,7 +1459,7 @@ router.get('/history/:page', function(req, res) {
 			var send = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', 'utf8');
 			var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 			if(exists) {
-				var exists = fs.existsSync('./user/' + ip + '-ban.txt');
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
 				}
