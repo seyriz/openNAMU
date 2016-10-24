@@ -551,8 +551,11 @@ router.get('/topic/:page/:topic', function(req, res) {
 	res.status(404).render('topic', { title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, wikiname: name });
 	res.end()	  
   }
-  else {		
-	if(encodeURIComponent(req.params.topic + '-10000-today').length > 255) {
+  else {
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+	else if(encodeURIComponent(req.params.topic) + '-10000-today'.length > 255) {
 		res.send('<script type="text/javascript">alert("토론 명이 너무 깁니다.");</script>')
 	}
 	  
