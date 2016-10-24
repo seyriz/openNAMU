@@ -594,7 +594,7 @@ router.get('/topic/:page/:topic', function(req, res) {
 			else {
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
-					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
 				else {
 					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
