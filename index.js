@@ -826,11 +826,17 @@ router.post('/revert/:page/:r', function(req, res) {
 		i = i + 1;
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(!exists) {
-			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', revert, 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', revert, 'utf8');
 			});
-			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.params.r+' 버전으로 되돌림', 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-ip.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', ip, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-today.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', today, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-send.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-ip.txt', req.params.r + ' 버전으로 되돌림', 'utf8');
 			});
 			break;
 		}
@@ -877,7 +883,13 @@ router.post('/delete/:page', function(req, res) {
 				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 			});
 			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">문서를 삭제함', 'utf8');
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+			});
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', '문서를 삭제함', 'utf8');
 			});
 			break;
 		}
@@ -938,6 +950,10 @@ router.post('/move/:page', function(req, res) {
 				});
 				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-ip.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-ip.txt', function (err) {
 				});
+				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-today.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-today.txt', function (err) {
+				});
+				fs.rename('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-send.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-send.txt', function (err) {
+				});
 			}
 			else {
 				break;
@@ -953,7 +969,13 @@ router.post('/move/:page', function(req, res) {
 					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '.txt', req.body.content, 'utf8');
 				});
 				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt','w',function(err,fd){
-					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo"><a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-ip.txt', ip, 'utf8');
+				});
+				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt','w',function(err,fd){
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt', today, 'utf8');
+				});
+				fs.open('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt','w',function(err,fd){
+					fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt', '<a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
 				});
 				break;
 			}
@@ -1170,35 +1192,6 @@ router.get('/raw/:page', function(req, res, next) {
 router.post('/history/:page', function(req, res, next) {
 	res.redirect('/diff/' + encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.r) + '/r' + encodeURIComponent(req.body.rr));
 });
-// 편집 화면을 보여줍니다.
-router.get('/edit/:page', function(req, res) {
-	licen = rlicen(licen);
-	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
-	var dis2 = loginy(req,res)
-	if(encodeURIComponent(req.params.page).length > 255) {
-		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
-	}
-	
-	var ip = yourip(req,res);
-	var page = req.params.page;
-
-    stop(ip);
-	editstop(ip, page);
-    var today = getNow();
-	
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
-		if(!exists){
-			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name});
-			res.end()
-		}
-		else{
-			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name});
-			res.end()
-		}
-	})
-});
 // 미리보기
 router.post('/preview/:page', function(req, res) {
 	licen = rlicen(licen);
@@ -1269,15 +1262,44 @@ router.get('/random', function(req, res) {
 		res.redirect('/w/' + test[1]);
 	}
 });
+// 편집 화면을 보여줍니다.
+router.get('/edit/:page', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	var dis2 = loginy(req,res)
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+	
+	var ip = yourip(req,res);
+	var page = req.params.page;
+
+    stop(ip);
+	editstop(ip, page);
+    var today = getNow();
+	
+	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+		if(!exists){
+			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name});
+			res.end()
+		}
+		else{
+			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name});
+			res.end()
+		}
+	})
+});
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var today = getNow();
 	
-	if(!req.body.send)
-	{
+	if(!req.body.send) {
 		req.body.send = "<br>";
 	}
+	
 	var rtitle = req.body.send;
 	var name = req.params.page;
 	rplus(ip, today, name, rtitle);
@@ -1294,7 +1316,13 @@ router.post('/edit/:page', function(req, res) {
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
 						});
 					});
 				}
@@ -1308,7 +1336,13 @@ router.post('/edit/:page', function(req, res) {
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -1321,11 +1355,17 @@ router.post('/edit/:page', function(req, res) {
 			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 				if(!exists) {
 					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w',function(err,fd){
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
 						});
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
 						});
 					});
 				}
@@ -1335,11 +1375,17 @@ router.post('/edit/:page', function(req, res) {
 						i = i + 1;
 						var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 						if(!exists) {
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
 							});
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+req.body.send, 'utf8');
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
 							});
 							break;
 						}
@@ -1387,7 +1433,9 @@ router.get('/history/:page', function(req, res) {
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(exists) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
-			neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/'+encodeURIComponent(req.params.page)+'/r'+i+'">r'+i+'</a></td><td id="yosolo">'+ip+'</td></tr></tbody></table>' + neoa;
+			var today = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', 'utf8');
+			var send = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', 'utf8');
+			neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 		}
 		else {
 			neoa = neoa + '</div>';
