@@ -146,7 +146,7 @@ function admin(ip) {
 	}
 }
 // 최근 바뀜 추가
-function rplus(ip, today, name, rtitle) {
+function rplus(ip, today, name, rtitle, now, req) {
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
 	fs.writeFileSync('./recent/RC-number.txt', Number(number)+1, 'utf8');
 	fs.open('./recent/RC-' + number + '.txt','w+',function(err,fd){
@@ -160,7 +160,22 @@ function rplus(ip, today, name, rtitle) {
 	});
 	fs.open('./recent/RC-' + number + '-today.txt','w+',function(err,fd){
 		fs.writeFileSync('./recent/RC-' + number + '-today.txt', today, 'utf8');
-	});	
+	});
+	
+	if(now.length > req.body.content.length) {
+		var leng = now.length - req.body.content.length;
+		fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
+			leng = '-' + leng
+			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
+		});
+	}
+	else if(now.length < req.body.content.length) {
+		var leng = req.body.content.length - now.length;
+		fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
+			leng = '+' + leng
+			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
+		});
+	}
 }
 // 최근 토론 추가
 function tplus(ip, today, name, name2) {
@@ -1118,6 +1133,12 @@ router.get('/RecentChanges', function(req, res, next) {
 				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
 				
+				var exists = fs.existsSync('./recent/RC-' + i + '-leng.txt');
+				if(exists) {
+					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
+					page = page + ' (' + leng + ')';
+				}
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
 					var ban = '풀기';
@@ -1149,6 +1170,12 @@ router.get('/RecentChanges', function(req, res, next) {
 				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RC-' + i + '.txt', 'utf8');
+				
+				var exists = fs.existsSync('./recent/RC-' + i + '-leng.txt');
+				if(exists) {
+					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
+					page = page + ' (' + leng + ')';
+				}
 				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
@@ -1348,7 +1375,9 @@ router.get('/edit/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
+	
 	var dis2 = loginy(req,res)
+	
 	if(encodeURIComponent(req.params.page).length > 255) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
@@ -1381,9 +1410,14 @@ router.post('/edit/:page', function(req, res) {
 		req.body.send = "<br>";
 	}
 	
+	var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
+	
 	var rtitle = req.body.send;
+	
 	var name = req.params.page;
-	rplus(ip, today, name, rtitle);
+	
+	rplus(ip, today, name, rtitle, now, req);
+	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
 			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
