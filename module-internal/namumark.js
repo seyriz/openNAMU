@@ -279,8 +279,9 @@ module.exports = function(req, n, ba){
 		  break; 
 	  }
 	  else if(match[1]) {
-		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + htmlencode.htmlEncode(match[1]) + "\" id=\"fn-" + htmlencode.htmlEncode(match[1]) + "\">[" + htmlencode.htmlEncode(match[1]) + "]</a> " + match[2] + "</span><br>";
-		six = six.replace(b, "<sup><a href='javascript:void(0);' id=\"rfn-" + htmlencode.htmlEncode(match[1]) + "\" onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + htmlencode.htmlEncode(match[1]) + "]</a></sup><span class='foot' id='footnote_"+htmlencode.htmlEncode(match[1])+"' style='display:none;'><a href=\"#fn-" + htmlencode.htmlEncode(match[1]) + "\" onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + htmlencode.htmlEncode(match[1]) + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+htmlencode.htmlEncode(match[1])+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[2] + "</span>");
+		tou = tou + "<span class='footnote-list'><a href=\"#rfn-" + a + "\" id=\"fn-" + a + "\">[" + htmlencode.htmlEncode(match[1]) + "]</a> " + match[2] + "</span><br>";
+		six = six.replace(b, "<sup><a href='javascript:void(0);' id=\"rfn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + htmlencode.htmlEncode(match[1]) + "]</a></sup><span class='foot' id='footnote_"+a+"' style='display:none;'><a href=\"#fn-" + a + "\" onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[" + htmlencode.htmlEncode(match[1]) + "]</a> <a href='javascript:void(0);' onclick=\"var f=document.getElementById('footnote_"+a+"');var s=f.style.display=='inline';f.style.display=s?'none':'inline';this.className=s?'':'opened';\">[X]</a> " + match[2] + "</span>");
+		a = a + 1;
 	  }
 	  else
 	  {
