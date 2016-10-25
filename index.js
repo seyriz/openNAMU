@@ -867,17 +867,17 @@ router.post('/revert/:page/:r', function(req, res) {
 		i = i + 1;
 		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 		if(!exists) {
-			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', revert, 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', revert, 'utf8');
 			});
-			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-ip.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', ip, 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
 			});
-			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-today.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '.txt', today, 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
 			});
-			fs.open('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-send.txt','w',function(err,fd){
-				fs.writeFileSync('./history/' + encodeURIComponent(req.body.page) + '/r' + i + '-ip.txt', req.params.r + ' 버전으로 되돌림', 'utf8');
+			fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w',function(err,fd){
+				fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.params.r + ' 버전으로 되돌림', 'utf8');
 			});
 			break;
 		}
