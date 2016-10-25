@@ -146,7 +146,7 @@ function admin(ip) {
 	}
 }
 // 최근 바뀜 추가
-function rplus(ip, today, name, rtitle, now, req) {
+function rplus(ip, today, name, rtitle, now, req, content) {
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
 	fs.writeFileSync('./recent/RC-number.txt', Number(number)+1, 'utf8');
 	fs.open('./recent/RC-' + number + '.txt','w+',function(err,fd){
@@ -162,19 +162,28 @@ function rplus(ip, today, name, rtitle, now, req) {
 		fs.writeFileSync('./recent/RC-' + number + '-today.txt', today, 'utf8');
 	});
 	
-	if(now.length > req.body.content.length) {
-		var leng = now.length - req.body.content.length;
-		fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
-			leng = '-' + leng
-			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-		});
-	}
-	else if(now.length < req.body.content.length) {
-		var leng = req.body.content.length - now.length;
-		fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
-			leng = '+' + leng
-			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-		});
+	if(content) {
+		if(!now) {
+			var leng = req.body.content.length;
+			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
+				leng = '+' + leng
+				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
+			});
+		}
+		else if(now.length > req.body.content.length) {
+			var leng = now.length - req.body.content.length;
+			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
+				leng = '-' + leng
+				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
+			});
+		}
+		else if(now.length < req.body.content.length) {
+			var leng = req.body.content.length - now.length;
+			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
+				leng = '+' + leng
+				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
+			});
+		}
 	}
 }
 // 최근 토론 추가
@@ -901,7 +910,6 @@ router.get('/delete/:page', function(req, res) {
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
 	var ip = yourip(req,res);
-
 	var today = getNow();
 	var rtitle = '문서를 삭제함';
 	var name = req.params.page;
@@ -957,7 +965,6 @@ router.get('/move/:page', function(req, res) {
 router.post('/move/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var today = getNow();
-	  
 	if(req.body.title === '')
 	{
 		res.send('<script type="text/javascript">alert("문서 이름 없음");</script>');
@@ -1415,14 +1422,17 @@ router.post('/edit/:page', function(req, res) {
 	if(!req.body.send) {
 		req.body.send = "<br>";
 	}
-	
-	var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
+	content = req.body.content;
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	if(exists) {
+		var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
+	}
 	
 	var rtitle = req.body.send;
 	
 	var name = req.params.page;
 	
-	rplus(ip, today, name, rtitle, now, req);
+	rplus(ip, today, name, rtitle, now, req, content);
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
