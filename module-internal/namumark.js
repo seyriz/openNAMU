@@ -22,7 +22,7 @@ module.exports = function(req, n, ba){
   return yyyy+'/' + mm+'/'+dd;
   }
   six = plugin(six);
-  six = six + '\r\n';
+  six = '\r\n' + six + '\r\n';
   six = six.replace(/<[Ss][Cc][Rr][Ii][Pp][Tt]>|<\/[Ss][Cc][Rr][Ii][Pp][Tt]>/g, "");
   six = six.replace(/<(.*) [Oo][Nn](.*)="(.*)">/g, "");
   six = six.replace(/[Jj][Aa][Vv][Aa][Ss][Cc][Rr][Ii][Pp][Tt]:/g, "");
@@ -89,11 +89,11 @@ module.exports = function(req, n, ba){
   var van;
   var test = /(.*)(#s-[0-9]+)$/;
   var testing;
-  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
+  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1#$2#\"><span class=\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class=\"out_link\" href=\"$1#$2#\"><span class=\"contect\">外</span>$1#$2#</a>");
 	
-  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
+  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\]\]/g, "<a class=\"out_link\" href=\"$1$2\"><span class=\"contect\">外</span>$1$2</a>");
   
   while(true) {
 	if(match = tong.exec(six)) {
@@ -103,15 +103,15 @@ module.exports = function(req, n, ba){
 		}
 		else if(testing = test.exec(match[1])) {
 			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
-				van = van + 'class#is#"not_thing"';
+				van = van + 'class="not_thing"';
 			}
-			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1])+testing[2]+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[2]+'</a>');
+			six = six.replace(tong, '<a '+van+' title="'+htmlencode.htmlEncode(testing[1])+testing[2]+'" href="/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[2]+'</a>');
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-				van = van + 'class#is#"not_thing"';
+				van = van + 'class="not_thing"';
 			}
-			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+			six = six.replace(tong, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
 		}
 	}
 	else {
@@ -126,15 +126,15 @@ module.exports = function(req, n, ba){
 		}
 		else if(testing = test.exec(match[1])) {
 			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
-				van = van + 'class#is#"not_thing"';
+				van = van + 'class="not_thing"';
 			}
-			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1]+testing[2])+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[1]+'</a>');
+			six = six.replace(tang, '<a '+van+' title="'+htmlencode.htmlEncode(testing[1]+testing[2])+'" href="/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[1]+'</a>');
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-				van = van + 'class#is#"not_thing"';
+				van = van + 'class="not_thing"';
 			}
-			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+			six = six.replace(tang, '<a '+van+' title="'+htmlencode.htmlEncode(match[1])+'" href="/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
 		}
 	}
 	else {
@@ -142,7 +142,7 @@ module.exports = function(req, n, ba){
 	}
   }
   
-  var h = /(={1,6})\s?([^=]*)\s?(?:={1,6})\r\n/;
+  var h = /\r\n(={1,6})\s?([^\n]*)\s?\r\n/;
   var h0c = 0;
   var h1c = 0;
   var h2c = 0;
@@ -156,6 +156,7 @@ module.exports = function(req, n, ba){
   var rtoc = '<div id="toc"><span id="toc-name">목차</span><br><br>';
   while(true) {
 	  if(head = h.exec(six)) {
+		  head[2] = head[2].replace(/\s?(={1,6})$/g, '')
 		  wiki = head[1].length;
 		  if(last < wiki) {
 			  last = wiki;
@@ -203,15 +204,12 @@ module.exports = function(req, n, ba){
 		  toc = toc.replace(/#\./g, '.');
 	      toc = toc.replace(/(.*)\./g, '$1');
 		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[2] + '<br>';
-		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>');
+		  six = six.replace(h, '\n<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> ' + head[2] + '</h'+wiki+'>');
 	  } else {
 		  rtoc = rtoc + '</div>';
 		  break;
 	  }
   }
-
-  six = six.replace(/#is#/g, '=');
-  rtoc = rtoc.replace(/#is#/g, '=');
 
   six = six.replace(/\[목차\]/g, rtoc);
   
