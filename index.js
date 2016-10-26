@@ -624,6 +624,11 @@ router.get('/topic/:page/:topic', function(req, res) {
 			}
 				
 			if(ip === starter) {
+				var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+				if(exists) {
+					ip = ip + ' - 관리자';
+				}
+				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
 					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
@@ -633,6 +638,11 @@ router.get('/topic/:page/:topic', function(req, res) {
 				}
 			}
 			else {
+				var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+				if(exists) {
+					ip = ip + ' - 관리자';
+				}
+				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
 					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
@@ -1142,11 +1152,17 @@ router.get('/RecentChanges', function(req, res, next) {
 				
 				var exists = fs.existsSync('./recent/RC-' + i + '-leng.txt');
 				if(exists) {
+					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
-					var pageplus = page + ' (' + leng + ')';
+					if(plus.exec(leng)) {
+						var pageplus = page + '</a> <span style="color:green;">(' + leng + ')</span>';
+					}
+					else {
+						var pageplus = page + '</a> <span style="color:red;">(' + leng + ')</span>';
+					}
 				}
 				else {
-					var pageplus = page;
+					var pageplus = page + '</a>';
 				}
 				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
@@ -1162,7 +1178,7 @@ router.get('/RecentChanges', function(req, res, next) {
 					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			else {
 				break;
@@ -1183,11 +1199,17 @@ router.get('/RecentChanges', function(req, res, next) {
 				
 				var exists = fs.existsSync('./recent/RC-' + i + '-leng.txt');
 				if(exists) {
+					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
-					var pageplus = page + ' (' + leng + ')';
+					if(plus.exec(leng)) {
+						var pageplus = page + '</a> <span style="color:green;">(' + leng + ')</span>';
+					}
+					else {
+						var pageplus = page + '</a> <span style="color:red;">(' + leng + ')</span>';
+					}
 				}
 				else {
-					var pageplus = page;
+					var pageplus = page + '</a>';
 				}
 				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
@@ -1203,7 +1225,7 @@ router.get('/RecentChanges', function(req, res, next) {
 					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
 		}

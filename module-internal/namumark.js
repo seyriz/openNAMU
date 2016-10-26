@@ -87,6 +87,8 @@ module.exports = function(req, n, ba){
   var tang = /\[\[([^\]\]]*)\]\]/;
   var match;
   var van;
+  var test = /(.*)(#s-[0-9]+)$/;
+  var testing;
   six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
 	
@@ -96,10 +98,21 @@ module.exports = function(req, n, ba){
   while(true) {
 	if(match = tong.exec(six)) {
 		van = '';
-		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-			van = van + 'class="not_thing"';
+		if(match[1] === req.params.page) {
+			six = six.replace(tong, '<b>'+match[2]+'</b>');
 		}
-		six = six.replace(/\[\[([^\]\]]*)\|([^\]\]]*)\]\]/, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+		else if(testing = test.exec(match[1])) {
+			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
+				van = van + 'class="not_thing"';
+			}
+			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1])+testing[2]+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[2]+'</a>');
+		}
+		else {
+			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+				van = van + 'class="not_thing"';
+			}
+			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+		}
 	}
 	else {
 		break;
@@ -108,10 +121,21 @@ module.exports = function(req, n, ba){
   while(true) {
 	if(match = tang.exec(six)) {
 		van = '';
-		if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-			van = van + 'class#is#"not_thing"';
+		if(match[1] === req.params.page) {
+			six = six.replace(tang, '<b>'+match[1]+'</b>');
 		}
-		six = six.replace(/\[\[([^\]\]]*)\]\]/, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+		else if(testing = test.exec(match[1])) {
+			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
+				van = van + 'class="not_thing"';
+			}
+			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1]+testing[2])+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[1]+'</a>');
+		}
+		else {
+			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
+				van = van + 'class="not_thing"';
+			}
+			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+		}
 	}
 	else {
 		break;
