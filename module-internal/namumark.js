@@ -103,13 +103,13 @@ module.exports = function(req, n, ba){
 		}
 		else if(testing = test.exec(match[1])) {
 			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
-				van = van + 'class="not_thing"';
+				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1])+testing[2]+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[2]+'</a>');
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-				van = van + 'class="not_thing"';
+				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
 		}
@@ -126,13 +126,13 @@ module.exports = function(req, n, ba){
 		}
 		else if(testing = test.exec(match[1])) {
 			if(!fs.existsSync('./data/' + encodeURIComponent(testing[1])+'.txt')) {
-				van = van + 'class="not_thing"';
+				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1]+testing[2])+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[1]+'</a>');
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
-				van = van + 'class="not_thing"';
+				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
 		}
