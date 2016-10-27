@@ -586,6 +586,7 @@ router.get('/topic/:page/:topic/stop', function(req, res) {
 			});
 		}
 	});
+	res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
 });
 // 토론 명
 router.get('/topic/:page/:topic', function(req, res) {
@@ -630,6 +631,17 @@ router.get('/topic/:page/:topic', function(req, res) {
 	var starter = fs.readFileSync(sfile, 'utf8');
 	var i = 0;
 	var add = '<div id="new_game">';
+	
+	var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+	if(exists) {
+		var exists = fs.existsSync(stfile);
+		if(exists) {
+			add = add + '<a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop">(토론 재개)</a><br><br>';
+		}
+		else {
+			add = add + '<a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop">(토론 정지)</a><br><br>';
+		}
+	}
 	  
 	while(true) {
 		i = i + 1;
