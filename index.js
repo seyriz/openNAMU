@@ -513,12 +513,18 @@ router.get('/topic/:page', function(req, res) {
 			  data = '블라인드 되었습니다.';
 		  }
 		  
-		  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+		  var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-admin.txt');
+		  if(exists) {			
+			  add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+		  }
+		  else {
+			  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+		  }
 	  
 		  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/stop.txt');
 		  if(exists) {			
 			  add = add + '<table id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
-			}
+		  }
 	  }
 	  
 	  i = i + 1;
