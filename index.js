@@ -145,6 +145,14 @@ function admin(ip) {
 		res.send('<script type="text/javascript">alert("어드민이 아닙니다.");</script>')
 	}
 }
+// 소유자
+function mine(ip) {
+	var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-mine.txt');
+	
+	if(!exists) {
+		res.send('<script type="text/javascript">alert("소유자가 아닙니다.");</script>')
+	}
+}
 // 최근 바뀜 추가
 function rplus(ip, today, name, rtitle, now, req, content) {
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
@@ -662,13 +670,19 @@ router.get('/topic/:page/:topic', function(req, res) {
 				data = '블라인드 되었습니다.';
 				bl = '해제';
 			}
-				
-			if(ip === starter) {
-				var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+			
+			var exists = fs.existsSync('./user/' + ip + '-admin.txt');
+			if(exists) {
+				ip = ip + ' - 관리자';
+				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
-					ip = ip + ' - 관리자';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
-				
+				else {
+					add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+				}
+			}
+			else if(ip === starter) {				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
 					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
@@ -678,11 +692,6 @@ router.get('/topic/:page/:topic', function(req, res) {
 				}
 			}
 			else {
-				var exists = fs.existsSync('./user/' + ip + '-admin.txt');
-				if(exists) {
-					ip = ip + ' - 관리자';
-				}
-				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
 					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
@@ -779,6 +788,23 @@ router.get('/ban/:ip', function(req, res) {
 			fs.open('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt','w',function(err,fd){
 			});
 		}
+	}
+	res.redirect('/w/')
+});
+// 어드민 부여
+router.get('/admin/:ip', function(req, res) {
+	var ip = yourip(req,res);
+	
+	mine(ip);
+	
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt');
+	if(exists) {
+		fs.unlink('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt', function (err) {
+		});
+	}
+	else {
+		fs.open('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt','w',function(err,fd){
+		});
 	}
 	res.redirect('/w/')
 });
