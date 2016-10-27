@@ -240,7 +240,7 @@ router.post('/register', function(req, res, next) {
 		var exists = fs.existsSync('./user/' + encodeURIComponent(req.body.id) + '.txt');
 		if(!exists) {
 			fs.writeFileSync('./user/' + encodeURIComponent(req.body.id) + '.txt', sha3_512(req.body.pw), 'utf8');
-			res.redirect('/w/')
+			res.redirect('/login')
 		}
 		else {
 			res.send('<script type="text/javascript">alert("이미 있는 계정 입니다.");</script>')
