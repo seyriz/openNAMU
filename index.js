@@ -330,7 +330,7 @@ router.get('/user/:user', function(req, res) {
 	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 	  var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
 	  if(redirect.exec(data)) {
-		data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+		data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 	  }
 	  parseNamu(req, data, function(cnt){
 			res.status(200).render('user', { title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: cnt, License: licen , wikiname: name});
@@ -505,7 +505,12 @@ router.get('/topic/:page', function(req, res) {
 			  data = '블라인드 되었습니다.';
 		  }
 		  
-		  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+		  add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="1">#1</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+	  
+		  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/stop.txt');
+		  if(exists) {			
+			  add = add + '<table id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
+			}
 	  }
 	  
 	  i = i + 1;
@@ -560,6 +565,28 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 		}
 	});
 });
+// 토론 정지
+router.get('/topic/:page/:topic/stop', function(req, res) {
+	licen = rlicen(licen);
+	name = rname(name);
+	FrontPage = rFrontPage(FrontPage);
+	
+	var ip = yourip(req,res);
+    admin(ip);
+  
+	var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt';
+	
+	fs.exists(sfile, function (exists) {
+		if(!exists) {
+			fs.open(sfile,'w',function(err,fd){
+			});
+		}
+		else {
+			fs.unlink(sfile, function (err) {
+			});
+		}
+	});
+});
 // 토론 명
 router.get('/topic/:page/:topic', function(req, res) {
   licen = rlicen(licen);
@@ -577,6 +604,7 @@ router.get('/topic/:page/:topic', function(req, res) {
   var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
   var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
   var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
+  var stfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt';
   
   var exists = fs.existsSync(rfile);
   if(!exists) {
@@ -631,10 +659,10 @@ router.get('/topic/:page/:topic', function(req, res) {
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
-					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
 				else {
-					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
 			}
 			else {
@@ -645,15 +673,23 @@ router.get('/topic/:page/:topic', function(req, res) {
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
-					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
 				else {
-					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+					add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 				}
 			}
 		}
 	}
-	res.status(200).render('topic', { title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, content: add, wikiname: name });
+	
+	var exists = fs.existsSync(stfile);
+	if(exists) {
+		var toronstop = 'none';
+		
+		add = add + '<table id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
+	}
+	
+	res.status(200).render('topic', { title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, content: add, wikiname: name, toronstop: toronstop });
 	res.end()	  
   }
 });
@@ -1119,7 +1155,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 		else {
 			var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
 			if(redirect.exec(data)) {
-				data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+				data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 			}
 			parseNamu(req, data, function(cnt){
 				res.status(200).render('index', { title: req.params.page, dis2:dis2, title2: title2, dis:dis, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name});
@@ -1343,9 +1379,9 @@ router.post('/preview/:page', function(req, res) {
 	var dis2 = loginy(req,res)
 	var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
 	var data = req.body.content;
-	data = data.replace(redirect, "{{{#!html <li>리다이렉트 [[$1]]</li>}}}");
+	data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 	parseNamu(req, data, function(cnt){
-		res.render('preview', { title: req.params.page, dis2:dis2,  title2: encodeURIComponent(req.params.page), data: data, content: cnt , wikiname: name});
+		res.render('preview', { title: req.params.page, dis2:dis2,  title2: encodeURIComponent(req.params.page), data: data, data2: req.body.content, content: cnt , wikiname: name});
 		res.end()
 	});
 });

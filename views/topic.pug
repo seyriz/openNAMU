@@ -8,7 +8,7 @@ block content
   br
   h2.title= title3
   div(id='content')!= content
-  form#usrform(method='POST', action='/topic/' + title2 + '/' + title4)
+  form#usrform(method='POST', action='/topic/' + title2 + '/' + title4, style='display:' + toronstop)
     dl.form-group
       dt
         label(for="content") 토론 참여
