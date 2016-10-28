@@ -1153,7 +1153,7 @@ router.get('/w/:page', function(req, res, next) {
 			var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
 			var dtest;
 			if(dtest = redirect.exec(data)) {
-				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 [[$1]]</li>");
+				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
 				res.status(200).render('index', { title: req.params.page, dis: dis, dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: data, License: licen , wikiname: name});
 				res.end()
 			}
