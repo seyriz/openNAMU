@@ -508,8 +508,6 @@ router.get('/topic/:page', function(req, res) {
 		  var ip = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-ip.txt', 'utf8');
 		  var today = fs.readFileSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-today.txt', 'utf8');
 		  
-		  data = data.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
-		  
 		  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/' + topic[i] + '/1-stop.txt');
 		  if(exists) {
 			  data = '블라인드 되었습니다.';
@@ -671,8 +669,6 @@ router.get('/topic/:page/:topic', function(req, res) {
 			var ip = fs.readFileSync(file + '/' + i + '-ip.txt', 'utf8');
 			var today = fs.readFileSync(file + '/' + i + '-today.txt', 'utf8');
 			
-			data = data.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
-			
 			var bl = '블라인드';
 			
 			var exists = fs.existsSync(file + '/' + i + '-stop.txt');
@@ -754,6 +750,7 @@ router.post('/topic/:page/:topic', function(req, res) {
   var name2 = req.params.topic;
   tplus(ip, today, name, name2)
   
+  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
   fs.exists(sfile, function (exists) {
 	if(!exists) {
 		fs.open(sfile,'w',function(err,fd){
