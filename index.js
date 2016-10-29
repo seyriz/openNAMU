@@ -173,6 +173,7 @@ function rplus(ip, today, name, rtitle, now, req, content) {
 				leng = '+' + leng
 				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			});
+			return '+' + leng;
 		}
 		else if(now.length > req.body.content.length) {
 			var leng = now.length - req.body.content.length;
@@ -180,6 +181,7 @@ function rplus(ip, today, name, rtitle, now, req, content) {
 				leng = '-' + leng
 				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			});
+			return '-' + leng;
 		}
 		else if(now.length < req.body.content.length) {
 			var leng = req.body.content.length - now.length;
@@ -187,6 +189,7 @@ function rplus(ip, today, name, rtitle, now, req, content) {
 				leng = '+' + leng
 				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			});
+			return '+' + leng;
 		}
 	}
 }
@@ -1596,7 +1599,7 @@ router.post('/edit/:page', function(req, res) {
 	
 	var name = req.params.page;
 	
-	rplus(ip, today, name, rtitle, now, req, content);
+	var leng = rplus(ip, today, name, rtitle, now, req, content);
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
@@ -1619,6 +1622,9 @@ router.post('/edit/:page', function(req, res) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
 						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
+						});
 					});
 				}
 				else {
@@ -1638,6 +1644,9 @@ router.post('/edit/:page', function(req, res) {
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
 							});
 							break;
 						}
@@ -1662,6 +1671,9 @@ router.post('/edit/:page', function(req, res) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
 						});
+						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
+						});
 					});
 				}
 				else {
@@ -1681,6 +1693,9 @@ router.post('/edit/:page', function(req, res) {
 							});
 							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
 								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+							});
+							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
 							});
 							break;
 						}
@@ -1733,6 +1748,20 @@ router.get('/history/:page', function(req, res) {
 			var ip = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', 'utf8');
 			var today = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', 'utf8');
 			var send = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', 'utf8');
+			var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt');
+			if(exists) {
+				var leng = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', 'utf8');
+				var plus = /\+/g;
+				if(plus.exec(leng)) {
+					var pageplus = '</a> <span style="color:green;">(' + leng + ')</span>';
+				}
+				else {
+					var pageplus = '</a> <span style="color:red;">(' + leng + ')</span>';
+				}
+			}
+			else {
+				var pageplus = '</a>';
+			}
 			var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 			if(exists) {
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
@@ -1742,10 +1771,10 @@ router.get('/history/:page', function(req, res) {
 				else {
 					var ban = '차단';
 				}
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + ' ' + pageplus + '</td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 			else {
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + '</a></td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">r' + i + ' ' + pageplus + '</td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 		}
 		else {
