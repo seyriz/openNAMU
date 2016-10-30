@@ -1023,6 +1023,7 @@ router.get('/delete/:page', function(req, res) {
 	var page = req.params.page;
 	var dis2 = loginy(req,res)
 	stop(ip);
+	editstop(ip, page);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
   
@@ -1078,6 +1079,7 @@ router.get('/move/:page', function(req, res) {
 	var page = req.params.page;
 	var dis2 = loginy(req,res)
     stop(ip);
+	editstop(ip, page);
     var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
