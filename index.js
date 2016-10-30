@@ -1409,9 +1409,21 @@ router.get('/RecentDiscuss', function(req, res, next) {
 					var ban = '차단';
 				}
 				
-				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-page.txt');
 				if(exists) {
-					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+					if(exists) {
+						ip = '<a href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					}
+					else {
+						ip = '<a href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+					}
+				}
+				else {
+					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+					if(exists) {
+						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					}
 				}
 				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+htmlencode.htmlEncode(page)+' ('+htmlencode.htmlEncode(title)+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
@@ -1433,12 +1445,21 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
 				
-				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-page.txt');
 				if(exists) {
-					var ban = '풀기';
+					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+					if(exists) {
+						ip = '<a href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					}
+					else {
+						ip = '<a href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+					}
 				}
 				else {
-					var ban = '차단';
+					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
+					if(exists) {
+						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					}
 				}
 				
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
