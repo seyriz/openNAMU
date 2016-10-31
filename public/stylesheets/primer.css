@@ -38,14 +38,17 @@ pre {
     word-break: break-all;
 }
 
-@media (max-width: 767px) {
-
-.one-fifth {
-    width: 100%;
-}
+@media (max-width: 1000px) {
 
 .four-fifths {
     width: 100%;
+}
+
+}
+@media (min-width: 1000px) {
+
+.four-fifths {
+    width: 1000px;
 }
 
 }
@@ -290,7 +293,6 @@ div.scroll-buttons {
 }
 
 .four-fifths {
-    width: 1000px;
     float: none;
     margin: auto;
 }
@@ -315,24 +317,12 @@ div.scroll-buttons {
 }
 
 #top {
-    margin: 0 auto;
     position: relative;
-    width: 50%;
 }
 
 @media (max-width: 939px) {
 	#search {
 		float: right;
-	}
-	#top {
-		width: 100%;
-	}
-}
-@media (max-width: 1919px) {
-	@media (min-width: 459px) {
-		#top {
-			width: 70%;
-		}
 	}
 }
 @media (max-width: 459px) {
@@ -342,11 +332,6 @@ div.scroll-buttons {
 	}
 	.input-group {
 		width: 100%;
-	}
-}
-@media (max-width: 1480px) {
-	.four-fifths {
-		width: 65%;
 	}
 }
 

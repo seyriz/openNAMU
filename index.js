@@ -779,7 +779,7 @@ router.post('/topic/:page/:topic', function(req, res) {
 	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
   }
   else {
-	var number = fs.readFileSync(nfile, 'utf8');;
+	var number = fs.readFileSync(nfile, 'utf8');
   }
   
   var ip = yourip(req,res);
@@ -1309,7 +1309,19 @@ router.get('/RecentChanges', function(req, res, next) {
 				else {
 					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 					if(exists) {
-						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+						else {
+							ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+					}
+					else {
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+						}
 					}
 				}
 				
@@ -1368,7 +1380,19 @@ router.get('/RecentChanges', function(req, res, next) {
 				else {
 					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 					if(exists) {
-						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+						else {
+							ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+					}
+					else {
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+						}
 					}
 				}
 				
@@ -1422,7 +1446,19 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				else {
 					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 					if(exists) {
-						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+						else {
+							ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+					}
+					else {
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+						}
 					}
 				}
 				
@@ -1445,6 +1481,14 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
 				var page = fs.readFileSync('./recent/RD-' + i + '.txt', 'utf8');
 				
+				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+				if(exists) {
+					var ban = '풀기';
+				}
+				else {
+					var ban = '차단';
+				}
+				
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-page.txt');
 				if(exists) {
 					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
@@ -1458,13 +1502,20 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				else {
 					var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 					if(exists) {
-						ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>' + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
+						else {
+							ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+						}
 					}
-				}
-				
-				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
-				if(exists) {
-					ip = ip + ' <a href="/ban/' + ip + '">(' + ban + ')';
+					else {
+						var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '.txt');
+						if(exists) {
+							ip = '<a class="not_thing" href="/user/' + encodeURIComponent(ip) + '">' + ip + '</a>';
+						}
+					}
 				}
 				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/topic/'+encodeURIComponent(page)+'/'+encodeURIComponent(title)+'">'+htmlencode.htmlEncode(page)+' ('+htmlencode.htmlEncode(title)+')</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr></tbody></table>' + data;
