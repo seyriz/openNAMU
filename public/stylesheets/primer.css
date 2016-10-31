@@ -224,6 +224,8 @@ s:hover, strike:hover, del:hover {
     margin-bottom: 20px;
 	margin-top: -18px;
 	background: #008275;
+	position: fixed;
+	z-index: 2;
 }
 
 .scroll-buttons a:link, .scroll-buttons a:visited {
@@ -285,6 +287,8 @@ div.scroll-buttons {
 
 #tool {
     float: right;
+	z-index: 1;
+	margin-top: 15px;
 }
 
 #logo {
@@ -347,6 +351,9 @@ body {
 	#RecentChanges {
 		width: 20px;
 		margin-right: 10px;
+	}
+	#tool {
+		margin-top: 75px;
 	}
 }
 

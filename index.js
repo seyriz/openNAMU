@@ -1276,6 +1276,7 @@ router.post('/preview/:page', function(req, res) {
 	var data = req.body.content;
 	data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 	parseNamu(req, data, function(cnt){
+		var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
 		var leftbarcontect;
 		if(leftbarcontect = leftbar.exec(cnt)) {
 		}
