@@ -38,21 +38,6 @@ pre {
     word-break: break-all;
 }
 
-@media (max-width: 1000px) {
-
-.four-fifths {
-    width: 100%;
-}
-
-}
-@media (min-width: 1000px) {
-
-.four-fifths {
-    width: 1000px;
-}
-
-}
-
 textarea {
     width: 100%;
 }
@@ -290,11 +275,12 @@ div.scroll-buttons {
     right: 0px;
 	border-left: 1px solid #545454;
 	border-radius: 10px 10px 0 0;
+	opacity: 0.8;
 }
 
 .four-fifths {
     float: none;
-    margin: auto;
+    margin-left: auto;
 }
 
 #tool {
@@ -354,7 +340,7 @@ body {
     float: left;
     padding: 5px;
 }
-@media (max-width: 459px) {
+@media (max-width: 710px) {
 	#is_mobile {
 		display: none;
 	}
@@ -364,23 +350,38 @@ body {
 	}
 }
 
+#left_bar {
+    height: 100%;
+    width: 15%;
+    position: fixed;
+    left: 0;
+    top: 45px;
+    background: white;
+    padding: 20px;
+}
+
 #yosolo {
     width: 33.33%;
 	text-align: center;
 }
+
 #toron {
     width: 100%;
 }
+
 #toroncolorgreen {
 	background-color: #B0D3AD;
 }
+
 #toroncolor {
 	background-color: #d5d5d5;
 }
+
 #bb {
     background: #a28a7e;
     color: white;
 }
+
 #history {
 	margin-right: 10px;
 }
@@ -389,6 +390,7 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
 .foot {
     position: fixed;
     bottom: 0px;
@@ -400,6 +402,7 @@ body {
     text-align: center;
     z-index: 10000;
 }
+
 #toroncolorstop {
     background: #9dd5e1;
 }
@@ -410,4 +413,23 @@ body {
 
 #toroncoloradmin {
     background-color: #F5C1C1;
+}
+
+@media (min-width: 768px) {
+
+.four-fifths {
+    width: 85%;
+}
+
+}
+@media (max-width: 768px) {
+
+.four-fifths {
+    width: 100%;
+}
+
+#left_bar {
+    display: none;
+}
+
 }
