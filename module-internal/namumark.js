@@ -21,7 +21,6 @@ module.exports = function(req, n, ba){
   }
   return yyyy+'/' + mm+'/'+dd;
   }
-  six = plugin(six);
   six = six + '\r\n';
   six = six.replace(/<[Ss][Cc][Rr][Ii][Pp][Tt]>|<\/[Ss][Cc][Rr][Ii][Pp][Tt]>/g, "");
   six = six.replace(/<(.*) [Oo][Nn](.*)="(.*)">/g, "");
@@ -106,12 +105,40 @@ module.exports = function(req, n, ba){
 				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1])+testing[2]+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[2]+'</a>');
+			
+			var exists = fs.existsSync('./data/' + encodeURIComponent(testing[1])+'-back/');
+			if(!exists) {
+				fs.mkdirSync('./data/' + encodeURIComponent(testing[1])+'-back/', 777);
+				fs.open('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+				});
+			}
+			else {
+				var exists = fs.existsSync('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt');
+				if(!exists) {
+					fs.open('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+					});
+				}
+			}
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tong, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[2]+'</a>');
+			
+			var exists = fs.existsSync('./data/' + encodeURIComponent(match[1])+'-back/');
+			if(!exists) {
+				fs.mkdirSync('./data/' + encodeURIComponent(match[1])+'-back/', 777);
+				fs.open('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+				});
+			}
+			else {
+				var exists = fs.existsSync('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt');
+				if(!exists) {
+					fs.open('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+					});
+				}
+			}
 		}
 	}
 	else {
@@ -129,12 +156,40 @@ module.exports = function(req, n, ba){
 				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(testing[1]+testing[2])+'" href#is#"/w/'+encodeURIComponent(testing[1])+testing[2]+'">'+match[1]+'</a>');
+			
+			var exists = fs.existsSync('./data/' + encodeURIComponent(testing[1])+'-back/');
+			if(!exists) {
+				fs.mkdirSync('./data/' + encodeURIComponent(testing[1])+'-back/', 777);
+				fs.open('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+				});
+			}
+			else {
+				var exists = fs.existsSync('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt');
+				if(!exists) {
+					fs.open('./data/' + encodeURIComponent(testing[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+					});
+				}
+			}
 		}
 		else {
 			if(!fs.existsSync('./data/' + encodeURIComponent(match[1])+'.txt')) {
 				van = van + 'class#is#"not_thing"';
 			}
 			six = six.replace(tang, '<a '+van+' title#is#"'+htmlencode.htmlEncode(match[1])+'" href#is#"/w/'+encodeURIComponent(match[1])+'">'+match[1]+'</a>');
+			
+			var exists = fs.existsSync('./data/' + encodeURIComponent(match[1])+'-back/');
+			if(!exists) {
+				fs.mkdirSync('./data/' + encodeURIComponent(match[1])+'-back/', 777);
+				fs.open('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+				});
+			}
+			else {
+				var exists = fs.existsSync('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt');
+				if(!exists) {
+					fs.open('./data/' + encodeURIComponent(match[1])+'-back/' + encodeURIComponent(req.params.page) + '.txt','w+',function(err,fd){
+					});
+				}
+			}
 		}
 	}
 	else {
@@ -338,6 +393,8 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[각주\]/g, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
+  
+  six = plugin(six);
   ba(six)
   
   // Thank for 2DU, LiteHell //

@@ -484,6 +484,12 @@ router.get('/setup', function(req, res, next) {
 		fs.open('./setting/CapPub.txt.txt','w+', function (err,fd) {
 		 });
 	}
+	var exists = fs.existsSync('./setting/Plugin.txt');
+	if(!exists) {
+		fs.open('./setting/Plugin.txt','w+', function (err,fd) {
+			fs.writeFileSync('./setting/Plugin.txt', 'false', 'utf8');
+		});
+	}
 	res.status(200).render('ban', { leftbarcontect: '', title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name });
  });
 // 토론
@@ -1589,6 +1595,59 @@ router.get('/raw/:page', function(req, res, next) {
 router.post('/history/:page', function(req, res, next) {
 	res.redirect('/diff/' + encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.r) + '/r' + encodeURIComponent(req.body.rr));
  });
+// 역링크
+router.get('/xref/:page', function(req, res) {
+	licen = rlicen(licen);
+	var dis2 = loginy(req,res)
+	name = rname(name);
+	var shine = 0;
+	var ganba;
+	var ruby = '<div>';
+	var dayo = /(.*)\.txt$/;
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-back/');
+	if(exists) {
+		var sun = fs.readdirSync('./data/' + encodeURIComponent(req.params.page) + '-back/');
+		while(true) {
+			if(sun[shine]) {
+				var exists = fs.existsSync('./data/' + sun[shine]);
+				if(exists) {
+					var data = fs.readFileSync('./data/' + sun[shine], 'utf8');
+					
+					var itis = new RegExp('\\[\\[' + req.params.page + '\\]\\]');
+					var itisnt = new RegExp('\\[\\[' + req.params.page + '\\|([^\\]]*)\\]\\]');
+					
+					if(itisnt.exec(data)) {
+						ganba = dayo.exec(sun[shine]);
+											
+						ruby = ruby + '<li>' + '<a href="/w/' + ganba[1] + '">' + decodeURIComponent(ganba[1]) + '</a></li>';
+					}
+					else if(itis.exec(data)) {
+						ganba = dayo.exec(sun[shine]);
+						
+						ruby = ruby + '<li>' + '<a href="/w/' + ganba[1] + '">' + decodeURIComponent(ganba[1]) + '</a></li>';
+					}
+					else {
+						fs.unlink('./data/' + encodeURIComponent(req.params.page) + '-back/' + sun[shine], function (err) {
+						});
+					}
+				}
+				else {
+					fs.unlink('./data/' + encodeURIComponent(req.params.page) + '-back/' + sun[shine], function (err) {
+					});
+				}
+			}
+			else {
+				ruby = ruby + '</div>';
+				break;
+			}
+			shine = shine + 1;
+		}
+	}
+	else {
+		ruby = ruby + '</div>';
+	}
+	res.render('ban', { leftbarcontect: '', title: req.params.page + ' (역 링크)', dis2:dis2, content: ruby , wikiname: name });
+ });
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
 	licen = rlicen(licen);
@@ -1599,7 +1658,7 @@ router.get('/TitleIndex', function(req, res) {
 	var shine = 0;
 	var ganba;
 	var ruby = '<div>';
-	var dayo = /(.*)\.txt/;
+	var dayo = /(.*)\.txt$/;
 	var haha = /-stop$/;
 	var hehe;
 	while(true) {
