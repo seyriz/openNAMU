@@ -318,6 +318,9 @@ div.scroll-buttons {
 	.input-group {
 		width: 100%;
 	}
+	#tool {
+    		margin-top: 30px;
+	}
 }
 
 .four-fifths.column {
