@@ -487,7 +487,7 @@ router.get('/setup', function(req, res, next) {
 	var exists = fs.existsSync('./setting/Plugin.txt');
 	if(!exists) {
 		fs.open('./setting/Plugin.txt','w+', function (err,fd) {
-			fs.writeFileSync('./setting/Plugin.txt', 'false', 'utf8');
+			fs.writeFileSync('./setting/Plugin.txt', 'true', 'utf8');
 		});
 	}
 	res.status(200).render('ban', { leftbarcontect: '', title: 'Setup', content: "완료 되었습니다.", License: licen, wikiname: name });
