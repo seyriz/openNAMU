@@ -221,7 +221,7 @@ s:hover, strike:hover, del:hover {
 	margin-top: -18px;
 	background: #008275;
 	z-index: 2;
-	position: absolute;
+	position: relative;
 }
 
 .scroll-buttons a:link, .scroll-buttons a:visited {
@@ -283,7 +283,6 @@ div.scroll-buttons {
 
 #tool {
     float: right;
-	margin-top: 15px;
 }
 
 #logo {
@@ -317,9 +316,6 @@ div.scroll-buttons {
 	}
 	.input-group {
 		width: 100%;
-	}
-	#tool {
-    		margin-top: 30px;
 	}
 }
 

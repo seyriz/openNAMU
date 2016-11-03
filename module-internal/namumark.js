@@ -29,16 +29,16 @@ module.exports = function(req, n, ba){
   
   /* 모니위키 및 추가 파싱 부분 */
   
-  six = six.replace(/\[\[[Yy][Oo][Uu][Tt][Uu][Bb][Ee]\(([^)]*)\)\]\]/g, "[youtube($1)]");
-  six = six.replace(/\[\[[Ii][Nn][Cc][Ll][Uu][Dd][Ee]\(([^)]*)\)\]\]/g, "[include($1)]");
+  six = six.replace(/\[\[youtube\(([^)]*)\)\]\]/ig, "[youtube($1)]");
+  six = six.replace(/\[\[include\(([^)]*)\)\]\]/ig, "[include($1)]");
   
   six = six.replace(/\[\[목차\]\]/g, "[목차]");
   six = six.replace(/\[\[각주\]\]/g, "[각주]");
   
-  six = six.replace(/[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt]:((?:[^.]*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))/g, "http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1");
+  six = six.replace(/attachment:((?:[^.]*)\.(?:jpg|png|gif|jpeg))/ig, "http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1");
   
-  six = six.replace(/\[[Yy][Tt]\(([^)]*)\)\]/g, "[youtube($1)]");
-  six = six.replace(/\[[Ii][Nn]\(([^)]*)\)\]/g, "[include($1)]");
+  six = six.replace(/\[yt\(([^)]*)\)\]/ig, "[youtube($1)]");
+  six = six.replace(/\[in\(([^)]*)\)\]/ig, "[include($1)]");
   
   /* 끝 */
   
@@ -89,11 +89,11 @@ module.exports = function(req, n, ba){
   var van;
   var test = /(.*)(#s-[0-9]+)$/;
   var testing;
-  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[(?:([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?![Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))[^\s])*)\.([Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))\]\]/g, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
+  six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))[^\s])*)\.(jpg|png|gif|jpeg))\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
 	
-  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
-  six = six.replace(/\[\[([Hh][Tt][Tt][Pp][Ss]?:\/\/)([^\]\]]*)\]\]/g, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
+  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
   
   while(true) {
 	if(match = tong.exec(six)) {
