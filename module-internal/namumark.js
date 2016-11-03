@@ -22,9 +22,10 @@ module.exports = function(req, n, ba){
   return yyyy+'/' + mm+'/'+dd;
   }
   six = six + '\r\n';
-  six = six.replace(/<[Ss][Cc][Rr][Ii][Pp][Tt]>|<\/[Ss][Cc][Rr][Ii][Pp][Tt]>/g, "");
-  six = six.replace(/<(.*) [Oo][Nn](.*)="(.*)">/g, "");
-  six = six.replace(/[Jj][Aa][Vv][Aa][Ss][Cc][Rr][Ii][Pp][Tt]:/g, "");
+  six = six.replace(/<script>|<\/script>/ig, "");
+  six = six.replace(/<(.*) on(.*)="(.*)">/ig, "");
+  six = six.replace(/javascript:/ig, "");
+  six = six.replace(/&#x6A;&#x61;&#x76;&#x61;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;/g, "");
   
   /* 모니위키 및 추가 파싱 부분 */
   
