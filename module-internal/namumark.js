@@ -32,8 +32,8 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[\[youtube\(([^)]*)\)\]\]/ig, "[youtube($1)]");
   six = six.replace(/\[\[include\(([^)]*)\)\]\]/ig, "[include($1)]");
   
-  six = six.replace(/\[\[목차\]\]/g, "[목차]");
-  six = six.replace(/\[\[각주\]\]/g, "[각주]");
+  six = six.replace(/\[\[(?:목차|tableofcontents)\]\]/ig, "[목차]");
+  six = six.replace(/\[\[(?:각주|footnote)\]\]/ig, "[각주]");
   
   six = six.replace(/attachment:((?:[^.]*)\.(?:jpg|png|gif|jpeg))/ig, "http://rigvedawiki.net/w/%EC%95%84%EC%9D%B4%ED%8F%B0%207?action=download&value=$1");
   
@@ -269,7 +269,7 @@ module.exports = function(req, n, ba){
   six = six.replace(/#is#/g, '=');
   rtoc = rtoc.replace(/#is#/g, '=');
 
-  six = six.replace(/\[목차\]/g, rtoc);
+  six = six.replace(/\[(?:목차|tableofcontents)\]/ig, rtoc);
   
   six = six.replace(/'''(.+?)'''(?!')/g,'<strong>$1</strong>');
   six = six.replace(/''(.+?)''(?!')/g,'<i>$1</i>');
@@ -390,8 +390,8 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/\n/g, "<br>");
   
-  six = six.replace(/\[각주\](((<br>+)*(\s+)*(\n+))+)?$/g, "");
-  six = six.replace(/\[각주\]/g, "<br>" + tou);
+  six = six.replace(/\[(?:각주|footnote)\](((<br>+)*(\s+)*(\n+))+)?$/ig, "");
+  six = six.replace(/\[(?:각주|footnote)\]/ig, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
   
