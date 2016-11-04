@@ -1,0 +1,13 @@
+extends wiki  
+block content
+  h1= title
+  form#usrform(method='POST', action='/ban/' + title2)
+    dl.form-group
+      dd
+        br
+        input.form-control.input-sm(type='text', name='ip')
+        br
+        p= '아무것도 안 적으면 무기 차단'
+        p= '차단 일 지정시 형식은 YYYY-MM-DD로 기록 바람'
+        .form-actions
+           button.btn.btn-primary(type='submit')= enter

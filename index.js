@@ -100,13 +100,13 @@ function yourip(req, res) {
 				test = decodeURIComponent(id);
 			}
 			else {
-				cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-				cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+				cookies.set( "AqoursGanbaRuby", '' )
+				cookies.set( "WikiID", '' )
 			}
 		}
 		else {
-			cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-			cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "AqoursGanbaRuby", '' )
+			cookies.set( "WikiID", '' )
 		}
 	}
 	return test;
@@ -125,7 +125,35 @@ function loginy(req,res) {
 function stop(ip) {
     var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 	if(exists) {
-		res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.");</script>')
+		var day = fs.readFileSync('./user/' + encodeURIComponent(ip) + '-ban.txt', 'utf8');
+		if(day === '') {
+			res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.<br>영구 정지");</script>');
+		}
+		else {
+			  var today = new Date();
+			  var dd = today.getDate();
+			  var mm = today.getMonth()+1; 
+			  var yyyy = today.getFullYear();
+			  if(dd<10) {
+				  dd='0'+dd;
+			  }
+			  if(mm<10) {
+				  mm='0'+mm;
+			  }
+			  var today = yyyy+mm+dd;
+			  var nowday = day.replace('-', '');
+			  if(today === nowday) {
+					fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
+					});
+			  }
+			  else if(today < nowday) {
+				    fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
+					});
+			  }
+			  else {
+				    res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.<br>'+day+' 까지");</script>');
+			  }
+		}
 	}
 }
 // acl
@@ -263,8 +291,8 @@ router.get('/logout', function(req, res, next) {
 	, AqoursGanbaRuby, WikiID
 			
 	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-		cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+		cookies.set( "AqoursGanbaRuby", '' )
+		cookies.set( "WikiID", '' )
 		res.status(200).render('ban', { leftbarcontect: '', title: '로그아웃', content: "로그아웃 했습니다.", License: licen, wikiname: name  });
 		res.end()
 	}
@@ -303,8 +331,8 @@ router.post('/login', function(req, res, next) {
 		if(pass === test) {
 			var cookies = new Cookies( req, res )
 			, AqoursGanbaRuby, WikiID
-			cookies.set( "AqoursGanbaRuby", test, { maxAge: 60 * 60 * 24 * 7 } )
-			cookies.set( "WikiID", encodeURIComponent(req.body.id), { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "AqoursGanbaRuby", test )
+			cookies.set( "WikiID", encodeURIComponent(req.body.id) )
 		}
 		else {
 			res.send('<script type="text/javascript">alert("암호가 틀렸습니다!");</script>')
@@ -388,13 +416,13 @@ router.get('/edit/user/:user', function(req, res) {
 			}
 		}
 		else {
-			cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-			cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+			cookies.set( "AqoursGanbaRuby", '' )
+			cookies.set( "WikiID", '' )
 		}
 	}
 	else {
-		cookies.set( "AqoursGanbaRuby", '', { maxAge: 60 * 60 * 24 * 7 } )
-		cookies.set( "WikiID", '', { maxAge: 60 * 60 * 24 * 7 } )
+		cookies.set( "AqoursGanbaRuby", '' )
+		cookies.set( "WikiID", '' )
 	}
   } else {
 	  res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
@@ -581,11 +609,11 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 					fs.exists(file + '/' + req.params.number + '-stop.txt', function (exists) {
 						if(exists) {
 							fs.unlink(file + '/' + req.params.number + '-stop.txt', function (err) {
-							 });
+							});
 						}
 						else {
 							fs.open(file + '/' + req.params.number + '-stop.txt','w',function(err,fd){
-							 });
+							});
 						}
 					 });
 					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
@@ -821,26 +849,55 @@ router.post('/topic/:page/:topic', function(req, res) {
 	}
    });
  });
-// 밴 추가
+// 밴 겟
 router.get('/ban/:ip', function(req, res) {
+	name = rname(name);
+	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
-	
-	admin(ip);
 	
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
 	if(exists) {
-		fs.unlink('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt', function (err) {
-		 });
+		var nowthat = '차단 해제';
 	}
 	else {
-		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt');
-		if(exists) {
-			res.send('<script type="text/javascript">alert("관리자는 차단 할 수 없습니다.");</script>')
+		var nowthat = '차단';
+	}
+	
+	res.status(200).render('ban-get', { leftbarcontect: '', enter: nowthat, title: req.params.ip, title2: encodeURIComponent(req.params.ip), dis2:dis2, wikiname: name });
+	res.end()
+ });
+// admin(ip);
+// 밴 추가
+router.post('/ban/:ip', function(req, res) {
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
+	if(!exists) {
+		var day;
+		var main = /^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$/;
+		if(day = main.exec(req.body.ip)) {
+			var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt');
+			if(exists) {
+				res.send('<script type="text/javascript">alert("관리자는 차단 할 수 없습니다.");</script>')
+			}
+			else {
+				fs.open('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt','w',function(err,fd){
+					fs.writeFileSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt', day[1], 'utf8');
+				});
+			}
 		}
 		else {
-			fs.open('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt','w',function(err,fd){
-			 });
+			var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-admin.txt');
+			if(exists) {
+				res.send('<script type="text/javascript">alert("관리자는 차단 할 수 없습니다.");</script>')
+			}
+			else {
+				fs.open('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt','w',function(err,fd){
+				});
+			}
 		}
+	}
+	else {
+		fs.unlink('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt', function (err) {
+		});
 	}
 	res.redirect('/w/')
  });
