@@ -933,7 +933,13 @@ router.get('/ban', function(req, res, next) {
 		if(sun[shine]) {
 			hehe = decodeURIComponent(sun[shine]);
 			if(ganba = dayo.exec(hehe)) {
-				ruby = ruby + '<li>' + ganba[1] + '</a></li>';
+				var day = fs.readFileSync('./user/' + sun[shine], 'utf8');
+				if(day === '') {
+					ruby = ruby + '<li>' + ganba[1] + '</li>';
+				}
+				else {
+					ruby = ruby + '<li>' + ganba[1] + ' : ' + day + '</li>';
+				}
 			}
 		}
 		else {
