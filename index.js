@@ -855,6 +855,8 @@ router.get('/ban/:ip', function(req, res) {
 	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	
+	admin(ip);
+	
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
 	if(exists) {
 		var nowthat = '차단 해제';
@@ -866,7 +868,6 @@ router.get('/ban/:ip', function(req, res) {
 	res.status(200).render('ban-get', { leftbarcontect: '', enter: nowthat, title: req.params.ip, title2: encodeURIComponent(req.params.ip), dis2:dis2, wikiname: name });
 	res.end()
  });
-// admin(ip);
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
