@@ -71,7 +71,8 @@ module.exports = function(req, n, ba){
 		  else if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(req, data, function(cnt){
-			six = six.replace(include, cnt);
+				six = six.replace(/\n$/, '');
+				six = six.replace(include, cnt);
 			})
 		  }
 		  else {
