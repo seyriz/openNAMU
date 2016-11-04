@@ -61,7 +61,7 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/\[\[분류:([^\]\]]*)\]\]/g, "");
   
-  var include = /\[[Ii][Nn][Cc][Ll][Uu][Dd][Ee]\(([^)]*)\)\]/;
+  var include = /\[include\(([^)]*)\)\]/i;
   var under;
   while(true) {
 	  if(under = include.exec(six)) {
@@ -71,7 +71,6 @@ module.exports = function(req, n, ba){
 		  else if(fs.existsSync('./data/' + encodeURIComponent(under[1])+'.txt')) {
 			var data = fs.readFileSync('./data/' + encodeURIComponent(under[1])+'.txt', 'utf8');
 			parseNamu(req, data, function(cnt){
-				six = six.replace(/\n$/, '');
 				six = six.replace(include, cnt);
 			})
 		  }
@@ -90,7 +89,7 @@ module.exports = function(req, n, ba){
   var van;
   var test = /(.*)(#s-[0-9]+)$/;
   var testing;
-  six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
+  six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))[^\s])*)\.(jpg|png|gif|jpeg))\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))[^\s])*)\.(jpg|png|gif|jpeg))\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
 	
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
