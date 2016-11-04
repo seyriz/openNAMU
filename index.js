@@ -943,7 +943,7 @@ router.get('/ban', function(req, res, next) {
 			}
 		}
 		else {
-			ruby = ruby + '</div>';
+			ruby = ruby + '</div><p>만약 기한이 지났는데 밴 목록에 있다면 그 사람이 그 이후로 편집등 행위를 하지 않았음을 의미 합니다. 해제 된 건 맞습니다.</p>';
 			break;
 		}
 		shine = shine + 1;
@@ -1731,16 +1731,22 @@ router.get('/TitleIndex', function(req, res) {
 	var ganba;
 	var ruby = '<div>';
 	var dayo = /(.*)\.txt$/;
+	var test = /-back$/;
 	var haha = /-stop$/;
 	var hehe;
 	while(true) {
 		if(sun[shine]) {
-			hehe = decodeURIComponent(sun[shine]);
-			ganba = dayo.exec(hehe);
-			if(haha.exec(ganba[1])) {
-				
-			} else {
-				ruby = ruby + '<li>' + '<a href="/w/' + encodeURIComponent(ganba[1]) + '">' + ganba[1] + '</a></li>';
+			if(test.exec(sun[shine])) {
+
+			}
+			else {
+				hehe = decodeURIComponent(sun[shine]);
+				ganba = dayo.exec(hehe);
+				if(haha.exec(ganba[1])) {
+					
+				} else {
+					ruby = ruby + '<li>' + '<a href="/w/' + encodeURIComponent(ganba[1]) + '">' + ganba[1] + '</a></li>';
+				}
 			}
 		}
 		else {
