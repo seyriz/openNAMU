@@ -1775,15 +1775,17 @@ router.get('/random', function(req, res) {
 		}
 	}
 	var random = Math.floor(Math.random() * (shine - 0)) + 0;
-	var test = dayo.exec(sun[random])
-	if(haha.exec(test[1])) {
-		res.redirect('/random');
-	}
-	else if(back.exec(sun[shine])) {
+	if(back.exec(sun[random])) {
 		res.redirect('/random');
 	}
 	else {
-		res.redirect('/w/' + test[1]);
+		var test = dayo.exec(sun[random])
+		if(haha.exec(test[1])) {
+			res.redirect('/random');
+		}
+		else {
+			res.redirect('/w/' + test[1]);
+		}
 	}
  });
 // 편집 화면을 보여줍니다.
