@@ -371,7 +371,7 @@ module.exports = function(req, n, ba){
 	  }
   }
  
-  var math = /<[Mm][Aa][Tt][Hh]>(((?!<math>).)*)<\/[Mm][Aa][Tt][Hh]>/;
+  var math = /<math>(((?!<math>).)*)<\/math>/i;
   var mathm;
   var matht;
   while(true)

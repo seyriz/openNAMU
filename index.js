@@ -1764,6 +1764,7 @@ router.get('/random', function(req, res) {
 	var ganba;
 	var dayo = /(.*)\.txt/;
 	var haha = /-stop$/;
+	var back = /-back$/;
 	var hehe;
 	while(true) {
 		if(sun[shine]) {
@@ -1776,6 +1777,9 @@ router.get('/random', function(req, res) {
 	var random = Math.floor(Math.random() * (shine - 0)) + 0;
 	var test = dayo.exec(sun[random])
 	if(haha.exec(test[1])) {
+		res.redirect('/random');
+	}
+	else if(back.exec(sun[shine])) {
 		res.redirect('/random');
 	}
 	else {
