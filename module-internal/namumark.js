@@ -32,6 +32,10 @@ module.exports = function(req, n, ba){
   six = six.replace(/<\/font>/g, '[/font]');
   six = six.replace(/<(iframe(\s[^>]+)?)>/g, '[iframe$2]');
   six = six.replace(/<\/iframe>/g, '[/iframe]');
+  six = six.replace(/<big>/g, '[big]');
+  six = six.replace(/<\/big>/g, '[/big]');
+  six = six.replace(/<small>/g, '[small]');
+  six = six.replace(/<\/small>/g, '[/small]');
   
   six = xssFilters.inHTMLData(six);
   
@@ -411,6 +415,10 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[\/font]/g, '</font>');
   six = six.replace(/\[(iframe(\s[^\]]+)?)]/g, '<iframe$2>');
   six = six.replace(/\[\/iframe]/g, '</iframe>');
+  six = six.replace(/\[big]/g, '<big>');
+  six = six.replace(/\[\/big]/g, '</big>');
+  six = six.replace(/\[small]/g, '<small>');
+  six = six.replace(/\[\/small]/g, '</small>');
   
   six = plugin(six);
   ba(six)
