@@ -7,6 +7,7 @@ module.exports = function(req, n, ba){
   var d = require('debug')('openNAMU:parser');
   var htmlencode = require('htmlencode');
   var katex = require('parse-katex');
+  var xssFilters = require('xss-filters');
   
   function getNow() {
   var today = new Date();
@@ -22,10 +23,17 @@ module.exports = function(req, n, ba){
   return yyyy+'/' + mm+'/'+dd;
   }
   six = six + '\r\n';
-  six = six.replace(/<script>|<\/script>/ig, "");
-  six = six.replace(/<(.*) on(.*)="(.*)">/ig, "");
-  six = six.replace(/javascript:/ig, "");
-  six = six.replace(/&#x6A;&#x61;&#x76;&#x61;&#x73;&#x63;&#x72;&#x69;&#x70;&#x74;/g, "");
+  
+  six = six.replace(/<(div(\s[^>]+)?)>/g, '[div$2]');
+  six = six.replace(/<\/div>/g, '[/div]');
+  six = six.replace(/<(span(\s[^>]+)?)>/g, '[span$2]');
+  six = six.replace(/<\/span>/g, '[/span]');
+  six = six.replace(/<(font(\s[^>]+)?)>/g, '[font$2]');
+  six = six.replace(/<\/font>/g, '[/font]');
+  six = six.replace(/<(iframe(\s[^>]+)?)>/g, '[iframe$2]');
+  six = six.replace(/<\/iframe>/g, '[/iframe]');
+  
+  six = xssFilters.inHTMLData(six);
   
   /* 모니위키 및 추가 파싱 부분 */
   
@@ -394,6 +402,15 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[(?:각주|footnote)\]/ig, "<br>" + tou);
   six = six + tou;
   d('1: '+six)
+  
+  six = six.replace(/\[(div(\s[^\]]+)?)]/g, '<div$2>');
+  six = six.replace(/\[\/div]/g, '</div>');
+  six = six.replace(/\[(span(\s[^\]]+)?)]/g, '<span$2>');
+  six = six.replace(/\[\/span]/g, '</span>');
+  six = six.replace(/\[(font(\s[^\]]+)?)]/g, '<font$2>');
+  six = six.replace(/\[\/font]/g, '</font>');
+  six = six.replace(/\[(iframe(\s[^\]]+)?)]/g, '<iframe$2>');
+  six = six.replace(/\[\/iframe]/g, '</iframe>');
   
   six = plugin(six);
   ba(six)
