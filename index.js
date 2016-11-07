@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var parseNamu = require('./module-internal/namumark')
 var fs = require('fs');
+var xssFilters = require('xss-filters');
 var htmlencode = require('htmlencode');
 var Diff = require('text-diff');
 var Cokies = require( "js-cookie" )
@@ -1438,7 +1439,7 @@ router.get('/RecentChanges', function(req, res, next) {
 					}
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+xssFilters.inHTMLData(title)+'</td></tr></tbody></table>' + data;
 			}
 			else {
 				break;
@@ -1509,7 +1510,7 @@ router.get('/RecentChanges', function(req, res, next) {
 					}
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+xssFilters.inHTMLData(title)+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
 		}
