@@ -1842,8 +1842,23 @@ router.post('/edit/:page', function(req, res) {
 	if(exists) {
 		var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
 	}
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	if(!exists) {
+		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
+		if(!exists) {
+			if(req.body.send === '<br>') {
+				req.body.send = '(새 문서)';
+			}
+			else {
+				req.body.send = req.body.send + ' (새 문서)';
+			}
+		}
+	}
+	var rtitle = req.body.send;
 	
 	var name = req.params.page;
+	
+	var leng = rplus(ip, today, name, rtitle, now, req, content);
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
@@ -1853,12 +1868,6 @@ router.post('/edit/:page', function(req, res) {
 			 });
 			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 				if(!exists) {
-					if(req.body.send === '<br>') {
-						req.body.send = '(새 문서)';
-					}
-					else {
-						req.body.send = req.body.send + ' (새 문서)';
-					}
 					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
@@ -1954,10 +1963,6 @@ router.post('/edit/:page', function(req, res) {
 			 });
 		}
 	 });
-	 
-	var rtitle = req.body.send;
-	
-	var leng = rplus(ip, today, name, rtitle, now, req, content);
 	
 	res.redirect('/w/'+ encodeURIComponent(req.params.page))
  });
