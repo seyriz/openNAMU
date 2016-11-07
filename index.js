@@ -1857,6 +1857,12 @@ router.post('/edit/:page', function(req, res) {
 			 });
 			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 				if(!exists) {
+					if(req.body.send === '<br>') {
+						req.body.send = '(새 문서)';
+					}
+					else {
+						req.body.send = req.body.send + ' (새 문서)';
+					}
 					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
 						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
 							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
