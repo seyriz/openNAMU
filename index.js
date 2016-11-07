@@ -1843,11 +1843,7 @@ router.post('/edit/:page', function(req, res) {
 		var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
 	}
 	
-	var rtitle = req.body.send;
-	
 	var name = req.params.page;
-	
-	var leng = rplus(ip, today, name, rtitle, now, req, content);
 	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
@@ -1958,6 +1954,11 @@ router.post('/edit/:page', function(req, res) {
 			 });
 		}
 	 });
+	 
+	var rtitle = req.body.send;
+	
+	var leng = rplus(ip, today, name, rtitle, now, req, content);
+	
 	res.redirect('/w/'+ encodeURIComponent(req.params.page))
  });
 // 역사 2
