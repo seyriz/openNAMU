@@ -140,8 +140,9 @@ function stop(ip) {
 			  if(mm<10) {
 				  mm='0'+mm;
 			  }
-			  var today = yyyy+mm+dd;
-			  var nowday = day.replace('-', '');
+			  var today = yyyy+'-' + mm+'-'+dd;
+			  today = today.replace(/-/g, '');
+			  var nowday = day.replace(/-/g, '');
 			  if(today === nowday) {
 					fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
 					});
