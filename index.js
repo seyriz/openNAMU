@@ -146,7 +146,7 @@ function stop(ip) {
 					fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
 					});
 			  }
-			  else if(today < nowday) {
+			  else if(today > nowday) {
 				    fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
 					});
 			  }
