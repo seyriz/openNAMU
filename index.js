@@ -719,7 +719,6 @@ router.get('/topic/:page/:topic', function(req, res) {
 			
 			var exists = fs.existsSync('./user/' + ip + '-admin.txt');
 			if(exists) {
-				ip = ip + ' - 관리자';
 				var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 				if(exists) {
 					var exists = fs.existsSync(file + '/' + i + '-stop.txt');
