@@ -1317,9 +1317,9 @@ router.get('/w/:page', function(req, res, next) {
 					}
 					var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
 					if(exists) {
-						cnt = '<div id="adminedit" style="text-align: center;border:2px solid red;padding:10px;"><big><big>이 문서는 관리자만 수정 가능 합니다.</big></big></div><br>' + cnt;
+						var acl = '<span style="margin-left:5px"></span>(관리자)'
 					}
-					res.status(200).render('index', { leftbarcontect: leftbarcontect[1], title: req.params.page, dis: dis, dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name });
+					res.status(200).render('index', { acl: acl, leftbarcontect: leftbarcontect[1], title: req.params.page, dis: dis, dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name });
 					res.end()
 				})
 			}
@@ -1371,9 +1371,9 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				}
 				var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
 				if(exists) {
-					cnt = '<div id="adminedit" style="text-align: center;border:2px solid red;padding:10px;"><big><big>이 문서는 관리자만 수정 가능 합니다.</big></big></div><br>' + cnt;
+					var acl = '<span style="margin-left:5px"></span>(관리자)'
 				}
-				res.status(200).render('index', { leftbarcontect: leftbarcontect[1], title: req.params.page, dis2:dis2, title2: title2, dis:dis, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name });
+				res.status(200).render('index', { acl: acl, leftbarcontect: leftbarcontect[1], title: req.params.page, dis2:dis2, title2: title2, dis:dis, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen , wikiname: name });
 				res.end()
 			})
 		}

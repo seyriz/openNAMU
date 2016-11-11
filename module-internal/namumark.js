@@ -24,18 +24,8 @@ module.exports = function(req, n, ba){
   }
   six = six + '\r\n';
   
-  six = six.replace(/<(div(\s[^>]+)?)>/g, '[div$2]');
-  six = six.replace(/<\/div>/g, '[/div]');
-  six = six.replace(/<(span(\s[^>]+)?)>/g, '[span$2]');
-  six = six.replace(/<\/span>/g, '[/span]');
-  six = six.replace(/<(font(\s[^>]+)?)>/g, '[font$2]');
-  six = six.replace(/<\/font>/g, '[/font]');
-  six = six.replace(/<(iframe(\s[^>]+)?)>/g, '[iframe$2]');
-  six = six.replace(/<\/iframe>/g, '[/iframe]');
-  six = six.replace(/<big>/g, '[big]');
-  six = six.replace(/<\/big>/g, '[/big]');
-  six = six.replace(/<small>/g, '[small]');
-  six = six.replace(/<\/small>/g, '[/small]');
+  six = six.replace(/<((?:div|span|font|iframe|big|small)(\s[^\]]+)?)>/g, '[$1]');
+  six = six.replace(/<\/(div|span|font|iframe|big|small)>/g, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
   
@@ -407,18 +397,8 @@ module.exports = function(req, n, ba){
   six = six + tou;
   d('1: '+six)
   
-  six = six.replace(/\[(div(\s[^\]]+)?)]/g, '<div$2>');
-  six = six.replace(/\[\/div]/g, '</div>');
-  six = six.replace(/\[(span(\s[^\]]+)?)]/g, '<span$2>');
-  six = six.replace(/\[\/span]/g, '</span>');
-  six = six.replace(/\[(font(\s[^\]]+)?)]/g, '<font$2>');
-  six = six.replace(/\[\/font]/g, '</font>');
-  six = six.replace(/\[(iframe(\s[^\]]+)?)]/g, '<iframe$2>');
-  six = six.replace(/\[\/iframe]/g, '</iframe>');
-  six = six.replace(/\[big]/g, '<big>');
-  six = six.replace(/\[\/big]/g, '</big>');
-  six = six.replace(/\[small]/g, '<small>');
-  six = six.replace(/\[\/small]/g, '</small>');
+  six = six.replace(/\[((?:div|span|font|iframe|big|small)(\s[^\]]+)?)]/g, '<$1>');
+  six = six.replace(/\[\/(div|span|font|iframe|big|small)]/g, '</$1>');
   
   six = plugin(six);
   ba(six)
