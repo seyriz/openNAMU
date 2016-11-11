@@ -1493,6 +1493,31 @@ router.get('/RecentChanges', function(req, res, next) {
 				break;
 			}
 			else {
+				var exists = fs.existsSync('./recent/RC-' + ( i - 1 ) + '.txt', 'utf8');
+				if(exists) {
+					j = Number(number) - 51;
+					while(true) {
+						fs.unlink('./recent/RC-' + j + '.txt', function (err) {
+						});
+						fs.unlink('./recent/RC-' + j + '-ip.txt', function (err) {
+						});
+						fs.unlink('./recent/RC-' + j + '-today.txt', function (err) {
+						});
+						fs.unlink('./recent/RC-' + j + '-title.txt', function (err) {
+						});
+						fs.unlink('./recent/RC-' + j + '-leng.txt', function (err) {
+						});
+						
+						var exists = fs.existsSync('./recent/RC-' + ( j - 1 ) + '.txt', 'utf8');
+						if(exists) {
+							j = j - 1;
+						}
+						else {
+							break;
+						}
+					}
+				}
+				
 				var ip = fs.readFileSync('./recent/RC-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RC-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RC-' + i + '-title.txt', 'utf8');
@@ -1634,7 +1659,30 @@ router.get('/RecentDiscuss', function(req, res, next) {
 			else if (i === Number(number)) {
 				break;
 			}
-			else {			
+			else {
+				var exists = fs.existsSync('./recent/RD-' + ( i - 1 ) + '.txt', 'utf8');
+				if(exists) {
+					j = Number(number) - 51;
+					while(true) {
+						fs.unlink('./recent/RD-' + j + '.txt', function (err) {
+						});
+						fs.unlink('./recent/RD-' + j + '-ip.txt', function (err) {
+						});
+						fs.unlink('./recent/RD-' + j + '-today.txt', function (err) {
+						});
+						fs.unlink('./recent/RD-' + j + '-title.txt', function (err) {
+						});
+						
+						var exists = fs.existsSync('./recent/RD-' + ( j - 1 ) + '.txt', 'utf8');
+						if(exists) {
+							j = j - 1;
+						}
+						else {
+							break;
+						}
+					}
+				}
+				
 				var ip = fs.readFileSync('./recent/RD-' + i + '-ip.txt', 'utf8');
 				var today = fs.readFileSync('./recent/RD-' + i + '-today.txt', 'utf8');
 				var title = fs.readFileSync('./recent/RD-' + i + '-title.txt', 'utf8');
