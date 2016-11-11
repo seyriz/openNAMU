@@ -24,7 +24,7 @@ module.exports = function(req, n, ba){
   }
   six = six + '\r\n';
   
-  six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^\]]+)?)>/g, '[$1]');
+  six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^>]+)?)>/g, '[$1]');
   six = six.replace(/<\/(div|span|font|iframe|big|small|table|td|tr|tbody)>/g, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
