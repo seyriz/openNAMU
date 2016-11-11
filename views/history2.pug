@@ -4,7 +4,8 @@ block content
     nav.menu
       a.menu-item.selected(href='#', onclick='return false', aria-label='문서의 역사를 확인합니다.') 역사보기
       a.menu-item(href='/w/' + title2, aria-label="문서의 내용을 읽습니다.") 문서보기
-  h1.title= title + ' (역사)'
+  h1.title= title
+  h2.title!= '<span style="margin-left:5px"></span>(역사)'
   br
   form#usrform(method='POST', action='/history/' + title2)
     input.form-control.input-sm(type='text', id='history', name='r')

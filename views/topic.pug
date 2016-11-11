@@ -4,7 +4,8 @@ block content
     nav.menu
       a.menu-item.selected(href='#', onclick='return false', aria-label="이 문서에 대해 토론 합니다.") 토론하기
       a.menu-item(href='/topic/' + title2) 목록보기
-  h1.title= title + ' (토론)'
+  h1.title= title
+  h2.title!= '<span style="margin-left:5px"></span>(토론)'
   br
   h2.title= title3
   div(id='content')!= content
