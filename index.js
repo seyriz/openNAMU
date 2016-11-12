@@ -127,7 +127,7 @@ function stop(ip) {
 	if(exists) {
 		var day = fs.readFileSync('./user/' + encodeURIComponent(ip) + '-ban.txt', 'utf8');
 		if(day === '') {
-			res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.<br>영구 정지");</script>');
+			return 'test';
 		}
 		else {
 			  var today = new Date();
@@ -152,7 +152,7 @@ function stop(ip) {
 					});
 			  }
 			  else {
-				    res.send('<script type="text/javascript">alert("밴 당한 상태 입니다.<br>'+day+' 까지");</script>');
+				    return 'test';
 			  }
 		}
 	}
@@ -245,10 +245,17 @@ router.get('/register', function(req, res, next) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	
-	var dis2 = loginy(req,res)
-	
-	res.status(200).render('register', { leftbarcontect: '', wikiname: name, dis2: dis2, title: '회원가입'  });
-	res.end()
+	var dis2 = loginy(req,res);
+	var ip = yourip(req,res);
+	var stopy;
+    stopy = stop(ip);
+    if(stopy) {
+   	  res.redirect('/ban');
+    }
+	else {
+	  res.status(200).render('register', { leftbarcontect: '', wikiname: name, dis2: dis2, title: '회원가입'  });
+	  res.end()
+	}
  });
 // 가입 하기
 router.post('/register', function(req, res, next) {
@@ -298,7 +305,7 @@ router.get('/logout', function(req, res, next) {
 		res.end()
 	}
 	else {
-		res.redirect('/login')
+		res.redirect('/login');
 	}
  });
 // 로그인
@@ -308,18 +315,23 @@ router.get('/login', function(req, res, next) {
 	
 	var ip = yourip(req,res);
 	
-	stop(ip)
-	
-	var cookies = new Cookies( req, res )
-	, AqoursGanbaRuby, WikiID
-			
-	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		res.status(200).render('ban', { leftbarcontect: '', title: '로그인', content: "이미 로그인 되어 있습니다.", License: licen, wikiname: name  });
-		res.end()	
+	var stopy;
+	stopy = stop(ip);
+	if(stopy) {
+		res.redirect('/ban');
 	}
-	else {
-		res.status(200).render('login', { leftbarcontect: '', wikiname: name, title: '로그인'  });
-		res.end()	
+	else {	
+		var cookies = new Cookies( req, res )
+		, AqoursGanbaRuby, WikiID
+				
+		if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+			res.status(200).render('ban', { leftbarcontect: '', title: '로그인', content: "이미 로그인 되어 있습니다.", License: licen, wikiname: name  });
+			res.end()	
+		}
+		else {
+			res.status(200).render('login', { leftbarcontect: '', wikiname: name, title: '로그인'  });
+			res.end()	
+		}
 	}
  });
 // 로그인 하기
@@ -833,57 +845,63 @@ router.get('/topic/:page/:topic', function(req, res) {
  });
 // post
 router.post('/topic/:page/:topic', function(req, res) {
-  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
-  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
-  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
-  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
-  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/';
-  
-  var exists = fs.existsSync(yfile);
-  if(!exists) {
-	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
-  }
-  
-  var exists = fs.existsSync(rfile);
-  if(!exists) {
-	fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
+  var ip = yourip(req,res);
+  var stopy;
+  stopy = stop(ip);
+  if(stopy) {
+	  res.redirect('/ban');
   }
   else {
-	var number = fs.readFileSync(nfile, 'utf8');
-  }
-  
-  var ip = yourip(req,res);
-  var page = req.params.page;
-  stop(ip);
-  
-  var today = getNow();
-  var name = req.params.page;
-  var name2 = req.params.topic;
-  tplus(ip, today, name, name2)
-  
-  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
-  fs.exists(sfile, function (exists) {
-	if(!exists) {
-		fs.open(sfile,'w',function(err,fd){
-			fs.writeFileSync(sfile, ip, 'utf8');
-		 });
-		var number = 1;
-		fs.writeFileSync(nfile, number + 1, 'utf8');
-		fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
-		fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
-		fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
-	}
-	else {
+	  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+	  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+	  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
+	  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
+	  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/';
+	  
+	  var exists = fs.existsSync(yfile);
+	  if(!exists) {
+		fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
+	  }
+	  
+	  var exists = fs.existsSync(rfile);
+	  if(!exists) {
+		fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
+	  }
+	  else {
 		var number = fs.readFileSync(nfile, 'utf8');
-		number = Number(number);
-		fs.writeFileSync(nfile, number + 1, 'utf8');
-		fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
-		fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
-		fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
-	}
-   });
+	  }
+
+	  var page = req.params.page;
+ 
+	  var today = getNow();
+	  var name = req.params.page;
+	  var name2 = req.params.topic;
+	  tplus(ip, today, name, name2)
+	  
+	  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
+	  fs.exists(sfile, function (exists) {
+		if(!exists) {
+			fs.open(sfile,'w',function(err,fd){
+				fs.writeFileSync(sfile, ip, 'utf8');
+			 });
+			var number = 1;
+			fs.writeFileSync(nfile, number + 1, 'utf8');
+			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
+		}
+		else {
+			var number = fs.readFileSync(nfile, 'utf8');
+			number = Number(number);
+			fs.writeFileSync(nfile, number + 1, 'utf8');
+			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
+		}
+	   });
+  }
  });
 // 밴 겟
 router.get('/ban/:ip', function(req, res) {
@@ -979,7 +997,7 @@ router.get('/ban', function(req, res, next) {
 			}
 		}
 		else {
-			ruby = ruby + '</div><p>만약 기한이 지났는데 밴 목록에 있다면 그 사람이 그 이후로 편집등 행위를 하지 않았음을 의미 합니다. 해제 된 건 맞습니다.</p>';
+			ruby = ruby + '</div><p><li>만약 기한이 지났는데 밴 목록에 있다면 그 사람이 그 이후로 편집등 행위를 하지 않았음을 의미 합니다. 해제 된 건 맞습니다.</li><li>만약 기한이 적혀 있지 않다면 무기 차단 입니다.</li></p>';
 			break;
 		}
 		shine = shine + 1;
@@ -1128,22 +1146,28 @@ router.get('/delete/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	var dis2 = loginy(req,res)
-	stop(ip);
-	editstop(ip, page);
-	var today = getNow();
-	var title2 = encodeURIComponent(req.params.page);
-  
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-		if(!exists) {
-			res.status(404).render('ban', { leftbarcontect: '', title: req.params.page, title2: title2,dis2:dis2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
-			res.end()
-			return;
-		}
-		else {
-			res.status(200).render('delete', { leftbarcontect: '', title: req.params.page, title2: title2,dis2:dis2, wikiname: name });
-			res.end()
-		}
-	})
+	var stopy;
+	stopy = stop(ip);
+	if(stopy) {
+		res.redirect('/ban');
+	}
+	else {	
+		editstop(ip, page);
+		var today = getNow();
+		var title2 = encodeURIComponent(req.params.page);
+	  
+		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+			if(!exists) {
+				res.status(404).render('ban', { leftbarcontect: '', title: req.params.page, title2: title2,dis2:dis2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
+				res.end()
+				return;
+			}
+			else {
+				res.status(200).render('delete', { leftbarcontect: '', title: req.params.page, title2: title2,dis2:dis2, wikiname: name });
+				res.end()
+			}
+		})
+	}
  });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
@@ -1184,21 +1208,27 @@ router.get('/move/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	var dis2 = loginy(req,res)
-    stop(ip);
-	editstop(ip, page);
-    var today = getNow();
-	var title2 = encodeURIComponent(req.params.page);
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-		if(!exists) {
-			res.status(404).render('ban', { leftbarcontect: '', title: req.params.page, dis2:dis2, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name });
-			res.end()
-			return;
-		}
-		else {
-			res.status(200).render('move', { leftbarcontect: '', title: req.params.page, dis2,dis2, title2: title2, wikiname: name });
-			res.end()
-		}
-	})
+    var stopy;
+	stopy = stop(ip);
+	if(stopy) {
+		res.redirect('/ban');
+	}
+	else {	
+		editstop(ip, page);
+		var today = getNow();
+		var title2 = encodeURIComponent(req.params.page);
+		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+			if(!exists) {
+				res.status(404).render('ban', { leftbarcontect: '', title: req.params.page, dis2:dis2, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name });
+				res.end()
+				return;
+			}
+			else {
+				res.status(200).render('move', { leftbarcontect: '', title: req.params.page, dis2,dis2, title2: title2, wikiname: name });
+				res.end()
+			}
+		})
+	}
  });
 // post
 router.post('/move/:page', function(req, res) {
@@ -1897,21 +1927,27 @@ router.get('/edit/:page', function(req, res) {
 	var ip = yourip(req,res);
 	var page = req.params.page;
 
-    stop(ip);
-	editstop(ip, page);
-    var today = getNow();
-	
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
-		if(!exists){
-			res.render('edit', { leftbarcontect: '', dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
-			res.end()
-		}
-		else{
-			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-			res.render('edit', { leftbarcontect: '', dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
-			res.end()
-		}
-	})
+    var stopy;
+	stopy = stop(ip);
+	if(stopy) {
+		res.redirect('/ban');
+	}
+	else {	
+		editstop(ip, page);
+		var today = getNow();
+		
+		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+			if(!exists){
+				res.render('edit', { leftbarcontect: '', dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
+				res.end()
+			}
+			else{
+				var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+				res.render('edit', { leftbarcontect: '', dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
+				res.end()
+			}
+		})
+	}
  });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
