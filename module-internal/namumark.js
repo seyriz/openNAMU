@@ -42,6 +42,21 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[yt\(([^)]*)\)\]/ig, "[youtube($1)]");
   six = six.replace(/\[in\(([^)]*)\)\]/ig, "[include($1)]");
   
+  six = six.replace(/{{{#!html\s?/ig, "");
+  
+  six = six.replace(/{{{#(\w+)\s?/ig, "<span style=\"color:$1\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style=\"color:$1\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style=\"color:$1\">");
+  
+  six = six.replace(/{{{\+([1-5])\s?/ig, "<span class=\"font-size-$1\">");
+  six = six.replace(/{{{\-([1-5])\s?/ig, "<span class=\"font-size-small-$1\">");
+  
+  six = six.replace(/\+}}}/ig, "</span>");
+  six = six.replace(/\-}}}/ig, "</span>");
+  
+  six = six.replace(/#}}}/ig, "</span>");
+  
+  six = six.replace(/}}}/ig, "");
   /* 끝 */
   
   var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
