@@ -93,6 +93,9 @@ module.exports = function(req, n, ba){
   var testing;
   six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))[^\s])*)\.(jpg|png|gif|jpeg))\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(?:(https?:\/\/(?:(?:(?!jpg|png|gif|jpeg))[^\s])*)\.(jpg|png|gif|jpeg))\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1#$2#\"><span class#is#\"contect\">外</span>$1#$2#</a>");
+  
+  six = six.replace(/\[\[wiki:([^\]\]]*)\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"/$1\">$2</a>");
+  six = six.replace(/\[\[wiki:([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"/$1\">$1</a>");
 	
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\|([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$3</a>");
   six = six.replace(/\[\[(https?:\/\/)([^\]\]]*)\]\]/ig, "<a class#is#\"out_link\" href#is#\"$1$2\"><span class#is#\"contect\">外</span>$1$2</a>");
