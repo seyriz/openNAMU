@@ -60,7 +60,7 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/}}}/g, "");
   
-  six = six.replace(/\n{\|/g, "\n<table><tbody><tr>");
+  six = six.replace(/\n{\|([^\n]*)/g, "\n<table $1><tbody><tr>");
   six = six.replace(/\n\|-/g, "</tr><tr>");
   six = six.replace(/\n\|}/g, "</tr></tbody></table>");
   six = six.replace(/\n\|(?:([^|\n]*)\|)?([^\n]*)/g, "<td $1>$2</td>");
