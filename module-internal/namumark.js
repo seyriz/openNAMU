@@ -24,7 +24,7 @@ module.exports = function(req, n, ba){
   }
   six = '\r\n' + six + '\r\n';
   
-six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody|table\s?border=(?:\w+)|table\s?border=(?:#[0-9a-f-A-F]{3})|table\s?border=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*))(\s[^>]+)?)>/ig, '[$1]');
+six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody|table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*))(\s[^>]+)?)>/ig, '[$1]');
   six = six.replace(/<\/(div|span|font|iframe|big|small|table|td|tr|tbody)>/ig, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
@@ -65,9 +65,9 @@ six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody|table\s
   six = six.replace(/}}}/g, "");
   
   var table = /\n{\|([^\n]*)/;
-  var td1 = /\[table\s?border=(\w+)\]/;
-  var td2 = /\[table\s?border=(#[0-9a-f-A-F]{3})\]/;
-  var td3 = /\[table\s?border=(#[0-9a-f-A-F]{6})\]/;
+  var td1 = /\[table\s?bordercolor=(\w+)\]/;
+  var td2 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{3})\]/;
+  var td3 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{6})\]/;
   var td4 = /\[table\s?width=([^\]]*)\]/;
   var td5 = /\[table\s?align=([^\]]*)\]/;
   var style;
