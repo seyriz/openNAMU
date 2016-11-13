@@ -692,7 +692,9 @@ router.get('/topic/:page/:topic', function(req, res) {
 	else if(encodeURIComponent(req.params.topic) + '-10000-today'.length > 255) {
 		res.send('<script type="text/javascript">alert("토론 명이 너무 깁니다.");</script>')
 	}
-	res.status(404).render('topic', { title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, wikiname: name  });
+	var toronstop = '';
+	
+	res.status(200).render('topic', { leftbarcontect: '', title: req.params.page, dis2:dis2, title2: title2, title3: req.params.topic, title4: title3, content: '', wikiname: name, toronstop: toronstop  });
 	res.end()	  
   }
   else {
@@ -896,7 +898,6 @@ router.post('/topic/:page/:topic', function(req, res) {
 			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
 			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
 			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 		}
 		else {
 			var number = fs.readFileSync(nfile, 'utf8');
@@ -905,8 +906,8 @@ router.post('/topic/:page/:topic', function(req, res) {
 			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
 			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
 			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 		}
+		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 	   });
   }
  });

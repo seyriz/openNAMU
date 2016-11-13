@@ -43,6 +43,8 @@ if (app.get('env') === 'development') {
 	}
     res.status(err.status || 500);
     res.render('error', {
+	  title: 'Error',
+      leftbarcontect: '',
       message: err.message,
       error: err,
 	  wikiname: name
@@ -55,6 +57,8 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
+	title: 'Error',
+	leftbarcontect: '',
     message: err.message,
     error: {}
   });
