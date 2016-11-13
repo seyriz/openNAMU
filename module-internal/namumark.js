@@ -24,7 +24,7 @@ module.exports = function(req, n, ba){
   }
   six = '\r\n' + six + '\r\n';
   
-  six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^>]+)?)>/ig, '[$1]');
+six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody|table\s?border=(?:\w+)|table\s?border=(?:#[0-9a-f-A-F]{3})|table\s?border=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*))(\s[^>]+)?)>/ig, '[$1]');
   six = six.replace(/<\/(div|span|font|iframe|big|small|table|td|tr|tbody)>/ig, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
@@ -64,7 +64,51 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/}}}/g, "");
   
-  six = six.replace(/\n{\|([^\n]*)/g, "\n<table $1><tbody><tr>");
+  var table = /\n{\|([^\n]*)/;
+  var td1 = /\[table\s?border=(\w+)\]/;
+  var td2 = /\[table\s?border=(#[0-9a-f-A-F]{3})\]/;
+  var td3 = /\[table\s?border=(#[0-9a-f-A-F]{6})\]/;
+  var td4 = /\[table\s?width=([^>]*)\]/;
+  var style;
+  var tdcell;
+  var cell;
+  var allstyle = 'style="';
+  while(true) {
+	  if(style = table.exec(six)) {
+		  console.log('1');
+		  if(style[1]) {
+			  console.log(style[1]);
+			  if(tdcell = td1.exec(style[1])) {
+				  allstyle = allstyle + 'border: 2px solid ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td1, '');
+			  }
+			  else if(tdcell = td2.exec(style[1])) {
+				  allstyle = allstyle + 'border: 2px solid ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td2, '');
+			  }
+			  else if(tdcell = td3.exec(style[1])) {
+				  allstyle = allstyle + 'border: 2px solid ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td3, '');
+			  }
+			 
+		 	  if(tdcell = td4.exec(style[1])) {
+				  console.log('a');
+				  
+				  allstyle = allstyle + 'width: ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td4, '');
+			  }
+			  
+			  six = six.replace(table, "\n<table " + allstyle + "\"><tbody><tr>");
+		  }
+		  else {
+			  console.log('3');
+			  six = six.replace(table, "\n<table><tbody><tr>");
+		  }
+	  }
+	  else {
+		  break;
+	  }
+  }
   six = six.replace(/\n\|-/g, "</tr><tr>");
   six = six.replace(/\n\|}/g, "</tr></tbody></table>");
   six = six.replace(/\n\|(?:([^|\n]*)\|)?([^\n]*)/g, "<td $1>$2</td>");
