@@ -29,6 +29,8 @@ module.exports = function(req, n, ba){
   
   six = xssFilters.inHTMLData(six);
   
+  six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
+  
   /* 모니위키 및 추가 파싱 부분 */
   
   six = six.replace(/\[\[youtube\(([^)]*)\)\]\]/ig, "[youtube($1)]");
@@ -301,8 +303,6 @@ module.exports = function(req, n, ba){
   six = six.replace(/,,(.+?),,(?!,)/g,'<sub>$1</sub>');
   
   six = six.replace(/\[[Bb][Rr]\]/ig,'<br>');
-  
-  six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
   six = six.replace(/([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?:(?!\.[Jj][Pp][Gg]|\.[Pp][Nn][Gg]|\.[Gg][Ii][Ff]|\.[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/g, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
   
