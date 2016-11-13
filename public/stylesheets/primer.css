@@ -148,6 +148,11 @@ table {
 
 .title {
 	display: inline-block;
+	margin-bottom: 30px;
+}
+
+.titlee {
+	display: inline-block;
 }
 
 not_del {
