@@ -48,12 +48,12 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/{{{#!wiki\s?([^\n]*)\n/ig, "<div $1>");
   
-  six = six.replace(/{{{#(\w+)\s?/ig, "<span style=\"color:$1;\">");
-  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style=\"color:$1;\">");
-  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style=\"color:$1;\">");
+  six = six.replace(/{{{#(\w+)\s?/ig, "<span style#is#\"color:$1;\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style#is#\"color:$1;\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style#is#\"color:$1;\">");
   
-  six = six.replace(/{{{\+([1-5])\s?/g, "<span class=\"font-size-$1\">");
-  six = six.replace(/{{{\-([1-5])\s?/g, "<span class=\"font-size-small-$1\">");
+  six = six.replace(/{{{\+([1-5])\s?/g, "<span class#is#\"font-size-$1\">");
+  six = six.replace(/{{{\-([1-5])\s?/g, "<span class#is#\"font-size-small-$1\">");
   
   six = six.replace(/\+}}}/g, "</span>");
   six = six.replace(/\-}}}/g, "</span>");
@@ -66,13 +66,13 @@ module.exports = function(req, n, ba){
   
   var table = /\n{\|([^\n]*)/;
   var td1 = /\[table\s?bordercolor=(\w+)\]/;
-  var td2 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{3})\]/;
-  var td3 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{6})\]/;
-  var td4 = /\[table\s?width=([^\]]*)\]/;
-  var td5 = /\[table\s?align=([^\]]*)\]/;
-  var td6 = /\[table\s?bgolor=(\w+)\]/;
-  var td7 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{3})\]/;
-  var td8 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{6})\]/;
+  var td2 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{3})\]/i;
+  var td3 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{6})\]/i;
+  var td4 = /\[table\s?width=([^\]]*)\]/i;
+  var td5 = /\[table\s?align=([^\]]*)\]/i;
+  var td6 = /\[table\s?bgolor=(\w+)\]/i;
+  var td7 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{3})\]/i;
+  var td8 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{6})\]/i;
   var style;
   var tdcell;
   var cell;
@@ -377,18 +377,18 @@ module.exports = function(req, n, ba){
   six = six.replace(/\^\^(.+?)\^\^(?!\^)/g,'<sup>$1</sup>');
   six = six.replace(/,,(.+?),,(?!,)/g,'<sub>$1</sub>');
   
-  six = six.replace(/\[[Bb][Rr]\]/ig,'<br>');
+  six = six.replace(/\[br\]/ig,'<br>');
   
-  six = six.replace(/([Hh][Tt][Tt][Pp][Ss]?:\/\/(?:(?:(?:(?!\.[Jj][Pp][Gg]|\.[Pp][Nn][Gg]|\.[Gg][Ii][Ff]|\.[Jj][Pp][Ee][Gg]))[^\s])*)\.(?:[Jj][Pp][Gg]|[Pp][Nn][Gg]|[Gg][Ii][Ff]|[Jj][Pp][Ee][Gg]))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/g, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
+  six = six.replace(/(https?:\/\/(?:(?:(?:(?!\.(?:jpg|png|gif|jpeg)))[^\s])*)\.(?:jpg|png|gif|jpeg))(?:\?([^&\n]*))?(?:\&([^&\n]*))?(?:\&([^&\n]*))?/ig, '<img src="$1" $2 $3 $4><hr style="display: inline;">');
   
-  six = six.replace(/#([Jj][Pp][Gg])#/g, '.$1');
-  six = six.replace(/#([Jj][Ee][Pp][Gg])#/g, '.$1');
-  six = six.replace(/#([Pp][Nn][Gg])#/g, '.$1');
-  six = six.replace(/#([Gg][Ii][Ff])#/g, '.$1');
+  six = six.replace(/#jpg#/g, '.$1');
+  six = six.replace(/#jpeg#/g, '.$1');
+  six = six.replace(/#png#/g, '.$1');
+  six = six.replace(/#gif#/g, '.$1');
   
-  var youtube = /\[youtube\(([^,\n]*)(?:,([^)\n]*))?\)\]/;
-  var widthy = /width=([0-9]*)/;
-  var heighty = /height=([0-9]*)/;
+  var youtube = /\[youtube\(([^,\n]*)(?:,([^)\n]*))?\)\]/i;
+  var widthy = /width=([0-9]*)/i;
+  var heighty = /height=([0-9]*)/i;
   var matchy;
   var matchy2;
   var matchy3;
@@ -416,7 +416,7 @@ module.exports = function(req, n, ba){
 	  }
   }
   
-  six = six.replace(/\[[Dd][Aa][Tt][Ee]\]/g, today);
+  six = six.replace(/\[date\]/ig, today);
   six = six.replace(/\[[Dd][Aa][Tt][Ee][Tt][Ii][Mm][Ee]\]/g, today);
   
   six = six.replace(/\[[Aa][Nn][Cc][Hh][Oo][Rr]\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
