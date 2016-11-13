@@ -46,9 +46,11 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/{{{#!html\s?/ig, "");
   
-  six = six.replace(/{{{#(\w+)\s?/ig, "<span style=\"color:$1\">");
-  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style=\"color:$1\">");
-  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style=\"color:$1\">");
+  six = six.replace(/{{{#!wiki\s?([^\n]*)\n/ig, "<div $1>");
+  
+  six = six.replace(/{{{#(\w+)\s?/ig, "<span style=\"color:$1;\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style=\"color:$1;\">");
+  six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style=\"color:$1;\">");
   
   six = six.replace(/{{{\+([1-5])\s?/g, "<span class=\"font-size-$1\">");
   six = six.replace(/{{{\-([1-5])\s?/g, "<span class=\"font-size-small-$1\">");
@@ -57,6 +59,8 @@ module.exports = function(req, n, ba){
   six = six.replace(/\-}}}/g, "</span>");
   
   six = six.replace(/#}}}/g, "</span>");
+  
+  six = six.replace(/#!}}}/g, "</div>");
   
   six = six.replace(/}}}/g, "");
   
