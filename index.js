@@ -2115,12 +2115,12 @@ router.get('/history/w/:page/:r', function(req, res) {
 				else {
 					leftbarcontect = ['',''];
 				}
-				res.status(200).render('history', { leftbarcontect: leftbarcontect[1], title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: cnt, wikiname: name , License: licen });
+				res.status(200).render('history', { leftbarcontect: leftbarcontect[1], title: req.params.page, title3: title3, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', content: cnt, wikiname: name , License: licen });
 				res.end()
 			});
 		}
 		else {
-			res.status(404).render('history', { leftbarcontect: '', title: req.params.page, title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
+			res.status(404).render('history', { leftbarcontect: '', title: req.params.page, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
 			res.end()
 			return;
 		}
@@ -2139,11 +2139,11 @@ router.get('/history/:page/:r', function(req, res) {
 			neob = neob.replace(/\n/g, '<br>')
 			var raw = htmlencode.htmlEncode(neob);
 			raw = raw.replace(/;&lt;br&gt;/g, '<br>');
-			res.status(200).render('history', { leftbarcontect: '', title: req.params.page, title3: title3, title2: req.params.page + ' (' + req.params.r + ' 판)', content: raw, wikiname: name , License: licen });
+			res.status(200).render('history', { leftbarcontect: '', title: req.params.page, title3: title3, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', content: raw, wikiname: name , License: licen });
 			res.end()
 		}
 		else {
-			res.status(404).render('history', { leftbarcontect: '', title: req.params.page, title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
+			res.status(404).render('history', { leftbarcontect: '', title: req.params.page, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
 			res.end()
 			return;
 		}
