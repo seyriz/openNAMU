@@ -22,10 +22,10 @@ module.exports = function(req, n, ba){
   }
   return yyyy+'/' + mm+'/'+dd;
   }
-  six = six + '\r\n';
+  six = '\r\n' + six + '\r\n';
   
-  six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^>]+)?)>/g, '[$1]');
-  six = six.replace(/<\/(div|span|font|iframe|big|small|table|td|tr|tbody)>/g, '[/$1]');
+  six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^>]+)?)>/ig, '[$1]');
+  six = six.replace(/<\/(div|span|font|iframe|big|small|table|td|tr|tbody)>/ig, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
   
@@ -50,15 +50,20 @@ module.exports = function(req, n, ba){
   six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style=\"color:$1\">");
   six = six.replace(/{{{(#[0-9a-f-A-F]{6})\s?/ig, "<span style=\"color:$1\">");
   
-  six = six.replace(/{{{\+([1-5])\s?/ig, "<span class=\"font-size-$1\">");
-  six = six.replace(/{{{\-([1-5])\s?/ig, "<span class=\"font-size-small-$1\">");
+  six = six.replace(/{{{\+([1-5])\s?/g, "<span class=\"font-size-$1\">");
+  six = six.replace(/{{{\-([1-5])\s?/g, "<span class=\"font-size-small-$1\">");
   
-  six = six.replace(/\+}}}/ig, "</span>");
-  six = six.replace(/\-}}}/ig, "</span>");
+  six = six.replace(/\+}}}/g, "</span>");
+  six = six.replace(/\-}}}/g, "</span>");
   
-  six = six.replace(/#}}}/ig, "</span>");
+  six = six.replace(/#}}}/g, "</span>");
   
-  six = six.replace(/}}}/ig, "");
+  six = six.replace(/}}}/g, "");
+  
+  six = six.replace(/\n{\|/g, "\n<table><tbody><tr>");
+  six = six.replace(/\n\|-/g, "</tr><tr>");
+  six = six.replace(/\n\|}/g, "</tr></tbody></table>");
+  six = six.replace(/\n\|(?:([^|\n]*)\|)?([^\n]*)/g, "<td $1>$2</td>");
   
   /* 끝 */
   
@@ -416,8 +421,8 @@ module.exports = function(req, n, ba){
   six = six + tou;
   d('1: '+six)
   
-  six = six.replace(/\[((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^\]]+)?)]/g, '<$1>');
-  six = six.replace(/\[\/(div|span|font|iframe|big|small|table|td|tr|tbody)]/g, '</$1>');
+  six = six.replace(/\[((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^\]]+)?)]/ig, '<$1>');
+  six = six.replace(/\[\/(div|span|font|iframe|big|small|table|td|tr|tbody)]/ig, '</$1>');
   
 //  six = plugin(six);
   ba(six)
