@@ -389,7 +389,14 @@ router.get('/user/:user', function(req, res) {
 		data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 	  }
 	  parseNamu(req, data, function(cnt){
-			res.status(200).render('user', { leftbarcontect: '', title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: cnt, License: licen , wikiname: name });
+		    var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
+			var leftbarcontect;
+			if(leftbarcontect = leftbar.exec(cnt)) {
+			}
+			else {
+				leftbarcontect = ['',''];
+			}
+			res.status(200).render('user', { leftbarcontect: leftbarcontect[1], title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: cnt, License: licen , wikiname: name });
 			res.end()
 	  })
   }
@@ -417,11 +424,11 @@ router.get('/edit/user/:user', function(req, res) {
 			if(req.params.user === id) {
 				var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 				if(!exists) {
-				  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: '', License: licen , wikiname: name });
+				  res.status(200).render('user-edit', { leftbarcontect: '', title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: '', License: licen , wikiname: name });
 				  res.end()
 				} else {
 				  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-				  res.status(200).render('user-edit', { title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: data, License: licen , wikiname: name });
+				  res.status(200).render('user-edit', { leftbarcontect: '', title: '사용자:' + req.params.user, dis2: dis2, title2: title2, content: data, License: licen , wikiname: name });
 				  res.end()
 				}
 			} else {

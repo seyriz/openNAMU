@@ -3,7 +3,7 @@ module.exports = function(req, n, ba){
   var six = n;
   var today = getNow();
   var parseNamu = require('./namumark')
-  var plugin = require('./plugin/plugin.js')
+//  var plugin = require('./plugin/plugin.js')
   var d = require('debug')('openNAMU:parser');
   var htmlencode = require('htmlencode');
   var katex = require('parse-katex');
@@ -57,6 +57,7 @@ module.exports = function(req, n, ba){
   six = six.replace(/#}}}/ig, "</span>");
   
   six = six.replace(/}}}/ig, "");
+  
   /* 끝 */
   
   var ohhhh = /\n>\s?((?:[^\n]*)(?:(?:(?:(?:\n>\s?)(?:[^\n]*))+)?))/;
@@ -418,7 +419,7 @@ module.exports = function(req, n, ba){
   six = six.replace(/\[((?:div|span|font|iframe|big|small|table|td|tr|tbody)(\s[^\]]+)?)]/g, '<$1>');
   six = six.replace(/\[\/(div|span|font|iframe|big|small|table|td|tr|tbody)]/g, '</$1>');
   
-  six = plugin(six);
+//  six = plugin(six);
   ba(six)
   
   // Thank for 2DU, LiteHell //
