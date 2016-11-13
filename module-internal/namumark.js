@@ -92,6 +92,19 @@ six = six.replace(/<((?:div|span|font|iframe|big|small|table|td|tr|tbody|table\s
 				  allstyle = allstyle + 'border: 2px solid ' + tdcell[1] + ';';
 				  style[1] = style[1].replace(td3, '');
 			  }
+			  
+			  if(tdcell = td6.exec(style[1])) {
+				  allstyle = allstyle + 'background: ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td6, '');
+			  }
+			  else if(tdcell = td7.exec(style[1])) {
+				  allstyle = allstyle + 'background: ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td7, '');
+			  }
+			  else if(tdcell = td8.exec(style[1])) {
+				  allstyle = allstyle + 'background: ' + tdcell[1] + ';';
+				  style[1] = style[1].replace(td8, '');
+			  }
 			 
 		 	  if(tdcell = td4.exec(style[1])) {				  
 				  allstyle = allstyle + 'width: ' + tdcell[1] + ';';
