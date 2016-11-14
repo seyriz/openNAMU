@@ -416,10 +416,9 @@ module.exports = function(req, n, ba){
 	  }
   }
   
-  six = six.replace(/\[date\]/ig, today);
-  six = six.replace(/\[[Dd][Aa][Tt][Ee][Tt][Ii][Mm][Ee]\]/g, today);
+  six = six.replace(/\[(?:date|datetime)\]/ig, today);
   
-  six = six.replace(/\[[Aa][Nn][Cc][Hh][Oo][Rr]\(([^\[\]]*)\)\]/g, "<div id=\"$1\"></div>");
+  six = six.replace(/\[anchor\(([^\[\]]*)\)\]/ig, "<div id=\"$1\"></div>");
   
   var bad = /((?:(?:\s\*\s[^\n]*)\n?)+)/;
   var apple;
