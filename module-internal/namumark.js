@@ -24,14 +24,16 @@ module.exports = function(req, n, ba){
   }
   six = '\r\n' + six + '\r\n';
   
-  six = six.replace(/<((?:div|span|font|iframe|table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6}))(\s[^>]+)?)>/ig, '[$1]');
-  six = six.replace(/<\/(div|span|font|iframe>/ig, '[/$1]');
+  six = six.replace(/<((?:\w+)|(?:#[0-9a-f-A-F]{3})|(?:#[0-9a-f-A-F]{6}))>/ig, '[bgcolor=$1]');
+  six = six.replace(/<((?:div|span|font|iframe|table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6})|\:|\(|\)|bgcolor=(?:\w+)|bgcolor=(?:#[0-9a-f-A-F]{3})|bgcolor=(?:#[0-9a-f-A-F]{6})|-(?:[0-9]+)|\|(?:[0-9]+))(\s[^>]+)?)>/ig, '[$1]');
+  six = six.replace(/<\/(div|span|font|iframe)>/ig, '[/$1]');
   
   six = xssFilters.inHTMLData(six);
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
   /* 모니위키 및 추가 파싱 부분 */
+  six = six.replace(/\[(table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^\]]*)|table\s?align=(?:[^\]]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6})|\:|\(|\)|bgcolor=(?:\w+)|bgcolor=(?:#[0-9a-f-A-F]{3})|bgcolor=(?:#[0-9a-f-A-F]{6})|-(?:[0-9]+)|\|(?:[0-9]+))\]/ig, '<$1>');
   
   six = six.replace(/\[\[youtube\(([^)]*)\)\]\]/ig, "[youtube($1)]");
   six = six.replace(/\[\[include\(([^)]*)\)\]\]/ig, "[include($1)]");
@@ -65,14 +67,14 @@ module.exports = function(req, n, ba){
   six = six.replace(/}}}/g, "");
   
   var table = /\n{\|([^\n]*)/;
-  var td1 = /\[table\s?bordercolor=(\w+)\]/;
-  var td2 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{3})\]/i;
-  var td3 = /\[table\s?bordercolor=(#[0-9a-f-A-F]{6})\]/i;
-  var td4 = /\[table\s?width=([^\]]*)\]/i;
-  var td5 = /\[table\s?align=([^\]]*)\]/i;
-  var td6 = /\[table\s?bgolor=(\w+)\]/i;
-  var td7 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{3})\]/i;
-  var td8 = /\[table\s?bgcolor=(#[0-9a-f-A-F]{6})\]/i;
+  var td1 = /<table\s?bordercolor=(\w+)>/;
+  var td2 = /<table\s?bordercolor=(#[0-9a-f-A-F]{3})>/i;
+  var td3 = /<table\s?bordercolor=(#[0-9a-f-A-F]{6})>/i;
+  var td4 = /<table\s?width=([^>]*)>/i;
+  var td5 = /<table\s?align=([^>]*)>/i;
+  var td6 = /<table\s?bgolor=(\w+)>/i;
+  var td7 = /<table\s?bgcolor=(#[0-9a-f-A-F]{3})>/i;
+  var td8 = /<table\s?bgcolor=(#[0-9a-f-A-F]{6})>/i;
   var style;
   var tdcell;
   var cell;
@@ -122,6 +124,7 @@ module.exports = function(req, n, ba){
 			  }
 			  
 			  six = six.replace(table, "\n<table " + allstyle + "\"><tbody><tr>");
+			  allstyle = 'style="';
 		  }
 		  else {
 			  six = six.replace(table, "\n<table><tbody><tr>");
@@ -133,7 +136,79 @@ module.exports = function(req, n, ba){
   }
   six = six.replace(/\n\|-/g, "</tr><tr>");
   six = six.replace(/\n\|}/g, "</tr></tbody></table>");
-  six = six.replace(/\n\|(?:([^|\n]*)\|)?([^\n]*)/g, "<td $1>$2</td>");
+  
+  
+  var table2 = /\n\|((?:(?:(?:(?:<\|(?:[0-9]+)>)*[^\|\[\n]))*)\|)?([^\n]*)/;
+  var style2;
+  var tr1 = /<\:>/;
+  var tr2 = /<\(>/;
+  var tr3 = /<\)>/;
+  var tr4 = /<width=([^>]*)>/i;
+  var tr5 = /<height=([^>]*)>/i;
+  var tr6 = /<bgolor=(\w+)>/i;
+  var tr7 = /<bgcolor=(#[0-9a-f-A-F]{3})>/i;
+  var tr8 = /<bgcolor=(#[0-9a-f-A-F]{6})>/i;
+  var tr9 = /<-([0-9]+)>/i;
+  var tr10 = /<\|([0-9]+)>/i;
+  var trcell;
+  var allstyle2 = 'style="';
+  while(true) {
+	  if(style2 = table2.exec(six)) {
+		  if(style2[1]) {
+			  if(trcell = tr1.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'text-align: center;';
+				  style2[1] = style2[1].replace(tr1, '');
+			  }
+			  else if(trcell = tr2.exec(style2[1])) {
+				  style2[1] = style2[1].replace(tr2, '');
+			  }
+			  else if(trcell = tr3.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'text-align: right;';
+				  style2[1] = style2[1].replace(tr3, '');
+			  }
+			  
+			  if(trcell = tr4.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'width: ' + trcell[1] + ';';
+				  style2[1] = style2[1].replace(tr4, '');
+			  }
+			  if(trcell = tr5.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'height: ' + trcell[1] + ';';
+				  style2[1] = style2[1].replace(tr5, '');
+			  }
+			  
+			  if(trcell = tr6.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'background: ' + trcell[1] + ';';
+				  style2[1] = style2[1].replace(tr6, '');
+			  }
+			  else if(trcell = tr7.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'background: ' + trcell[1] + ';';
+				  style2[1] = style2[1].replace(tr7, '');
+			  }
+			  else if(trcell = tr8.exec(style2[1])) {
+				  allstyle2 = allstyle2 + 'background: ' + trcell[1] + ';';
+				  style2[1] = style2[1].replace(tr8, '');
+			  }
+			  
+			  if(trcell = tr9.exec(style2[1])) {
+				  allstyle2 = 'colspan="' + trcell[1] + '" ' + allstyle2;
+				  style2[1] = style2[1].replace(tr9, '');
+			  }
+			  if(trcell = tr10.exec(style2[1])) {
+				  allstyle2 = 'rowspan="' + trcell[1] + '" ' + allstyle2;
+				  style2[1] = style2[1].replace(tr10, '');
+			  }
+			  
+			  six = six.replace(table2, "<td " + allstyle2 + "\">$2</td>");
+			  allstyle2 = 'style="';
+		  }
+		  else {
+			  six = six.replace(table2, "<td $1>$2</td>");
+		  }
+	  }
+	  else {
+		  break;
+	  }
+  }
   
   /* 끝 */
   
