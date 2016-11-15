@@ -164,6 +164,9 @@ function editstop(ip, page) {
 	var exists = fs.existsSync('./data/' + encodeURIComponent(page) + '-stop.txt');
 	if(exists) {
 		aya = admin(ip);
+		if(aya) {
+			return aya;
+		}
 	}
 }
 // 어드민
@@ -647,9 +650,7 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
  });
 // 토론 정지
 router.get('/topic/:page/:topic/stop', function(req, res) {
-	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
 	var ip = yourip(req,res);
     var dis2 = loginy(req,res);
@@ -1168,31 +1169,35 @@ router.post('/revert/:page/:r', function(req, res) {
 router.get('/delete/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	var ip = yourip(req,res);
 	var page = req.params.page;
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
 	var stopy;
 	stopy = stop(ip);
 	if(stopy) {
 		res.redirect('/ban');
 	}
-	else {	
-		editstop(ip, page);
-		var today = getNow();
-		var title2 = encodeURIComponent(req.params.page);
-	  
-		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-			if(!exists) {
-				res.status(404).render('ban', { title: req.params.page, title2: title2,dis2:dis2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
-				res.end()
-				return;
-			}
-			else {
-				res.status(200).render('delete', { title: req.params.page, title2: title2,dis2:dis2, wikiname: name });
-				res.end()
-			}
-		})
+	else {
+		aya = editstop(ip, page);
+		if(aya) {
+			res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+		}
+		else {
+			var today = getNow();
+			var title2 = encodeURIComponent(req.params.page);
+		  
+			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+				if(!exists) {
+					res.status(404).render('ban', { title: req.params.page, title2: title2,dis2:dis2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
+					res.end()
+					return;
+				}
+				else {
+					res.status(200).render('delete', { title: req.params.page, title2: title2,dis2:dis2, wikiname: name });
+					res.end()
+				}
+			})
+		}
 	}
  });
 // 문서 삭제 처리
@@ -1230,30 +1235,34 @@ router.post('/delete/:page', function(req, res) {
 router.get('/move/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	var ip = yourip(req,res);
 	var page = req.params.page;
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
     var stopy;
 	stopy = stop(ip);
 	if(stopy) {
 		res.redirect('/ban');
 	}
 	else {	
-		editstop(ip, page);
-		var today = getNow();
-		var title2 = encodeURIComponent(req.params.page);
-		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-			if(!exists) {
-				res.status(404).render('ban', { title: req.params.page, dis2:dis2, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name });
-				res.end()
-				return;
-			}
-			else {
-				res.status(200).render('move', { title: req.params.page, dis2,dis2, title2: title2, wikiname: name });
-				res.end()
-			}
-		})
+		aya = editstop(ip, page);
+		if(aya) {
+			res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+		}
+		else {
+			var today = getNow();
+			var title2 = encodeURIComponent(req.params.page);
+			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+				if(!exists) {
+					res.status(404).render('ban', { title: req.params.page, dis2:dis2, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+req.params.page+"'>편집</a>", License: licen , wikiname: name });
+					res.end()
+					return;
+				}
+				else {
+					res.status(200).render('move', { title: req.params.page, dis2,dis2, title2: title2, wikiname: name });
+					res.end()
+				}
+			})
+		}
 	}
  });
 // post
@@ -1938,7 +1947,7 @@ router.get('/edit/:page', function(req, res) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
 	
 	if(encodeURIComponent(req.params.page).length > 255) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
@@ -1953,20 +1962,25 @@ router.get('/edit/:page', function(req, res) {
 		res.redirect('/ban');
 	}
 	else {	
-		editstop(ip, page);
-		var today = getNow();
-		
-		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
-			if(!exists){
-				res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
-				res.end()
-			}
-			else{
-				var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-				res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
-				res.end()
-			}
-		})
+		aya = editstop(ip, page);
+		if(aya) {
+			res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+		}
+		else {
+			var today = getNow();
+			
+			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+				if(!exists){
+					res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
+					res.end()
+				}
+				else{
+					var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+					res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
+					res.end()
+				}
+			})
+		}
 	}
  });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
