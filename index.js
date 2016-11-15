@@ -1167,6 +1167,7 @@ router.get('/revert/:page/:r', function(req, res) {
  });
 // 되돌리기 3
 router.post('/revert/:page/:r', function(req, res) {
+	name = rname(name);
 	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	var page = req.params.page;
@@ -2043,6 +2044,7 @@ router.get('/edit/:page', function(req, res) {
  });
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
+	name = rname(name);
 	var today = getNow();
 	
 	var ip = yourip(req,res);
