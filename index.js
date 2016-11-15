@@ -1109,8 +1109,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 		}
 		else {
 			res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", dis2:dis2, License: licen, wikiname: name });
-			res.end()
-			return;
+			res.end();
 		}
 	 });
  });
@@ -1133,7 +1132,6 @@ router.get('/revert/:page/:r', function(req, res) {
 	else {
 		res.status(404).render('ban', { title: req.params.page, title2: title2, dis2:dis2, content: "이 리비전이 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
 		res.end()
-		return;
 	}
  });
 // 되돌리기 3
@@ -1160,16 +1158,16 @@ router.post('/revert/:page/:r', function(req, res) {
 			if(!exists) {
 				fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w',function(err,fd){
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', revert, 'utf8');
-				 });
+				});
 				fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w',function(err,fd){
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
-				 });
+				});
 				fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w',function(err,fd){
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
-				 });
+				});
 				fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w',function(err,fd){
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.params.r + ' 버전으로 되돌림', 'utf8');
-				 });
+				});
 				break;
 			}
 		}
@@ -1407,8 +1405,8 @@ router.get('/w/:page', function(req, res, next) {
  });
 // 리다이렉트 w
 router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
-	licen = rlicen(licen);
-	name = rname(name);
+  licen = rlicen(licen);
+  name = rname(name);
   var testing = /\//;
   if(testing.exec(req.params.page)) {
 	  var zenkaino = /(.*)\/.*/;
