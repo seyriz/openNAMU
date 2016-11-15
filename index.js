@@ -1250,6 +1250,8 @@ router.get('/delete/:page', function(req, res) {
  });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
+	name = rname(name);
+	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	aya = editstop(ip, page);
