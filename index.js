@@ -1140,6 +1140,7 @@ router.get('/revert/:page/:r', function(req, res) {
 router.post('/revert/:page/:r', function(req, res) {
 	var ip = yourip(req,res);
 	var dis2 = loginy(req,res);
+	var page = req.params.page;
     aya = editstop(ip, page);
 	if(aya) {
 		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
