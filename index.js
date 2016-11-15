@@ -246,15 +246,12 @@ function tplus(ip, today, name, name2) {
 }
 // 회원 가입
 router.get('/register', function(req, res, next) {
-	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
 	var dis2 = loginy(req,res);
 
-	  res.status(200).render('register', { wikiname: name, dis2: dis2, title: '회원가입'  });
-	  res.end()
-	}
+	res.status(200).render('register', { wikiname: name, dis2: dis2, title: '회원가입'  });
+	res.end()
  });
 // 가입 하기
 router.post('/register', function(req, res, next) {
@@ -946,8 +943,7 @@ router.get('/ban/:ip', function(req, res) {
 	}
 		
 	res.status(200).render('ban-get', { enter: nowthat, title: req.params.ip, title2: encodeURIComponent(req.params.ip), dis2:dis2, wikiname: name });
-	res.end()
-	}
+	res.end();
  });
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
