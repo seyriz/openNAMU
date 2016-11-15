@@ -11,6 +11,7 @@ var licen;
 var name;
 var FrontPage;
 var lb;
+var aya;
 // 라이선스
 function rlicen(licen) {
 	var exists = fs.existsSync('./setting/License.txt');
@@ -162,14 +163,14 @@ function stop(ip) {
 function editstop(ip, page) {
 	var exists = fs.existsSync('./data/' + encodeURIComponent(page) + '-stop.txt');
 	if(exists) {
-		admin(ip);
+		aya = admin(ip);
 	}
 }
 // 어드민
 function admin(ip) {
 	var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-admin.txt');
 	if(!exists) {
-		res.send('<script type="text/javascript">alert("어드민이 아닙니다.");</script>')
+		return 'test';
 	}
 }
 // 소유자
@@ -545,7 +546,7 @@ router.get('/topic/:page', function(req, res) {
   name = rname(name);
   FrontPage = rFrontPage(FrontPage);
   
-  var dis2 = loginy(req,res)
+  var dis2 = loginy(req,res);
   
   var title2 = encodeURIComponent(req.params.page);
   
@@ -596,7 +597,7 @@ router.get('/topic/:page', function(req, res) {
 	var add = '';
   }
   
-  res.status(200).render('new-topic', { title: req.params.page, dis2:dis2, title2: title2, content: add, wikiname: name  });
+  res.status(200).render('new-topic', { title: req.params.page, dis2:dis2, title2: title2, content: add, wikiname: name });
   res.end()
  });
 // 토론으로 보냄
@@ -605,41 +606,44 @@ router.post('/topic/:page', function(req, res) {
  });
 // 토론 블라인드
 router.get('/topic/:page/:topic/b:number', function(req, res) {
-	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
 	var ip = yourip(req,res);
-    admin(ip);
-  
-    var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
-	var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
-	
-	fs.exists(sfile, function (exists) {
-		if(!exists) {
-			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
-		}
-		else {
-			fs.exists(file + '/' + req.params.number + '.txt', function (exists) {
-				if(!exists) {
-					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
-				}
-				else {
-					fs.exists(file + '/' + req.params.number + '-stop.txt', function (exists) {
-						if(exists) {
-							fs.unlink(file + '/' + req.params.number + '-stop.txt', function (err) {
-							});
-						}
-						else {
-							fs.open(file + '/' + req.params.number + '-stop.txt','w',function(err,fd){
-							});
-						}
-					 });
-					res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
-				}
-			 });
-		}
-	 });
+	var dis2 = loginy(req,res);
+    aya = admin(ip);
+	if(aya) {
+		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+	}
+	else {
+		var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+		var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+		
+		fs.exists(sfile, function (exists) {
+			if(!exists) {
+				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+			}
+			else {
+				fs.exists(file + '/' + req.params.number + '.txt', function (exists) {
+					if(!exists) {
+						res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+					}
+					else {
+						fs.exists(file + '/' + req.params.number + '-stop.txt', function (exists) {
+							if(exists) {
+								fs.unlink(file + '/' + req.params.number + '-stop.txt', function (err) {
+								});
+							}
+							else {
+								fs.open(file + '/' + req.params.number + '-stop.txt','w',function(err,fd){
+								});
+							}
+						 });
+						res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+					}
+				 });
+			}
+		 });
+	}
  });
 // 토론 정지
 router.get('/topic/:page/:topic/stop', function(req, res) {
@@ -648,22 +652,27 @@ router.get('/topic/:page/:topic/stop', function(req, res) {
 	FrontPage = rFrontPage(FrontPage);
 	
 	var ip = yourip(req,res);
-    admin(ip);
-  
-	var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt';
-	
-	fs.exists(sfile, function (exists) {
-		if(!exists) {
-			fs.open(sfile,'w',function(err,fd){
-			 });
-		}
-		else {
-			fs.unlink(sfile, function (err) {
-			 });
-		}
-	 });
-	res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
- });
+    var dis2 = loginy(req,res);
+    aya = admin(ip);
+	if(aya) {
+		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+	}
+	else {
+		var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt';
+		
+		fs.exists(sfile, function (exists) {
+			if(!exists) {
+				fs.open(sfile,'w',function(err,fd){
+				 });
+			}
+			else {
+				fs.unlink(sfile, function (err) {
+				 });
+			}
+		 });
+		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+	}
+});
 // 토론 명
 router.get('/topic/:page/:topic', function(req, res) {
   licen = rlicen(licen);
@@ -916,18 +925,23 @@ router.get('/ban/:ip', function(req, res) {
 	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	
-	admin(ip);
-	
-	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
-	if(exists) {
-		var nowthat = '차단 해제';
+	var dis2 = loginy(req,res);
+    aya = admin(ip);
+	if(aya) {
+		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
 	}
 	else {
-		var nowthat = '차단';
+		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
+		if(exists) {
+			var nowthat = '차단 해제';
+		}
+		else {
+			var nowthat = '차단';
+		}
+		
+		res.status(200).render('ban-get', { enter: nowthat, title: req.params.ip, title2: encodeURIComponent(req.params.ip), dis2:dis2, wikiname: name });
+		res.end()
 	}
-	
-	res.status(200).render('ban-get', { enter: nowthat, title: req.params.ip, title2: encodeURIComponent(req.params.ip), dis2:dis2, wikiname: name });
-	res.end()
  });
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
@@ -1011,33 +1025,38 @@ router.get('/ban', function(req, res, next) {
 	}
 	res.status(200).render('ban', { title: '밴 목록', dis2:dis2, content: ruby , wikiname: name });
 	res.end()
- });
+});
 // ACL
 router.get('/acl/:page', function(req, res, next) {
 	var ip = yourip(req,res);
 
-    admin(ip);
-	
-	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
-	if(exists) {
-		fs.unlink('./data/' + encodeURIComponent(req.params.page) + '-stop.txt', function (err) {
-		 });
+    var dis2 = loginy(req,res);
+    aya = admin(ip);
+	if(aya) {
+		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
 	}
 	else {
-		fs.open('./data/' + encodeURIComponent(req.params.page) + '-stop.txt','w',function(err,fd){
-		 });
+		var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
+		if(exists) {
+			fs.unlink('./data/' + encodeURIComponent(req.params.page) + '-stop.txt', function (err) {
+			 });
+		}
+		else {
+			fs.open('./data/' + encodeURIComponent(req.params.page) + '-stop.txt','w',function(err,fd){
+			 });
+		}
+		res.redirect('/w/'+encodeURIComponent(req.params.page));
 	}
-	res.redirect('/w/'+encodeURIComponent(req.params.page))
- });
+});
 // 리다이렉트.
 router.get('/w/', function(req, res) {
 	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage))
- });
+});
 // ver
 router.get('/ver', function(req, res) {
 	res.redirect('https://namu.ml/w/%EC%9C%84%ED%82%A4%20%EB%B2%84%EC%A0%84')
- });
+});
 // 검색 결과를 보여줍니다.
 router.post('/search', function(req, res) {
     fs.exists('./data/' + encodeURIComponent(req.body.name)+'.txt', function (exists) {
