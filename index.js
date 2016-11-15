@@ -2021,15 +2021,29 @@ router.get('/random', function(req, res) {
  });
 // 편집 화면을 보여줍니다.
 router.get('/edit/:page', function(req, res) {
-	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
 	var dis2 = loginy(req,res);
 	
 	if(encodeURIComponent(req.params.page).length > 255) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
+			
+	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+		if(!exists){
+			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
+			res.end()
+		}
+		else{
+			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
+			res.end()
+		}
+	})
+ });
+// 편집 결과를 적용하고 해당 문서로 이동합니다.
+router.post('/edit/:page', function(req, res) {
+	var today = getNow();
 	
 	var ip = yourip(req,res);
 	var page = req.params.page;
@@ -2045,158 +2059,138 @@ router.get('/edit/:page', function(req, res) {
 			res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
 		}
 		else {
-			var today = getNow();
+			if(!req.body.send) {
+				req.body.send = "<br>";
+			}
+			content = req.body.content;
+			var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
+			if(exists) {
+				var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
+			}
+			var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
+			if(!exists) {
+				var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
+				if(!exists) {
+					if(req.body.send === '<br>') {
+						req.body.send = '(새 문서)';
+					}
+					else {
+						req.body.send = req.body.send + ' (새 문서)';
+					}
+				}
+			}
+			var rtitle = req.body.send;
 			
-			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
-				if(!exists){
-					res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
-					res.end()
-				}
-				else{
-					var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-					res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
-					res.end()
-				}
-			})
-		}
-	}
- });
-// 편집 결과를 적용하고 해당 문서로 이동합니다.
-router.post('/edit/:page', function(req, res) {
-	var ip = yourip(req,res);
-	var today = getNow();
-	
-	if(!req.body.send) {
-		req.body.send = "<br>";
-	}
-	content = req.body.content;
-	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
-	if(exists) {
-		var now = fs.readFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', 'utf8');
-	}
-	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
-	if(!exists) {
-		var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
-		if(!exists) {
-			if(req.body.send === '<br>') {
-				req.body.send = '(새 문서)';
-			}
-			else {
-				req.body.send = req.body.send + ' (새 문서)';
-			}
-		}
-	}
-	var rtitle = req.body.send;
-	
-	var name = req.params.page;
-	
-	var leng = rplus(ip, today, name, rtitle, now, req, content);
-	
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-		if(!exists) {
-			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
-			fs.open(file,'w',function(err,fd){
-				fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-			 });
-			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
+			var name = req.params.page;
+			
+			var leng = rplus(ip, today, name, rtitle, now, req, content);
+			
+			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 				if(!exists) {
-					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
-						 });
+					var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
+					fs.open(file,'w',function(err,fd){
+						fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
+					 });
+					fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
+						if(!exists) {
+							fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
+								 });
+							 });
+						}
+						else {
+							var i = 0;
+							while(true) {
+								i = i + 1;
+								var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+								if(!exists) {
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
+									 });
+									break;
+								}
+							}
+						}
 					 });
 				}
 				else {
-					var i = 0;
-					while(true) {
-						i = i + 1;
-						var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+					fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
+					fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
 						if(!exists) {
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+							fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
+								 });
+								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
+								 });
 							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
-							 });
-							break;
 						}
-					}
-				}
-			 });
-		}
-		else {
-			fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-			fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
-				if(!exists) {
-					fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
-						 });
-						fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
-							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
-						 });
+						else {
+							var i = 0;
+							while(true) {
+								i = i + 1;
+								var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+								if(!exists) {
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+									 });
+									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
+										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
+									 });
+									break;
+								}
+							}
+						}
 					 });
 				}
-				else {
-					var i = 0;
-					while(true) {
-						i = i + 1;
-						var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
-						if(!exists) {
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
-							 });
-							fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
-								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
-							 });
-							break;
-						}
-					}
-				}
-			 });
+			 });	
+			res.redirect('/w/'+ encodeURIComponent(req.params.page));
 		}
-	 });
-	
-	res.redirect('/w/'+ encodeURIComponent(req.params.page))
+	}
  });
  // 역사 3
 router.get('/history/w/:page/:r', function(req, res) {
