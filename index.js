@@ -399,6 +399,9 @@ router.get('/user/:user', function(req, res) {
 			if(leftbarcontect = leftbar.exec(cnt)) {
 				lb = 'block';
 			}
+			else {
+				leftbarcontect = ['',''];
+			}
 			res.status(200).render('user', { lbc: leftbarcontect[1], lb: lb, title: '사용자:' + req.params.user, dis: 'none', dis2: dis2, title2: title2, content: cnt, License: licen , wikiname: name });
 			res.end()
 	  })
@@ -1378,6 +1381,9 @@ router.get('/w/:page', function(req, res, next) {
 					if(leftbarcontect = leftbar.exec(cnt)) {
 						lb = 'block';
 					}
+					else {
+						leftbarcontect = ['',''];
+					}
 					var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
 					if(exists) {
 						var acl = '<span style="margin-left:5px"></span>(관리자)'
@@ -1430,6 +1436,9 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				if(leftbarcontect = leftbar.exec(cnt)) {
 					lb = 'block';
 				}
+				else {
+					leftbarcontect = ['',''];
+				}
 				var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
 				if(exists) {
 					var acl = '<span style="margin-left:5px"></span>(관리자)'
@@ -1455,6 +1464,9 @@ router.post('/preview/:page', function(req, res) {
 		var leftbarcontect;
 		if(leftbarcontect = leftbar.exec(cnt)) {
 			lb = 'block';
+		}
+		else {
+			leftbarcontect = ['',''];
 		}
 		res.render('preview', { lbc: leftbarcontect[1], lb: lb, title: req.params.page, dis2:dis2, title2: encodeURIComponent(req.params.page), data: data, data2: req.body.content, content: cnt , wikiname: name });
 		res.end()
@@ -2137,6 +2149,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 				var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
 				var leftbarcontect;
 				if(leftbarcontect = leftbar.exec(cnt)) {
+					lb = 'block';
 				}
 				else {
 					leftbarcontect = ['',''];
