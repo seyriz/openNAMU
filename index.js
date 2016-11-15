@@ -2047,7 +2047,7 @@ router.post('/edit/:page', function(req, res) {
 	
 	var ip = yourip(req,res);
 	var page = req.params.page;
-
+	var dis2 = loginy(req,res);
     var stopy;
 	stopy = stop(ip);
 	if(stopy) {
