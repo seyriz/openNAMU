@@ -1116,14 +1116,14 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
  });
 // 되돌리기
 router.post('/revert/:page', function(req, res) {
-	res.redirect('/revert/'+ encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.re))
+	res.redirect('/revert/'+ encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.re));
  });
 // 되돌리기 2
 router.get('/revert/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
 	var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
 	if(exists) {
