@@ -880,54 +880,60 @@ router.post('/topic/:page/:topic', function(req, res) {
 	  res.redirect('/ban');
   }
   else {
-	  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
-	  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
-	  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
-	  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
-	  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/';
-	  
-	  var exists = fs.existsSync(yfile);
-	  if(!exists) {
-		fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
-	  }
-	  
-	  var exists = fs.existsSync(rfile);
-	  if(!exists) {
-		fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
+	  var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt');
+	  if(exists) {
+		  res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 	  }
 	  else {
-		var number = fs.readFileSync(nfile, 'utf8');
-	  }
-
-	  var page = req.params.page;
- 
-	  var today = getNow();
-	  var name = req.params.page;
-	  var name2 = req.params.topic;
-	  tplus(ip, today, name, name2)
-	  
-	  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
-	  fs.exists(sfile, function (exists) {
-		if(!exists) {
-			fs.open(sfile,'w',function(err,fd){
-				fs.writeFileSync(sfile, ip, 'utf8');
-			 });
-			var number = 1;
-			fs.writeFileSync(nfile, number + 1, 'utf8');
-			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
-			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
-			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-		}
-		else {
+		  var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
+		  var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
+		  var nfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/number.txt';
+		  var rfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/';
+		  var yfile = './topic/' + encodeURIComponent(req.params.page) + '/';
+		  
+		  var exists = fs.existsSync(yfile);
+		  if(!exists) {
+			fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page), 777);
+		  }
+		  
+		  var exists = fs.existsSync(rfile);
+		  if(!exists) {
+			fs.mkdirSync('./topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic), 777);
+		  }
+		  else {
 			var number = fs.readFileSync(nfile, 'utf8');
-			number = Number(number);
-			fs.writeFileSync(nfile, number + 1, 'utf8');
-			fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
-			fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
-			fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
-		}
-		res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
-	   });
+		  }
+
+		  var page = req.params.page;
+	 
+		  var today = getNow();
+		  var name = req.params.page;
+		  var name2 = req.params.topic;
+		  tplus(ip, today, name, name2)
+		  
+		  req.body.content = req.body.content.replace(/(#[0-9]*)/g, "<a href=\"$1\">$1</a>");
+		  fs.exists(sfile, function (exists) {
+				if(!exists) {
+					fs.open(sfile,'w',function(err,fd){
+						fs.writeFileSync(sfile, ip, 'utf8');
+					 });
+					var number = 1;
+					fs.writeFileSync(nfile, number + 1, 'utf8');
+					fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+					fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+					fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+				}
+				else {
+					var number = fs.readFileSync(nfile, 'utf8');
+					number = Number(number);
+					fs.writeFileSync(nfile, number + 1, 'utf8');
+					fs.writeFileSync(file + '/' + number + '-ip.txt', ip, 'utf8');
+					fs.writeFileSync(file + '/' + number + '-today.txt', today, 'utf8');
+					fs.writeFileSync(file + '/' + number + '.txt',req.body.content);
+				}
+				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
+		   });
+	  }
   }
  });
 // 밴 겟
