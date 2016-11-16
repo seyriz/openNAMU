@@ -1619,7 +1619,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				dis: dis, 
 				title2: title2, 
 				subtitle: encodeURIComponent(lovelive), 
-				content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
 				License: licen, 
 				wikiname: name 
 			});
@@ -1653,7 +1653,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 					title2: title2,
 					dis: dis,
 					subtitle: encodeURIComponent(lovelive),
-					content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt,
+					content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li>' + cnt,
 					License: licen,
 					wikiname: name 
 				});
