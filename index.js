@@ -1125,7 +1125,7 @@ router.get('/ban', function(req, res, next) {
 	res.end()
 });
 // ACL
-router.get('/acl/:page', function(req, res, next) {
+router.get('/acl/:page', function(req, res) {
 	var ip = yourip(req,res);
 
     var dis2 = loginy(req,res);
@@ -1501,7 +1501,7 @@ router.post('/move/:page', function(req, res) {
 	}
  });
 // 항목을 보여줍니다.
-router.get('/w/:page', function(req, res, next) {
+router.get('/w/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
   var testing = /\//;
@@ -1589,7 +1589,7 @@ router.get('/w/:page', function(req, res, next) {
   })
  });
 // 리다이렉트 w
-router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
+router.get('/w/:page/redirect/:rdrc', function(req, res) {
   licen = rlicen(licen);
   name = rname(name);
   var testing = /\//;
@@ -1623,8 +1623,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				License: licen, 
 				wikiname: name 
 			});
-			res.end()
-			return;
+			res.end();
 		}
 		else {
 			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
@@ -1657,7 +1656,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 					License: licen,
 					wikiname: name 
 				});
-				res.end()
+				res.end();
 			})
 		}
 	})
@@ -1692,11 +1691,11 @@ router.post('/preview/:page', function(req, res) {
 			content: cnt, 
 			wikiname: name 
 		});
-		res.end()
+		res.end();
 	 });
  });
 // 최근 바뀜을 보여줍니다.
-router.get('/RecentChanges', function(req, res, next) {
+router.get('/RecentChanges', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	
