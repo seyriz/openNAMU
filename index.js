@@ -1031,6 +1031,7 @@ router.get('/ban/:ip', function(req, res) {
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
 	var dis2 = loginy(req,res);
+	var ip = yourip(req,res);
     aya = admin(ip);
 	if(aya) {
 		res.redirect('/Access');
