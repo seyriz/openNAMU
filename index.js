@@ -307,9 +307,14 @@ router.get('/logout', function(req, res, next) {
 	, AqoursGanbaRuby, WikiID
 			
 	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		cookies.set( "AqoursGanbaRuby", '' )
-		cookies.set( "WikiID", '' )
-		res.status(200).render('ban', { title: '로그아웃', content: "로그아웃 했습니다.", License: licen, wikiname: name  });
+		cookies.set( "AqoursGanbaRuby", '' );
+		cookies.set( "WikiID", '' );
+		res.status(200).render('ban', { 
+			title: '로그아웃', 
+			content: "로그아웃 했습니다.", 
+			License: licen, 
+			wikiname: name  
+		});
 		res.end()
 	}
 	else {
@@ -338,7 +343,7 @@ router.get('/login', function(req, res, next) {
 			wikiname: name, 
 			title: '로그인'  
 		});
-		res.end()	
+		res.end();
 	}
  });
 // 로그인 하기
@@ -381,9 +386,8 @@ router.get('/', function(req, res, next) {
 router.get('/Upload', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
 	
 	res.status(200).render('upload', { 
 		title: '파일 업로드', 
@@ -410,7 +414,8 @@ router.get('/user/:user', function(req, res) {
 		  wikiname: name 
 	  });
 	  res.end()
-  } else {
+  } 
+  else {
 	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 	  var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 	  if(redirect.exec(data)) {
@@ -508,7 +513,6 @@ router.post('/edit/user/:user', function(req, res) {
   licen = rlicen(licen);
   name = rname(name);
   var title2 = encodeURIComponent(req.params.user);
-  var dis2 = loginy(req,res);
   var ip = yourip(req,res);
   var stopy;
   stopy = stop(ip);
@@ -682,12 +686,7 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 	var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
-		res.status(200).render('ban', { 
-			title: '권한 오류', 
-			dis2: dis2, 
-			content: '어드민이 아닙니다.', 
-			wikiname: name 
-		});
+		res.redirect('/Access');
 	}
 	else {
 		var file = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic);
@@ -728,12 +727,7 @@ router.get('/topic/:page/:topic/stop', function(req, res) {
     var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
-		res.status(200).render('ban', { 
-			title: '권한 오류', 
-			dis2: dis2, 
-			content: '어드민이 아닙니다.', 
-			wikiname: name 
-		});
+		res.redirect('/Access');
 	}
 	else {
 		var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/stop.txt';
@@ -944,7 +938,7 @@ router.get('/topic/:page/:topic', function(req, res) {
 		wikiname: name, 
 		toronstop: toronstop  
 	});
-	res.end()	  
+	res.end();  
   }
  });
 // post
@@ -1038,12 +1032,7 @@ router.post('/ban/:ip', function(req, res) {
 	var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
-		res.status(200).render('ban', { 
-			title: '권한 오류',
-			dis2: dis2, 
-			content: '어드민이 아닙니다.', 
-			wikiname: name 
-		});
+		res.redirect('/Access');
 	}
 	else {
 		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
@@ -1099,7 +1088,7 @@ router.get('/admin/:ip', function(req, res) {
 // 밴 리스트
 router.get('/ban', function(req, res, next) {
 	name = rname(name);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
 	var sun = fs.readdirSync('./user');
 	var shine = 0;
 	var ganba;
@@ -1140,12 +1129,7 @@ router.get('/acl/:page', function(req, res, next) {
     var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
-		res.status(200).render('ban', { 
-			title: '권한 오류',
-			dis2: dis2, 
-			content: '어드민이 아닙니다.', 
-			wikiname: name 
-		});
+		res.redirect('/Access');
 	}
 	else {
 		var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '-stop.txt');
@@ -1195,27 +1179,54 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 								var sc = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.r+'.txt', 'utf8');
 								var id = fs.readFileSync('./history/' + encodeURIComponent(req.params.page)+'/'+req.params.rr+'.txt', 'utf8');
  
-								var diff = new Diff(); // options may be passed to constructor; see below 
-								var textDiff = diff.main(sc, id); // produces diff array 
+								var diff = new Diff();
+								var textDiff = diff.main(sc, id);
 								
-								
-								res.status(200).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, dis2:dis2, wikiname: name, License: licen, content: diff.prettyHtml(textDiff) });
-								res.end()
+								res.status(200).render('diff', { 
+									title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')',
+									title2: title2,
+									dis2: dis2,
+									wikiname: name,
+									License: licen,
+									content: diff.prettyHtml(textDiff) 
+								});
+								res.end();
 							}
 							else {
-								res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, dis2:dis2, content: "이 문서의 "+req.params.rr+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name  });
+								res.status(404).render('diff', { 
+									title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', 
+									title2: title2, 
+									dis2: dis2, 
+									content: "이 문서의 "+req.params.rr+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", 
+									License: licen, 
+									wikiname: name  
+								});
 								res.end()
 							}
 						 });
 				}
 				else {
-					res.status(404).render('diff', { title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', title2: title2, dis2:dis2, content: "이 문서의 "+req.params.r+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", License: licen, wikiname: name  });
+					res.status(404).render('diff', { 
+						title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')',
+						title2: title2,
+						dis2: dis2, 
+						content: "이 문서의 "+req.params.r+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", 
+						License: licen, 
+						wikiname: name  
+					});
 					res.end()
 				}
 			 });
 		}
 		else {
-			res.status(404).render('ban', { title: req.params.page, title2: title2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", dis2:dis2, License: licen, wikiname: name });
+			res.status(404).render('ban', { 
+				title: req.params.page, 
+				title2: title2, 
+				content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				dis2: dis2, 
+				License: licen, 
+				wikiname: name 
+			});
 			res.end();
 		}
 	 });
@@ -1261,12 +1272,7 @@ router.post('/revert/:page/:r', function(req, res) {
 	var page = req.params.page;
 	aya = editstop(ip, page);
 	if(aya) {
-		res.status(200).render('ban', {
-			title: '권한 오류',
-			dis2: dis2,
-			content: '어드민이 아닙니다.',
-			wikiname: name
-		});
+		res.redirect('/Access');
 	}
 	else {
 		var stopy;
@@ -1323,7 +1329,7 @@ router.get('/delete/:page', function(req, res) {
 				wikiname: name
 			});
 			
-			res.end()
+			res.end();
 		}
 		else {
 			res.status(200).render('delete', { title: req.params.page,
@@ -1332,19 +1338,18 @@ router.get('/delete/:page', function(req, res) {
 				wikiname: name
 			});
 			
-			res.end()
+			res.end();
 		}
 	})
  });
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
 	name = rname(name);
-	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	aya = editstop(ip, page);
 	if(aya) {
-		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+		res.redirect('/Access');
 	}
 	else {
 		var stopy;
@@ -1417,10 +1422,9 @@ router.post('/move/:page', function(req, res) {
 	name = rname(name);
 	var ip = yourip(req,res);
 	var page = req.params.page;
-	var dis2 = loginy(req,res);
 	aya = editstop(ip, page);
 	if(aya) {
-		res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+		res.redirect('/Access');
 	}
 	else {
 		var stopy;
@@ -1519,16 +1523,33 @@ router.get('/w/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('oldindex', { title: req.params.page, dis: dis,dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
-			res.end()
-			return;
+			res.status(404).render('oldindex', { 
+				title: req.params.page, 
+				dis: dis,
+				dis2: dis2, 
+				title2: title2, 
+				subtitle: encodeURIComponent(lovelive), 
+				content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				License: licen, 
+				wikiname: name 
+			});
+			res.end();
 		}
 		else {
 			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			var dtest;
 			if(dtest = redirect.exec(data)) {
 				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
-				res.status(200).render('oldindex', { title: req.params.page, dis: dis, dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: data, License: licen , wikiname: name });
+				res.status(200).render('oldindex', { 
+					title: req.params.page, 
+					dis: dis, 
+					dis2: dis2, 
+					title2: title2, 
+					subtitle: encodeURIComponent(lovelive), 
+					content: data, 
+					License: licen, 
+					wikiname: name 
+				});
 				res.end()
 			}
 			else {
@@ -1545,7 +1566,19 @@ router.get('/w/:page', function(req, res, next) {
 					if(exists) {
 						var acl = '<span style="margin-left:5px"></span>(관리자)'
 					}
-					res.status(200).render('index', { acl: acl, lbc: leftbarcontect[1], lb: lb, title: req.params.page, dis: dis, dis2:dis2, title2: title2, subtitle: encodeURIComponent(lovelive), content: cnt, License: licen , wikiname: name });
+					res.status(200).render('index', { 
+						acl: acl, 
+						lbc: leftbarcontect[1], 
+						lb: lb, 
+						title: req.params.page, 
+						dis: dis, 
+						dis2: dis2, 
+						title2: title2, 
+						subtitle: encodeURIComponent(lovelive), 
+						content: cnt, 
+						License: licen, 
+						wikiname: name 
+					});
 					res.end()
 				})
 			}
@@ -1578,7 +1611,16 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('oldindex', { title: req.params.page, dis2:dis2, dis: dis, title2: title2, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen, wikiname: name });
+			res.status(404).render('oldindex', { 
+				title: req.params.page, 
+				dis2: dis2, 
+				dis: dis, 
+				title2: title2, 
+				subtitle: encodeURIComponent(lovelive), 
+				content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				License: licen, 
+				wikiname: name 
+			});
 			res.end()
 			return;
 		}
@@ -1600,7 +1642,19 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 				if(exists) {
 					var acl = '<span style="margin-left:5px"></span>(관리자)'
 				}
-				res.status(200).render('index', { acl: acl, lbc: leftbarcontect[1], lb: lb, title: req.params.page, dis2:dis2, title2: title2, dis:dis, subtitle: encodeURIComponent(lovelive), content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt, License: licen, wikiname: name });
+				res.status(200).render('index', { 
+					acl: acl,
+					lbc: leftbarcontect[1],
+					lb: lb,
+					title: req.params.page,
+					dis2: dis2,
+					title2: title2,
+					dis: dis,
+					subtitle: encodeURIComponent(lovelive),
+					content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt,
+					License: licen,
+					wikiname: name 
+				});
 				res.end()
 			})
 		}
@@ -1625,7 +1679,17 @@ router.post('/preview/:page', function(req, res) {
 		else {
 			leftbarcontect = ['',''];
 		}
-		res.render('preview', { lbc: leftbarcontect[1], lb: lb, title: req.params.page, dis2:dis2, title2: encodeURIComponent(req.params.page), data: data, data2: req.body.content, content: cnt , wikiname: name });
+		res.render('preview', { 
+			lbc: leftbarcontect[1], 
+			lb: lb, 
+			title: req.params.page, 
+			dis2:dis2, 
+			title2: encodeURIComponent(req.params.page), 
+			data: data, 
+			data2: req.body.content, 
+			content: cnt, 
+			wikiname: name 
+		});
 		res.end()
 	 });
  });
@@ -1813,8 +1877,14 @@ router.get('/RecentChanges', function(req, res, next) {
 			i = i + 1;
 		}
 	}
-  	res.status(200).render('re1', { title: '최근 변경내역', dis2:dis2, content: data, License: licen , wikiname: name });
-	res.end()
+  	res.status(200).render('re1', { 
+		title: '최근 변경내역',
+		dis2:dis2, 
+		content: data,
+		License: licen,
+		wikiname: name 
+	});
+	res.end();
  });
 // 최근 토론을 보여줍니다.
 router.get('/RecentDiscuss', function(req, res, next) {
@@ -1958,8 +2028,14 @@ router.get('/RecentDiscuss', function(req, res, next) {
 			i = i + 1;
 		}
 	}
-  	res.status(200).render('de1', { title: '최근 토론내역', dis2:dis2, content: data, License: licen , wikiname: name });
-	res.end()
+  	res.status(200).render('de1', { 
+		title: '최근 토론내역', 
+		dis2:dis2, 
+		content: data, 
+		License: licen, 
+		wikiname: name 
+	});
+	res.end();
  });
 // raw를 보여줍니다.
 router.get('/raw/:page', function(req, res, next) {
@@ -1970,17 +2046,28 @@ router.get('/raw/:page', function(req, res, next) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('ban', { title: req.params.page, dis2:dis2, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
-			res.end()
-			return;
+			res.status(404).render('ban', { 
+				title: req.params.page, 
+				dis2:dis2, 
+				content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				License: licen,
+				wikiname: name 
+			});
+			res.end();
 		}
 		else {
 			data = data.replace(/<br>/g, '[br]')
 			data = data.replace(/\n/g, '<br>')
 			var raw = htmlencode.htmlEncode(data);
 			raw = raw.replace(/;&lt;br&gt;/g, '<br>');
-			res.status(200).render('ban', { title: req.params.page, dis2:dis2, content: raw, License: licen ,wikiname: name });
-			res.end()
+			res.status(200).render('ban', { 
+				title: req.params.page, 
+				dis2:dis2, 
+				content: raw, 
+				License: licen,
+				wikiname: name 
+			});
+			res.end();
 		}
 	})
   })
@@ -1991,7 +2078,6 @@ router.post('/history/:page', function(req, res, next) {
  });
 // 역링크
 router.get('/xref/:page', function(req, res) {
-	licen = rlicen(licen);
 	var dis2 = loginy(req,res)
 	name = rname(name);
 	var shine = 0;
@@ -2040,14 +2126,17 @@ router.get('/xref/:page', function(req, res) {
 	else {
 		ruby = ruby + '</div>';
 	}
-	res.render('ban', { title: req.params.page + ' (역 링크)', dis2:dis2, content: ruby , wikiname: name });
+	res.render('ban', { 
+		title: req.params.page + ' (역 링크)', 
+		dis2:dis2, 
+		content: ruby, 
+		wikiname: name 
+	});
  });
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
-	licen = rlicen(licen);
 	var dis2 = loginy(req,res)
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
 	var sun = fs.readdirSync('./data');
 	var shine = 0;
 	var ganba;
@@ -2077,7 +2166,12 @@ router.get('/TitleIndex', function(req, res) {
 		}
 		shine = shine + 1;
 	}
-	res.render('ban', { title: '모든 문서', dis2:dis2, content: ruby + '<br>' + shine + '개의 문서' , wikiname: name });
+	res.render('ban', { 
+		title: '모든 문서', 
+		dis2:dis2, 
+		content: ruby + '<br>' + shine + '개의 문서', 
+		wikiname: name 
+	});
  });
 // 랜덤
 router.get('/random', function(req, res) {
@@ -2122,12 +2216,24 @@ router.get('/edit/:page', function(req, res) {
 			
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
 		if(!exists){
-			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: "" , wikiname: name });
+			res.render('edit', { 
+				dis2:dis2, 
+				title: req.params.page, 
+				title2: encodeURIComponent(req.params.page), 
+				content: "" , 
+				wikiname: name 
+			});
 			res.end()
 		}
 		else{
 			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-			res.render('edit', { dis2:dis2, title: req.params.page, title2: encodeURIComponent(req.params.page), content: data , wikiname: name });
+			res.render('edit', { 
+				dis2:dis2,
+				title: req.params.page, 
+				title2: encodeURIComponent(req.params.page), 
+				content: data , 
+				wikiname: name 
+			});
 			res.end()
 		}
 	})
@@ -2139,7 +2245,6 @@ router.post('/edit/:page', function(req, res) {
 	
 	var ip = yourip(req,res);
 	var page = req.params.page;
-	var dis2 = loginy(req,res);
     var stopy;
 	stopy = stop(ip);
 	if(stopy) {
@@ -2148,7 +2253,7 @@ router.post('/edit/:page', function(req, res) {
 	else {	
 		aya = editstop(ip, page);
 		if(aya) {
-			res.status(200).render('ban', { title: '권한 오류', dis2: dis2, content: '어드민이 아닙니다.', wikiname: name });
+			res.redirect('/Access');
 		}
 		else {
 			if(!req.body.send) {
@@ -2172,11 +2277,8 @@ router.post('/edit/:page', function(req, res) {
 				}
 			}
 			var rtitle = req.body.send;
-			
 			var name = req.params.page;
-			
 			var leng = rplus(ip, today, name, rtitle, now, req, content);
-			
 			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 				if(!exists) {
 					var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
@@ -2306,14 +2408,28 @@ router.get('/history/w/:page/:r', function(req, res) {
 				else {
 					leftbarcontect = ['',''];
 				}
-				res.status(200).render('history', { leftbarcontect: leftbarcontect[1], title: req.params.page, title3: title3, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', content: cnt, wikiname: name , License: licen });
-				res.end()
+				res.status(200).render('history', { 
+					leftbarcontect: leftbarcontect[1], 
+					title: req.params.page, 
+					title3: title3, 
+					title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
+					content: cnt, 
+					wikiname: name, 
+					License: licen 
+				});
+				res.end();
 			});
 		}
 		else {
-			res.status(404).render('history', { title: req.params.page, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
-			res.end()
-			return;
+			res.status(404).render('history', { 
+				title: req.params.page, 
+				title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
+				title3: title3, 
+				content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				License: licen, 
+				wikiname: name 
+			});
+			res.end();
 		}
 	 });
  });
@@ -2330,13 +2446,26 @@ router.get('/history/:page/:r', function(req, res) {
 			neob = neob.replace(/\n/g, '<br>')
 			var raw = htmlencode.htmlEncode(neob);
 			raw = raw.replace(/;&lt;br&gt;/g, '<br>');
-			res.status(200).render('history', { title: req.params.page, title3: title3, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', content: raw, wikiname: name , License: licen });
-			res.end()
+			res.status(200).render('history', { 
+				title: req.params.page, 
+				title3: title3, 
+				title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
+				content: raw, 
+				wikiname: name, 
+				License: licen 
+			});
+			res.end();
 		}
 		else {
-			res.status(404).render('history', { title: req.params.page, title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', title3: title3, content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", License: licen ,wikiname: name });
-			res.end()
-			return;
+			res.status(404).render('history', { 
+				title: req.params.page, 
+				title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
+				title3: title3, 
+				content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
+				License: licen,
+				wikiname: name 
+			});
+			res.end();
 		}
 	 });
  });
@@ -2394,12 +2523,28 @@ router.get('/history/:page', function(req, res) {
 			if(exists) {
 				neoa = '<table id="toron"><tbody><td id="yosolo">관리자만 편집 가능한 문서 입니다.</td></tr></tbody></table>' + neoa;
 			}
-			res.status(200).render('history2', { title: req.params.page, dis2:dis2, title2:title2, content: neoa, License: licen ,wikiname: name });
-			break;
+			res.status(200).render('history2', { 
+				title: req.params.page, 
+				dis2:dis2, 
+				title2:title2, 
+				content: neoa, 
+				License: licen,
+				wikiname: name 
+			});
 			res.end()
-			return;
+			break;
 		}
 	}
- });
+});
+// 토론
+router.get('/Access', function(req, res) {
+	var dis2 = loginy(req, res);
+	res.status(200).render('ban', { 
+		title: '권한 오류', 
+		dis2: dis2, 
+		content: '어드민이 아닙니다.', 
+		wikiname: name 
+	});
+});
 
 module.exports = router;
