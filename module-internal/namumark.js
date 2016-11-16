@@ -555,7 +555,7 @@ module.exports = function(req, n, ba){
 	  }
   }
   
-  var sp = /\r\n(\s+)/;
+  var sp = /\r\n( +)/;
   var np;
   while(true) {
 	  if(np = sp.exec(six)) {
