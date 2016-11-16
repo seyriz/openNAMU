@@ -1442,7 +1442,7 @@ router.get('/w/:page', function(req, res, next) {
 			return;
 		}
 		else {
-			var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
+			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			var dtest;
 			if(dtest = redirect.exec(data)) {
 				data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
@@ -1501,7 +1501,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res, next) {
 			return;
 		}
 		else {
-			var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
+			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			if(redirect.exec(data)) {
 				data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 			}
@@ -1531,7 +1531,7 @@ router.post('/preview/:page', function(req, res) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	var dis2 = loginy(req,res)
-	var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
+	var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 	var data = req.body.content;
 	data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 	parseNamu(req, data, function(cnt){
@@ -2211,7 +2211,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 	fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', function (hists) {
 		if(hists) {
 			var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
-			var redirect = /^#(?:넘겨주기|[Rr][Ee][Dd][Ii][Rr][Ee][Cc][Tt])\s([^\n]*)/g;
+			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			if(redirect.exec(neob)) {
 				data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
 			}
