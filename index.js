@@ -1009,6 +1009,7 @@ router.post('/topic/:page/:topic', function(req, res) {
 // 밴 겟
 router.get('/ban/:ip', function(req, res) {
 	name = rname(name);
+	var dis2 = loginy(req,res);
 	
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
 	if(exists) {
