@@ -939,7 +939,8 @@ router.get('/topic/:page/:topic', function(req, res) {
 	});
 	res.end();  
   }
- });
+});
+
 // post
 router.post('/topic/:page/:topic', function(req, res) {
   var ip = yourip(req,res);
@@ -1004,7 +1005,8 @@ router.post('/topic/:page/:topic', function(req, res) {
 		   });
 	  }
   }
- });
+});
+ 
 // 밴 겟
 router.get('/ban/:ip', function(req, res) {
 	name = rname(name);
@@ -1026,7 +1028,8 @@ router.get('/ban/:ip', function(req, res) {
 		wikiname: name 
 	});
 	res.end();
- });
+});
+
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
 	var dis2 = loginy(req,res);
@@ -1068,7 +1071,8 @@ router.post('/ban/:ip', function(req, res) {
 		}
 		res.redirect('/w/');
 	}
- });
+});
+ 
 // 어드민 부여
 router.get('/admin/:ip', function(req, res) {
 	var ip = yourip(req,res);
@@ -1085,7 +1089,8 @@ router.get('/admin/:ip', function(req, res) {
 		});
 	}
 	res.redirect('/w/');
- });
+});
+ 
 // 밴 리스트
 router.get('/ban', function(req, res) {
 	name = rname(name);
@@ -1123,6 +1128,7 @@ router.get('/ban', function(req, res) {
 	});
 	res.end()
 });
+
 // ACL
 router.get('/acl/:page', function(req, res) {
 	var ip = yourip(req,res);
@@ -1145,15 +1151,18 @@ router.get('/acl/:page', function(req, res) {
 		res.redirect('/w/'+encodeURIComponent(req.params.page));
 	}
 });
+
 // 리다이렉트.
 router.get('/w/', function(req, res) {
 	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage));
 });
+
 // ver
 router.get('/ver', function(req, res) {
 	res.redirect('https://namu.ml/w/%EC%9C%84%ED%82%A4%20%EB%B2%84%EC%A0%84');
 });
+
 // 검색 결과를 보여줍니다.
 router.post('/search', function(req, res) {
     fs.exists('./data/' + encodeURIComponent(req.body.name)+'.txt', function (exists) {
@@ -1164,7 +1173,8 @@ router.post('/search', function(req, res) {
 			res.redirect('/edit/'+encodeURIComponent(req.body.name));
 		}
 	 });
- });
+});
+ 
 // diff
 router.get('/diff/:page/:r/:rr', function(req, res) {
 	licen = rlicen(licen);
@@ -1235,6 +1245,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 		}
 	});
 });
+
 // 되돌리기
 router.get('/revert/:page/:r', function(req, res) {
 	licen = rlicen(licen);
@@ -1263,7 +1274,8 @@ router.get('/revert/:page/:r', function(req, res) {
 		});
 		res.end()
 	}
- });
+});
+ 
 // 되돌리기 2
 router.post('/revert/:page/:r', function(req, res) {
 	name = rname(name);
@@ -1310,7 +1322,8 @@ router.post('/revert/:page/:r', function(req, res) {
 			}
 		}
 	}
- });
+});
+ 
 // 문서 삭제
 router.get('/delete/:page', function(req, res) {
 	name = rname(name);
@@ -1340,7 +1353,8 @@ router.get('/delete/:page', function(req, res) {
 			res.end();
 		}
 	})
- });
+});
+ 
 // 문서 삭제 처리
 router.post('/delete/:page', function(req, res) {
 	name = rname(name);
@@ -1386,7 +1400,8 @@ router.post('/delete/:page', function(req, res) {
 			res.redirect('/w/'+ encodeURIComponent(req.params.page));
 		}
 	}
- });
+});
+ 
 // 문서 이동
 router.get('/move/:page', function(req, res) {
 	licen = rlicen(licen);
@@ -1416,6 +1431,7 @@ router.get('/move/:page', function(req, res) {
 		}
 	})
 });
+
 // post
 router.post('/move/:page', function(req, res) {
 	name = rname(name);
@@ -1496,7 +1512,8 @@ router.post('/move/:page', function(req, res) {
 			}
 		}
 	}
- });
+});
+ 
 // 항목을 보여줍니다.
 router.get('/w/:page', function(req, res) {
 	licen = rlicen(licen);
@@ -1707,10 +1724,10 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
 					}
 				}
 				else {
@@ -1808,10 +1825,10 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
 					}
 				}
 				else {
@@ -2507,10 +2524,10 @@ router.get('/history/:page', function(req, res) {
 				else {
 					var ban = '차단';
 				}
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(revert)' + pageplus + '</td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(되돌리기)' + pageplus + '</td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 			else {
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(revert)' + pageplus + '</td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(되돌리기)' + pageplus + '</td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 		}
 		else {
