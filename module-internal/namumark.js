@@ -31,12 +31,6 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  var redirect = /^\r\n#(?:넘겨주기|redirect)\s([^\n]*)/ig;
-  var dtest;
-  if(dtest = redirect.exec(data)) {
-	data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
-  }
-  
   /* 모니위키 및 추가 파싱 부분 */
   six = six.replace(/\[(table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^\]]*)|table\s?align=(?:[^\]]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6})|\:|\(|\)|bgcolor=(?:\w+)|bgcolor=(?:#[0-9a-f-A-F]{3})|bgcolor=(?:#[0-9a-f-A-F]{6})|-(?:[0-9]+)|\|(?:[0-9]+))\]/ig, '<$1>');
   
