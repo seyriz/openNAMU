@@ -588,7 +588,7 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/\[((?:div|span|font|iframe|\/(?:div|span|font|iframe))(\s[^\]]+)?)]/ig, '<$1>');
   
-//  six = plugin(six);
+  //  six = plugin(six);
   ba(six)
   
   // Thank for 2DU, LiteHell //
