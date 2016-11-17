@@ -419,7 +419,7 @@ router.get('/user/:user', function(req, res) {
 	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 	  var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 	  if(redirect.exec(data)) {
-		data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
+		data = data.replace(redirect, " * 리다이렉트 [[$1]]");
 	  }
 	  parseNamu(req, data, function(cnt){
 		    var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
@@ -1641,7 +1641,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 		else {
 			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			if(redirect.exec(data)) {
-				data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
+				data = data.replace(redirect, " * 리다이렉트 [[$1]]");
 			}
 			parseNamu(req, data, function(cnt){
 				var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
@@ -1684,7 +1684,7 @@ router.post('/preview/:page', function(req, res) {
 	var dis2 = loginy(req,res)
 	var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 	var data = req.body.content;
-	data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
+	data = data.replace(redirect, " * 리다이렉트 [[$1]]");
 	parseNamu(req, data, function(cnt){
 		var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
 		var leftbarcontect;
@@ -2419,7 +2419,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 			var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
 			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 			if(redirect.exec(neob)) {
-				data = data.replace(redirect, "<li>리다이렉트 [[$1]]</li>");
+				data = data.replace(redirect, " * 리다이렉트 [[$1]]");
 			}
 			parseNamu(req, neob, function(cnt){
 				var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
