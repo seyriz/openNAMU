@@ -1552,11 +1552,6 @@ router.get('/w/:page', function(req, res) {
 				res.end();
 			}
 			else {
-				var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
-				var dtest;
-				if(dtest = redirect.exec(data)) {
-					data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
-				}
 				parseNamu(req, data, function(cnt){
 					var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
 					var leftbarcontect;
