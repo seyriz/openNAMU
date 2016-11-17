@@ -31,7 +31,7 @@ module.exports = function(req, n, ba){
   
   six = six.replace(/{{\|((?:[^|]*)\n?(?:(?:(?:(?:(?:[^|]*)(?:\n)?)+))))\|}}/g, "<table><tbody><tr><td>$1</td></tr></tbody></table>");
   
-  var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
+  var redirect = /^\r\n#(?:넘겨주기|redirect)\s([^\n]*)/ig;
   var dtest;
   if(dtest = redirect.exec(data)) {
 	data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
