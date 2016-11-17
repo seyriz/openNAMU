@@ -1184,8 +1184,9 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 								var textDiff = diff.main(sc, id);
 								
 								res.status(200).render('diff', { 
-									title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')',
+									title: req.params.page,
 									title2: title2,
+									title3: '<span style="margin-left:5px"></span>(' + req.params.r + ' / ' + req.params.rr + ')',
 									dis2: dis2,
 									wikiname: name,
 									License: licen,
@@ -1195,8 +1196,9 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 							}
 							else {
 								res.status(404).render('diff', { 
-									title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')', 
-									title2: title2, 
+									title: req.params.page, 
+									title2: title2,
+									title3: '<span style="margin-left:5px"></span>(' + req.params.r + ' / ' + req.params.rr + ')',
 									dis2: dis2, 
 									content: "이 문서의 "+req.params.rr+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", 
 									License: licen, 
@@ -1208,8 +1210,9 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 				}
 				else {
 					res.status(404).render('diff', { 
-						title: req.params.page + ' (' + req.params.r + ' / ' + req.params.rr + ')',
+						title: req.params.page,
 						title2: title2,
+						title3: '<span style="margin-left:5px"></span>(' + req.params.r + ' / ' + req.params.rr + ')',
 						dis2: dis2, 
 						content: "이 문서의 "+req.params.r+" 판이 없습니다. <a href='/w/"+encodeURIComponent(req.params.page)+"'>돌아가기</a>", 
 						License: licen, 
