@@ -5,9 +5,7 @@ var logger = require('morgan');
 var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./index');
-
 var app = express();
 
 // view engine setup
@@ -26,13 +24,13 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  res.redirect('/w/');
+    res.redirect('/w/');
 });
 
 
 // 에러 창
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
 	var exists = fs.existsSync('./setting/WikiName.txt');
 	var name;
 	if(exists) {
@@ -41,27 +39,23 @@ if (app.get('env') === 'development') {
 	else {
 		name = "오픈나무";
 	}
-    res.status(err.status || 500);
-		res.render('error', {
-		  title: 'Error',
-		  leftbarcontect: '',
-		  message: err.message,
-		  error: err,
-		  wikiname: name
+    res.status(404).render('error', {
+		    title: 'Error',
+		    message: err.message,
+		    error: err,
+		    wikiname: name
 		});
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-	title: 'Error',
-	leftbarcontect: '',
-    message: err.message,
-    error: {}
-  });
+app.use(function(err, req, res) {
+    res.status(200).res.render('error', {
+		title: 'Error',
+		message: err.message,
+		error: {}
+    });
 });
 
 var debug = require('debug')('openNAMU:server');

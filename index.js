@@ -1328,16 +1328,15 @@ router.get('/delete/:page', function(req, res) {
 				License: licen,
 				wikiname: name
 			});
-			
 			res.end();
 		}
 		else {
-			res.status(200).render('delete', { title: req.params.page,
+			res.status(200).render('delete', { 
+				title: req.params.page,
 				title2: title2,
 				dis2 :dis2,
 				wikiname: name
 			});
-			
 			res.end();
 		}
 	})
