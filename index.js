@@ -1230,13 +1230,9 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 			});
 			res.end();
 		}
-	 });
- });
+	});
+});
 // 되돌리기
-router.post('/revert/:page', function(req, res) {
-	res.redirect('/revert/'+ encodeURIComponent(req.params.page) + '/r' + encodeURIComponent(req.body.re));
- });
-// 되돌리기 2
 router.get('/revert/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
@@ -1265,7 +1261,7 @@ router.get('/revert/:page/:r', function(req, res) {
 		res.end()
 	}
  });
-// 되돌리기 3
+// 되돌리기 2
 router.post('/revert/:page/:r', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
@@ -2511,10 +2507,10 @@ router.get('/history/:page', function(req, res) {
 				else {
 					var ban = '차단';
 				}
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)' + pageplus + '</td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(revert)' + pageplus + '</td><td id="yosolo">' + ip + ' <a href="/ban/' + ip + '">(' + ban + ')</a></td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 			else {
-				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)' + pageplus + '</td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
+				neoa = '<table id="toron"><tbody><tr><td id="yosolo">r' + i + ' <a href="/history/' + encodeURIComponent(req.params.page) + '/r' + i + '">(raw)</a> <a href="/history/w/' + encodeURIComponent(req.params.page) + '/r' + i + '">(w)</a> <a href="/revert/' + encodeURIComponent(req.params.page) + '/r' + i + '">(revert)' + pageplus + '</td><td id="yosolo">' + ip + '</td><td id="yosolo">' + today +'</td></tr><tr><td colspan="3" id="yosolo">' + send + '</td></tr></tbody></table>' + neoa;
 			}
 		}
 		else {

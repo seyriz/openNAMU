@@ -11,9 +11,6 @@ block content
     input.form-control.input-sm(type='text', id='history', name='r')
     input.form-control.input-sm(type='text', id='history', name='rr')
     button.btn.btn-primary(type='submit') 리비전 비교
-  form#usrform(style='margin-top:5px', method='POST', action='/revert/' + title2)
-    input.form-control.input-sm(type='text', id='history', name='re')
-    button.btn.btn-primary(type='submit') 되돌리기
   div(style="margin-top:10px")
   <table style="width: 100%;"><tbody><tr><td style="text-align: center;width:33.33%">넘버</td><td style="text-align: center;width:33.33%">기여자</td><td style="text-align: center;width:33.33%">시간</td></tr></tbody></table>
   div!= content
