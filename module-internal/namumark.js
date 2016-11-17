@@ -572,7 +572,7 @@ module.exports = function(req, n, ba){
 			  }
 		  }
 		  
-		  six = six.replace(sp, '\n' + up);
+		  six = six.replace(sp, '<br>' + up);
 	  }
 	  else {
 		  break;

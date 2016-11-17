@@ -1724,10 +1724,10 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 					}
 				}
 				else {
@@ -1825,10 +1825,10 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(역사)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 					}
 				}
 				else {
