@@ -16,7 +16,7 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(logger('dev')); 로그 제거
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({limit: '10240mb', extended: false}));
 app.use(cookieParser());
@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 
 // 에러 창
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+    app.use(function(err, req, res, next) {
 	var exists = fs.existsSync('./setting/WikiName.txt');
 	var name;
 	if(exists) {
@@ -42,14 +42,14 @@ if (app.get('env') === 'development') {
 		name = "오픈나무";
 	}
     res.status(err.status || 500);
-    res.render('error', {
-	  title: 'Error',
-      leftbarcontect: '',
-      message: err.message,
-      error: err,
-	  wikiname: name
+		res.render('error', {
+		  title: 'Error',
+		  leftbarcontect: '',
+		  message: err.message,
+		  error: err,
+		  wikiname: name
+		});
     });
-  });
 }
 
 // production error handler
