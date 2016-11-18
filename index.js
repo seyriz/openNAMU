@@ -1851,10 +1851,10 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span>';
 					}
 				}
 				else {
@@ -1903,7 +1903,7 @@ router.get('/RecentChanges', function(req, res) {
 					title = htmlencode.htmlEncode(title)
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+' <a href="/history/'+encodeURIComponent(page)+'">(history)</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
 		}
