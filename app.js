@@ -31,20 +31,22 @@ app.use(function(req, res, next) {
 // 에러 창
 if (app.get('env') === 'development') {
     app.use(function(err, req, res) {
-	var exists = fs.existsSync('./setting/WikiName.txt');
-	var name;
-	if(exists) {
-		name = fs.readFileSync('./setting/WikiName.txt', 'utf8');
-	}
-	else {
-		name = "오픈나무";
-	}
-    res.status(404).render('error', {
+		var exists = fs.existsSync('./setting/WikiName.txt');
+		var name;
+		if(exists) {
+			name = fs.readFileSync('./setting/WikiName.txt', 'utf8');
+		}
+		else {
+			name = "오픈나무";
+		}
+		res.status(404).render('error', {
 		    title: 'Error',
 		    message: err.message,
 		    error: err,
 		    wikiname: name
 		});
+		res.end();
+		return;
     });
 }
 
@@ -56,6 +58,8 @@ app.use(function(err, req, res) {
 		message: err.message,
 		error: {}
     });
+	res.end();
+	return;  
 });
 
 var debug = require('debug')('openNAMU:server');
