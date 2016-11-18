@@ -2541,11 +2541,15 @@ router.get('/history/:page', function(req, res) {
 			if(exists) {
 				var leng = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', 'utf8');
 				var plus = /\+/g;
+				var or = /\-/g;
 				if(plus.exec(leng)) {
 					var pageplus = '</a> <span style="color:green;">(' + leng + ')</span>';
 				}
-				else {
+				else if(or.exec(leng)) {
 					var pageplus = '</a> <span style="color:red;">(' + leng + ')</span>';
+				}
+				else {
+					var pageplus = '</a>';
 				}
 			}
 			else {
