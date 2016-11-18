@@ -344,6 +344,7 @@ router.get('/login', function(req, res) {
 			title: '로그인'  
 		});
 		res.end();
+		return;
 	}
  });
 // 로그인 하기
@@ -937,8 +938,9 @@ router.get('/topic/:page/:topic', function(req, res) {
 		wikiname: name, 
 		toronstop: toronstop  
 	});
-	res.end();  
-  }
+	res.end();
+	return;  
+    }
 });
 
 // post
@@ -1028,6 +1030,7 @@ router.get('/ban/:ip', function(req, res) {
 		wikiname: name 
 	});
 	res.end();
+	return;
 });
 
 // 밴 추가
@@ -1203,6 +1206,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 									content: diff.prettyHtml(textDiff) 
 								});
 								res.end();
+								return;
 							}
 							else {
 								res.status(404).render('diff', { 
@@ -1242,6 +1246,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 	});
 });
@@ -1342,6 +1347,7 @@ router.get('/delete/:page', function(req, res) {
 				wikiname: name
 			});
 			res.end();
+			return;
 		}
 		else {
 			res.status(200).render('delete', { 
@@ -1351,6 +1357,7 @@ router.get('/delete/:page', function(req, res) {
 				wikiname: name
 			});
 			res.end();
+			return;
 		}
 	})
 });
@@ -1419,6 +1426,7 @@ router.get('/move/:page', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 		else {
 			res.status(200).render('move', { 
@@ -1428,6 +1436,7 @@ router.get('/move/:page', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 	})
 });
@@ -1550,6 +1559,7 @@ router.get('/w/:page', function(req, res) {
 					wikiname: name 
 				});
 				res.end();
+				return;
 			}
 			else {
 				var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
@@ -1567,6 +1577,7 @@ router.get('/w/:page', function(req, res) {
 						wikiname: name 
 					});
 					res.end();
+					return;
 				}
 				parseNamu(req, data, function(cnt){
 					var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
@@ -1595,6 +1606,7 @@ router.get('/w/:page', function(req, res) {
 						wikiname: name 
 					});
 					res.end();
+					return;
 				});
 			}
 		});
@@ -1637,6 +1649,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 		else {
 			var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
@@ -1665,11 +1678,12 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 					title2: title2,
 					dis: dis,
 					subtitle: encodeURIComponent(lovelive),
-					content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li>' + cnt,
+					content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li><br>' + cnt,
 					License: licen,
 					wikiname: name 
 				});
 				res.end();
+				return;
 			})
 		}
 	})
@@ -1706,6 +1720,7 @@ router.post('/preview/:page', function(req, res) {
 			wikiname: name 
 		});
 		res.end();
+		return;
 	 });
 });
  
@@ -1901,6 +1916,7 @@ router.get('/RecentChanges', function(req, res) {
 		wikiname: name 
 	});
 	res.end();
+	return;
 });
  
 // 최근 토론을 보여줍니다.
@@ -2053,6 +2069,7 @@ router.get('/RecentDiscuss', function(req, res, next) {
 		wikiname: name 
 	});
 	res.end();
+	return;
 });
  
 // raw를 보여줍니다.
@@ -2072,6 +2089,7 @@ router.get('/raw/:page', function(req, res) {
 					wikiname: name 
 				});
 				res.end();
+				return;
 			}
 			else {
 				data = data.replace(/<br>/g, '[br]')
@@ -2086,6 +2104,7 @@ router.get('/raw/:page', function(req, res) {
 					wikiname: name 
 				});
 				res.end();
+				return;
 			}
 		});
     });
@@ -2440,6 +2459,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 					License: licen 
 				});
 				res.end();
+				return;
 			});
 		}
 		else {
@@ -2452,6 +2472,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 	 });
 });
@@ -2478,6 +2499,7 @@ router.get('/history/:page/:r', function(req, res) {
 				License: licen 
 			});
 			res.end();
+			return;
 		}
 		else {
 			res.status(404).render('history', { 
@@ -2489,6 +2511,7 @@ router.get('/history/:page/:r', function(req, res) {
 				wikiname: name 
 			});
 			res.end();
+			return;
 		}
 	 });
 });
