@@ -2185,12 +2185,14 @@ router.get('/TitleIndex', function(req, res) {
 	var test = /-back$/;
 	var haha = /-stop$/;
 	var hehe;
+	var re = 0;
 	while(true) {
 		if(sun[shine]) {
 			if(test.exec(sun[shine])) {
 
 			}
 			else {
+				re = re + 1;
 				hehe = decodeURIComponent(sun[shine]);
 				ganba = dayo.exec(hehe);
 				if(haha.exec(ganba[1])) {
@@ -2209,7 +2211,7 @@ router.get('/TitleIndex', function(req, res) {
 	res.render('ban', { 
 		title: '모든 문서', 
 		dis2:dis2, 
-		content: ruby + '<br>' + shine + '개의 문서', 
+		content: ruby + '<br>' + re + '개의 문서', 
 		wikiname: name 
 	});
  });
