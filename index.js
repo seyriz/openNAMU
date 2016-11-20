@@ -2334,13 +2334,10 @@ router.get('/edit/:page/:number', function(req, res) {
 			while(true) {
 				if(toc.exec(data)) {
 					i = i + 1;
-					console.log(i);
-					console.log(data);
 					if(req.params.number === i) {
 						test = is.exec(data);
 						test[1] = test[1].replace(/\r\n$/, '');
 						break;
-						console.log(test);
 					}
 					else {
 						data = data.replace(toc, '');
