@@ -2309,26 +2309,52 @@ router.get('/edit/:page', function(req, res) {
 	})
 });
 // 문단 편집
+/* 미 완성 코드
 router.get('/edit/:page/:number', function(req, res) {
 	name = rname(name);
 	
 	var dis2 = loginy(req,res);
+	req.params.number = Number(req.params.number);
 	
 	if(encodeURIComponent(req.params.page).length > 255) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
-			
+	
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
 		if(!exists){
 			res.redirect('/edit/' + encodeURIComponent(req.params.page));
 		}
 		else{
 			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+			data = data + '\r\n';
+			var toc = /(?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n/;
+			var test;
+			var is = /((?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n(?:(?:(?:(?:(?!(?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n).)*)\r\n)+))/;
+			var i = 0;
+			while(true) {
+				if(toc.exec(data)) {
+					i = i + 1;
+					console.log(i);
+					console.log(data);
+					if(req.params.number === i) {
+						test = is.exec(data);
+						test[1] = test[1].replace(/\r\n$/, '');
+						break;
+						console.log(test);
+					}
+					else {
+						data = data.replace(toc, '');
+					}
+				}
+				else {
+					break;
+				}
+			}
 			res.render('edit', { 
 				dis2:dis2,
 				title: req.params.page, 
 				title2: encodeURIComponent(req.params.page), 
-				content: data , 
+				content: test[1],
 				wikiname: name 
 			});
 			res.end();
@@ -2336,6 +2362,7 @@ router.get('/edit/:page/:number', function(req, res) {
 		}
 	})
 });
+*/
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	name = rname(name);
