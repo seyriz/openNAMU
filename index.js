@@ -255,7 +255,8 @@ router.get('/register', function(req, res) {
 		dis2: dis2, 
 		title: '회원가입'  
 	});
-	res.end()
+	res.end();
+	return;
  });
 // 가입 하기
 router.post('/register', function(req, res) {
@@ -315,7 +316,8 @@ router.get('/logout', function(req, res) {
 			License: licen, 
 			wikiname: name  
 		});
-		res.end()
+		res.end();
+		return;
 	}
 	else {
 		res.redirect('/login');
@@ -336,7 +338,8 @@ router.get('/login', function(req, res) {
 			License: licen, 
 			wikiname: name  
 		});
-		res.end()	
+		res.end();
+		return;
 	}
 	else {
 		res.status(200).render('login', { 
@@ -395,7 +398,8 @@ router.get('/Upload', function(req, res, next) {
 		dis2:dis2, 
 		wikiname: name 
 	});
-	res.end()
+	res.end();
+	return;
 });
 // 사용자 문서
 router.get('/user/:user', function(req, res) {
@@ -414,7 +418,8 @@ router.get('/user/:user', function(req, res) {
 		  License: licen, 
 		  wikiname: name 
 	  });
-	  res.end()
+	  res.end();
+	  return;
   } 
   else {
 	  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
@@ -442,7 +447,8 @@ router.get('/user/:user', function(req, res) {
 				License: licen, 
 				wikiname: name 
 			});
-			res.end()
+			res.end();
+			return;
 	  })
   }
 });
@@ -477,7 +483,8 @@ router.get('/edit/user/:user', function(req, res) {
 					  License: licen, 
 					  wikiname: name 
 				  });
-				  res.end()
+				  res.end();
+				  return;
 				} 
 				else {
 				  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
@@ -489,7 +496,8 @@ router.get('/edit/user/:user', function(req, res) {
 					  License: licen, 
 					  wikiname: name 
 				  });
-				  res.end()
+				  res.end();
+				  return;
 				}
 			} 
 			else {
@@ -614,6 +622,8 @@ router.get('/setup', function(req, res) {
 		License: licen, 
 		wikiname: name 
 	});
+	res.end();
+	return;
  });
 // 토론
 router.get('/topic/:page', function(req, res) {
@@ -672,8 +682,15 @@ router.get('/topic/:page', function(req, res) {
 	var add = '';
   }
   
-  res.status(200).render('new-topic', { title: req.params.page, dis2:dis2, title2: title2, content: add, wikiname: name });
-  res.end()
+  res.status(200).render('new-topic', { 
+		title: req.params.page, 
+		dis2:dis2, 
+		title2: title2,
+		content: add,
+		wikiname: name 
+  });
+  res.end();
+  return;
  });
 // 토론으로 보냄
 router.post('/topic/:page', function(req, res) {
@@ -1129,7 +1146,8 @@ router.get('/ban', function(req, res) {
 		content: ruby, 
 		wikiname: name 
 	});
-	res.end()
+	res.end();
+	return;
 });
 
 // ACL
@@ -1218,7 +1236,8 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 									License: licen, 
 									wikiname: name  
 								});
-								res.end()
+								res.end();
+								return;
 							}
 						 });
 				}
@@ -1232,7 +1251,8 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 						License: licen, 
 						wikiname: name  
 					});
-					res.end()
+					res.end();
+					return;
 				}
 			 });
 		}
@@ -1266,7 +1286,8 @@ router.get('/revert/:page/:r', function(req, res) {
 			wikiname: name,
 			title3: req.params.r 
 		});
-		res.end()
+		res.end();
+		return;
 	}
 	else {
 		res.status(404).render('ban', { 
@@ -1277,7 +1298,8 @@ router.get('/revert/:page/:r', function(req, res) {
 			License: licen,
 			wikiname: name 
 		});
-		res.end()
+		res.end();
+		return;
 	}
 });
  
@@ -2171,6 +2193,8 @@ router.get('/xref/:page', function(req, res) {
 		content: ruby, 
 		wikiname: name 
 	});
+	res.end();
+	return;
 });
 
 // 모든 문서
@@ -2214,6 +2238,8 @@ router.get('/TitleIndex', function(req, res) {
 		content: ruby + '<br>' + re + '개의 문서', 
 		wikiname: name 
 	});
+	res.end();
+	return;
  });
 // 랜덤
 router.get('/random', function(req, res) {
@@ -2265,7 +2291,8 @@ router.get('/edit/:page', function(req, res) {
 				content: "" , 
 				wikiname: name 
 			});
-			res.end()
+			res.end();
+			return;
 		}
 		else{
 			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
@@ -2276,10 +2303,39 @@ router.get('/edit/:page', function(req, res) {
 				content: data , 
 				wikiname: name 
 			});
-			res.end()
+			res.end();
+			return;
 		}
 	})
- });
+});
+// 문단 편집
+router.get('/edit/:page/:number', function(req, res) {
+	name = rname(name);
+	
+	var dis2 = loginy(req,res);
+	
+	if(encodeURIComponent(req.params.page).length > 255) {
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+	}
+			
+	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+		if(!exists){
+			res.redirect('/edit/' + encodeURIComponent(req.params.page));
+		}
+		else{
+			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+			res.render('edit', { 
+				dis2:dis2,
+				title: req.params.page, 
+				title2: encodeURIComponent(req.params.page), 
+				content: data , 
+				wikiname: name 
+			});
+			res.end();
+			return;
+		}
+	})
+});
 // 편집 결과를 적용하고 해당 문서로 이동합니다.
 router.post('/edit/:page', function(req, res) {
 	name = rname(name);
@@ -2585,6 +2641,7 @@ router.get('/history/:page', function(req, res) {
 				wikiname: name 
 			});
 			res.end()
+			return;
 			break;
 		}
 	}
@@ -2599,6 +2656,8 @@ router.get('/Access', function(req, res) {
 		content: '어드민이 아닙니다.', 
 		wikiname: name 
 	});
+	res.end();
+	return;
 });
 
 module.exports = router;
