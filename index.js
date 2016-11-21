@@ -1514,7 +1514,7 @@ router.get('/w/:page', function(req, res) {
     fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 			if(!exists) {
-				res.status(404).render('oldindex', { 
+				res.status(404).render('index', { 
 					title: req.params.page, 
 					dis: dis,
 					dis2: dis2, 
@@ -1522,7 +1522,8 @@ router.get('/w/:page', function(req, res) {
 					subtitle: encodeURIComponent(lovelive), 
 					content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
 					License: licen, 
-					wikiname: name 
+					wikiname: name,
+					acl: ''
 				});
 				res.end();
 				return;
@@ -1532,7 +1533,7 @@ router.get('/w/:page', function(req, res) {
 				var dtest;
 				if(dtest = redirect.exec(data)) {
 					data = data.replace(redirect, "<head><meta http-equiv=\"refresh\" content=\"0;url=/w/"+encodeURIComponent(dtest[1])+"/redirect/"+encodeURIComponent(req.params.page)+"\" /></head><li>리다이렉트 <a href='$1'>$1</a></li>");
-					res.status(200).render('oldindex', { 
+					res.status(200).render('index', { 
 						title: req.params.page, 
 						dis: dis, 
 						dis2: dis2, 
@@ -1540,7 +1541,8 @@ router.get('/w/:page', function(req, res) {
 						subtitle: encodeURIComponent(lovelive), 
 						content: data, 
 						License: licen, 
-						wikiname: name 
+						wikiname: name,
+						acl: ''
 					});
 					res.end();
 					return;
@@ -1569,7 +1571,7 @@ router.get('/w/:page', function(req, res) {
 						subtitle: encodeURIComponent(lovelive), 
 						content: cnt, 
 						License: licen, 
-						wikiname: name 
+						wikiname: name
 					});
 					res.end();
 					return;
@@ -1604,7 +1606,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
   fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 		if(!exists) {
-			res.status(404).render('oldindex', { 
+			res.status(404).render('index', { 
 				title: req.params.page, 
 				dis2: dis2, 
 				dis: dis, 
@@ -1612,7 +1614,8 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 				subtitle: encodeURIComponent(lovelive), 
 				content: '<li><a href="/edit/' + req.params.rdrc + '">' + req.params.rdrc + '</a> 에서 넘어 왔습니다.</li>' + "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
 				License: licen, 
-				wikiname: name 
+				wikiname: name,
+				acl: ''
 			});
 			res.end();
 			return;
