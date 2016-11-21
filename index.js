@@ -1510,7 +1510,6 @@ router.get('/w/:page', function(req, res) {
     }
     var dis2 = loginy(req,res)
     var title2 = encodeURIComponent(req.params.page);
-    data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 	exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
 		res.status(404).render('index', { 
@@ -1528,6 +1527,7 @@ router.get('/w/:page', function(req, res) {
 		return;
 	}
 	else {
+		data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 		var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 		var dtest;
 		if(dtest = redirect.exec(data)) {
@@ -2311,6 +2311,7 @@ router.post('/edit/:page', function(req, res) {
 			res.redirect('/Access');
 		}
 		else {
+			var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
 			if(!req.body.send) {
 				req.body.send = "<br>";
 			}
@@ -2334,80 +2335,65 @@ router.post('/edit/:page', function(req, res) {
 			var rtitle = req.body.send;
 			var name = req.params.page;
 			var leng = rplus(ip, today, name, rtitle, now, req, content);
-			fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
+			fs.exists(file, function (exists) {
 				if(!exists) {
-					var file = './data/' + encodeURIComponent(req.params.page)+'.txt';
-					fs.open(file,'w',function(err,fd){
-						fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-					 });
-					fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
-						if(!exists) {
-							fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
-								 });
-							 });
-						}
-						else {
-							var i = 0;
-							while(true) {
-								i = i + 1;
-								var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
-								if(!exists) {
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
-									 });
-									break;
-								}
+					fs.openSync(file,'w');
+					fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
+					fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
+					if(!exists) {
+						fs.mkdirSync('./history/' + encodeURIComponent(req.params.page), 777);
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+');
+						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+');
+						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+');
+						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+');
+						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+');
+						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
+					}
+					else {
+						var i = 0;
+						while(true) {
+							i = i + 1;
+							var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
+							if(!exists) {
+								fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+								fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+								fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+								fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+								fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+');
+								fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
+								break;
 							}
 						}
-					 });
+					}
 				}
 				else {
-					fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-					fs.exists('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', function (exists) {
+					var ndata = fs.readFileSync(file, 'utf8');
+					if(req.body.content === ndata) {
+
+					}
+					else {
+						fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
+						fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
 						if(!exists) {
-							fs.mkdir('./history/' + encodeURIComponent(req.params.page), 777, function(err) {
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
-								 });
-								fs.open('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+',function(err,fd){
-									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
-								 });
-							 });
+							fs.mkdirSync('./history/' + encodeURIComponent(req.params.page), 777);
+							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt', req.body.content, 'utf8');
+							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt','w+');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-ip.txt', ip, 'utf8');
+							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt','w+');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-today.txt', today, 'utf8');
+							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt','w+');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-send.txt', req.body.send, 'utf8');
+							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt','w+');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r1-leng.txt', leng, 'utf8');
 						}
 						else {
 							var i = 0;
@@ -2415,26 +2401,21 @@ router.post('/edit/:page', function(req, res) {
 								i = i + 1;
 								var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'.txt');
 								if(!exists) {
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
-									 });
-									fs.open('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+',function(err,fd){
-										fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
-									 });
+									fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt','w+');
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '.txt', req.body.content, 'utf8');
+									fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt','w+');
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-ip.txt', ip, 'utf8');
+									fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt','w+');
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
+									fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+');
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.body.send, 'utf8');
+									fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w+');
+									fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt', leng, 'utf8');
 									break;
 								}
 							}
 						}
-					 });
+					}
 				}
 			});	
 			res.redirect('/w/'+ encodeURIComponent(req.params.page));
