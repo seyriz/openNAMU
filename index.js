@@ -1601,7 +1601,6 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
     }
     var dis2 = loginy(req,res)
     var title2 = encodeURIComponent(req.params.page);
-    data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 	exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
 		res.status(404).render('index', { 
@@ -1619,6 +1618,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 		return;
 	}
 	else {
+		data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 		var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 		if(redirect.exec(data)) {
 			data = data.replace(redirect, " * 리다이렉트 [[$1]]");
