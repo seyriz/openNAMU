@@ -23,8 +23,7 @@ module.exports = function(req, n, ba){
   return yyyy+'/' + mm+'/'+dd;
   }
   six = '\r\n' + six + '\r\n';
-  
-  six = six.replace(/<((?:\w+)|(?:#[0-9a-f-A-F]{3})|(?:#[0-9a-f-A-F]{6}))>/ig, '[bgcolor=$1]');
+
   six = six.replace(/<((?:span|font|iframe|table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6})|\:|\(|\)|bgcolor=(?:\w+)|bgcolor=(?:#[0-9a-f-A-F]{3})|bgcolor=(?:#[0-9a-f-A-F]{6})|-(?:[0-9]+)|\|(?:[0-9]+)|big|small|del|s|\/(?:span|font|iframe|big|small|del|s))(\s[^>]+)?)>/ig, '[$1]');
   
   six = xssFilters.inHTMLData(six);
