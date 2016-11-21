@@ -39,7 +39,11 @@ function rFrontPage(FrontPage) {
 	var exists = fs.existsSync('./setting/FrontPage.txt');
 	
 	if(exists) {
+		var test = /%0A$/;
 		FrontPage = fs.readFileSync('./setting/FrontPage.txt', 'utf8');
+		if(test.exec(FrontPage)) {
+			FrontPage = FrontPage.replace(test, '');
+		}
 	}
 	else {
 		FrontPage = "FrontPage";
