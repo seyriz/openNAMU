@@ -1383,8 +1383,7 @@ router.post('/delete/:page', function(req, res) {
 					break;
 				}
 			}
-			fs.unlink('./data/' + encodeURIComponent(req.params.page)+'.txt', function (err) {
-			});
+			fs.unlinkSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 			res.redirect('/w/'+ encodeURIComponent(req.params.page));
 		}
 	}
@@ -1396,21 +1395,20 @@ router.get('/move/:page', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
 	var title2 = encodeURIComponent(req.params.page);
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
-		if(!exists) {
-			res.redirect('/w/' + encodeURIComponent(req.params.page));
-		}
-		else {
-			res.status(200).render('move', { 
-				title: req.params.page,
-				dis2,dis2,
-				title2: title2,
-				wikiname: name 
-			});
-			res.end();
-			return;
-		}
-	})
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	if(!exists) {
+		res.redirect('/w/' + encodeURIComponent(req.params.page));
+	}
+	else {
+		res.status(200).render('move', { 
+			title: req.params.page,
+			dis2,dis2,
+			title2: title2,
+			wikiname: name 
+		});
+		res.end();
+		return;
+	}
 });
 
 // post
