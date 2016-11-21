@@ -2047,15 +2047,7 @@ router.get('/raw/:page', function(req, res) {
     fs.readFile('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8', function(err, data) {
 		fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function (exists) {
 			if(!exists) {
-				res.status(404).render('ban', { 
-					title: req.params.page, 
-					dis2:dis2, 
-					content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
-					License: licen,
-					wikiname: name 
-				});
-				res.end();
-				return;
+				res.redirect('/w/' + encodeURIComponent(req.params.page));
 			}
 			else {
 				data = data.replace(/<br>/g, '[br]')
