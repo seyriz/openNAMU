@@ -2200,7 +2200,7 @@ router.post('/edit/:page', function(req, res) {
 				if(!exists) {
 					fs.openSync(file,'w');
 					fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-					fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
+					var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
 					if(!exists) {
 						fs.mkdirSync('./history/' + encodeURIComponent(req.params.page), 777);
 						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+');
@@ -2242,7 +2242,7 @@ router.post('/edit/:page', function(req, res) {
 					}
 					else {
 						fs.writeFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', req.body.content, 'utf8');
-						fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
+						var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt');
 						if(!exists) {
 							fs.mkdirSync('./history/' + encodeURIComponent(req.params.page), 777);
 							fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r1.txt','w+');
