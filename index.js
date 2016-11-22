@@ -37,7 +37,6 @@ function rname(name) {
 // 대문
 function rFrontPage(FrontPage) {
 	var exists = fs.existsSync('./setting/FrontPage.txt');
-	
 	if(exists) {
 		var test = /%0A$/;
 		FrontPage = fs.readFileSync('./setting/FrontPage.txt', 'utf8');
@@ -136,30 +135,28 @@ function stop(ip) {
 			return 'test';
 		}
 		else {
-			  var today = new Date();
-			  var dd = today.getDate();
-			  var mm = today.getMonth()+1; 
-			  var yyyy = today.getFullYear();
-			  if(dd<10) {
-				  dd='0'+dd;
-			  }
+			var today = new Date();
+			var dd = today.getDate();
+			var mm = today.getMonth()+1; 
+			var yyyy = today.getFullYear();
+			if(dd<10) {
+				dd='0'+dd;
+			}
 			  if(mm<10) {
-				  mm='0'+mm;
-			  }
-			  var today = yyyy+'-' + mm+'-'+dd;
-			  today = today.replace(/-/g, '');
-			  var nowday = day.replace(/-/g, '');
-			  if(today === nowday) {
-					fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
-					});
-			  }
-			  else if(today > nowday) {
-				    fs.unlink('./user/' + encodeURIComponent(ip) + '-ban.txt', function (err) {
-					});
-			  }
-			  else {
-				    return 'test';
-			  }
+				mm='0'+mm;
+			}
+			var today = yyyy+'-' + mm+'-'+dd;
+			today = today.replace(/-/g, '');
+			var nowday = day.replace(/-/g, '');
+			if(today === nowday) {
+				fs.unlinkSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+			}
+			else if(today > nowday) {
+			    fs.unlinkSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
+			}
+			else {
+			    return 'test';
+			}
 		}
 	}
 }
@@ -191,42 +188,34 @@ function mine(ip) {
 function rplus(ip, today, name, rtitle, now, req, content) {
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
 	fs.writeFileSync('./recent/RC-number.txt', Number(number)+1, 'utf8');
-	fs.open('./recent/RC-' + number + '.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RC-' + number + '.txt', name, 'utf8');
-	 });
-	fs.open('./recent/RC-' + number + '-title.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RC-' + number + '-title.txt', rtitle, 'utf8');
-	 });
-	fs.open('./recent/RC-' + number + '-ip.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RC-' + number + '-ip.txt', ip, 'utf8');
-	 });
-	fs.open('./recent/RC-' + number + '-today.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RC-' + number + '-today.txt', today, 'utf8');
-	 });
-	
+	fs.openSync('./recent/RC-' + number + '.txt','w+');
+	fs.writeFileSync('./recent/RC-' + number + '.txt', name, 'utf8');
+	fs.openSync('./recent/RC-' + number + '-title.txt','w+');
+	fs.writeFileSync('./recent/RC-' + number + '-title.txt', rtitle, 'utf8');
+	fs.openSync('./recent/RC-' + number + '-ip.txt','w+');
+	fs.writeFileSync('./recent/RC-' + number + '-ip.txt', ip, 'utf8');
+	fs.openSync('./recent/RC-' + number + '-today.txt','w+');
+	fs.writeFileSync('./recent/RC-' + number + '-today.txt', today, 'utf8');
 	if(content) {
 		if(!now) {
 			var leng = req.body.content.length;
-			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
-				leng = '+' + leng
-				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			 });
+			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
+			leng = '+' + leng
+			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			return '+' + leng;
 		}
 		else if(now.length > req.body.content.length) {
 			var leng = now.length - req.body.content.length;
-			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
-				leng = '-' + leng
-				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			 });
+			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
+			leng = '-' + leng
+			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			return '-' + leng;
 		}
 		else if(now.length < req.body.content.length) {
 			var leng = req.body.content.length - now.length;
-			fs.open('./recent/RC-' + number + '-leng.txt','w+',function(err,fd){
-				leng = '+' + leng
-				fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			 });
+			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
+			leng = '+' + leng
+			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
 			return '+' + leng;
 		}
 	}
@@ -235,25 +224,19 @@ function rplus(ip, today, name, rtitle, now, req, content) {
 function tplus(ip, today, name, name2) {
 	var number = fs.readFileSync('./recent/RD-number.txt', 'utf8');
 	fs.writeFileSync('./recent/RD-number.txt', Number(number)+1, 'utf8');
-	fs.open('./recent/RD-' + number + '.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RD-' + number + '.txt', name, 'utf8');
-	 });
-	fs.open('./recent/RD-' + number + '-title.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RD-' + number + '-title.txt', name2, 'utf8');
-	 });
-	fs.open('./recent/RD-' + number + '-ip.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RD-' + number + '-ip.txt', ip, 'utf8');
-	 });
-	fs.open('./recent/RD-' + number + '-today.txt','w+',function(err,fd){
-		fs.writeFileSync('./recent/RD-' + number + '-today.txt', today, 'utf8');
-	 });	
+	fs.openSync('./recent/RD-' + number + '.txt','w+');
+	fs.writeFileSync('./recent/RD-' + number + '.txt', name, 'utf8');
+	fs.openSync('./recent/RD-' + number + '-title.txt','w+');
+	fs.writeFileSync('./recent/RD-' + number + '-title.txt', name2, 'utf8');
+	fs.openSync('./recent/RD-' + number + '-ip.txt','w+');
+	fs.writeFileSync('./recent/RD-' + number + '-ip.txt', ip, 'utf8');
+	fs.openSync('./recent/RD-' + number + '-today.txt','w+');
+	fs.writeFileSync('./recent/RD-' + number + '-today.txt', today, 'utf8');	
 }
 // 회원 가입
 router.get('/register', function(req, res) {
 	name = rname(name);
-	
 	var dis2 = loginy(req,res);
-
 	res.status(200).render('register', { 
 		wikiname: name, 
 		dis2: dis2, 
