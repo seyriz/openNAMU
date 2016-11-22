@@ -1235,7 +1235,7 @@ router.get('/delete/:page', function(req, res) {
 	var dis2 = loginy(req,res);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);  
-	var exists = fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '.txt');
 	if(!exists) {
 		res.redirect('/w/' + encodeURIComponent(req.params.page));
 	}
