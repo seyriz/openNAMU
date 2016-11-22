@@ -1626,7 +1626,7 @@ router.get('/RecentChanges', function(req, res) {
 					}
 				}
 				else {
-					var pageplus = htmlencode.htmlEncode(page) + '</a>';
+					var pageplus = htmlencode.htmlEncode(page) + '</a>  <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 				}
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
@@ -1665,7 +1665,8 @@ router.get('/RecentChanges', function(req, res) {
 				}
 				if(title === '<br>') {}
 				else {
-					title = htmlencode.htmlEncode(title)
+					title = htmlencode.htmlEncode(title);
+					title = title.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
 				}
 				
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
@@ -1716,7 +1717,7 @@ router.get('/RecentChanges', function(req, res) {
 					}
 				}
 				else {
-					var pageplus = htmlencode.htmlEncode(page) + '</a>';
+					var pageplus = htmlencode.htmlEncode(page) + '</a>  <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
 				}
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
@@ -1755,7 +1756,8 @@ router.get('/RecentChanges', function(req, res) {
 				}
 				if(title === '<br>') {}
 				else {
-					title = htmlencode.htmlEncode(title)
+					title = htmlencode.htmlEncode(title);
+					title = title.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
 				}
 				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+' <a href="/history/'+encodeURIComponent(page)+'">(history)</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
@@ -2410,6 +2412,8 @@ router.get('/history/:page', function(req, res) {
 			else {
 				var pageplus = '</a>';
 			}
+			send = htmlencode.htmlEncode(send);
+			send = send.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
 			var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 			if(exists) {
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
