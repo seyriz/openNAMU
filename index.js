@@ -202,21 +202,21 @@ function rplus(ip, today, name, rtitle, now, req, content) {
 			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
 			leng = '+' + leng
 			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			return '+' + leng;
+			return leng;
 		}
 		else if(now.length > req.body.content.length) {
 			var leng = now.length - req.body.content.length;
 			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
 			leng = '-' + leng
 			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			return '-' + leng;
+			return leng;
 		}
 		else if(now.length < req.body.content.length) {
 			var leng = req.body.content.length - now.length;
 			fs.openSync('./recent/RC-' + number + '-leng.txt','w+');
 			leng = '+' + leng
 			fs.writeFileSync('./recent/RC-' + number + '-leng.txt', leng, 'utf8');
-			return '+' + leng;
+			return leng;
 		}
 	}
 }
@@ -1919,7 +1919,7 @@ router.get('/raw/:page', function(req, res) {
 	FrontPage = rFrontPage(FrontPage);
 	var dis2 = loginy(req,res)
     var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
-	var exists = fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
 		res.redirect('/w/' + encodeURIComponent(req.params.page));
 	}
