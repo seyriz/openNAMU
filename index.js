@@ -2076,7 +2076,7 @@ router.get('/edit/:page', function(req, res) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
 			
-	var exists = fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt');
+	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists){
 		res.render('edit', { 
 			dis2:dis2, 
