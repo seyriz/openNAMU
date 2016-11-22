@@ -363,13 +363,15 @@ router.post('/login', function(req, res) {
 		res.redirect('/w/');
 	}
 });
+
 // 대문으로 이동합니다.
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
 	FrontPage = rFrontPage(FrontPage);
 	res.redirect('/w/'+encodeURIComponent(FrontPage));
 });
+
 // 파일 업로드
-router.get('/Upload', function(req, res, next) {
+router.get('/Upload', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var dis2 = loginy(req,res);
@@ -1208,7 +1210,6 @@ router.post('/revert/:page/:r', function(req, res) {
 			rplus(ip, today, name, rtitle);
 			var revert = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
 			fs.writeFileSync('./data/' + encodeURIComponent(req.params.page) + '.txt', revert, 'utf8');
-			res.redirect('/w/'+ encodeURIComponent(req.params.page))
 			var i = 0;
 			while(true) {
 				i = i + 1;
@@ -1222,9 +1223,11 @@ router.post('/revert/:page/:r', function(req, res) {
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
 					fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w+');
 					fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', req.params.r + ' 버전으로 되돌림', 'utf8');
+					fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w');
 					break;
 				}
 			}
+			res.redirect('/w/'+ encodeURIComponent(req.params.page));
 		}
 	}
 });
@@ -1286,6 +1289,7 @@ router.post('/delete/:page', function(req, res) {
 						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-today.txt', today, 'utf8');
 						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt','w');
 						fs.writeFileSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-send.txt', '문서를 삭제함', 'utf8');
+						fs.openSync('./history/' + encodeURIComponent(req.params.page) + '/r' + i + '-leng.txt','w');
 						break;
 					}
 				}
@@ -1359,6 +1363,7 @@ router.post('/move/:page', function(req, res) {
 							fs.renameSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-ip.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-ip.txt');
 							fs.renameSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-today.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-today.txt');
 							fs.renameSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-send.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-send.txt');
+							fs.renameSync('./history/' + encodeURIComponent(req.params.page) + '/r'+ i +'-leng.txt','./history/' + encodeURIComponent(req.body.title) + '/r'+ i +'-leng.txt');
 						}
 						else {
 							break;
@@ -1376,14 +1381,15 @@ router.post('/move/:page', function(req, res) {
 							fs.openSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt','w+');
 							fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-today.txt', today, 'utf8');
 							fs.openSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt','w+');
-							fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt', '<a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.body.title+'</a> 문서로 문서를 이동함', 'utf8');
+							fs.writeFileSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-send.txt', '<a href="/w/'+encodeURIComponent(req.params.page)+'">'+req.params.page+'</a> 에서 <a href="/w/'+encodeURIComponent(req.params.page)+'">' + req.body.title + '</a> 문서로 문서를 이동함', 'utf8');
+							fs.openSync('./history/' + encodeURIComponent(req.body.title) + '/r' + i + '-leng.txt','w+');
 							break;
 						}
 					}
 					fs.rmdirSync('./history/' + encodeURIComponent(req.params.page));	
 					fs.renameSync('./data/' + encodeURIComponent(req.params.page)+'.txt','./data/' + encodeURIComponent(req.body.title)+'.txt');
 				}
-				res.redirect('/w/'+ encodeURIComponent(req.body.title))
+				res.redirect('/w/'+ encodeURIComponent(req.body.title));
 			}
 		}
 	}
@@ -2289,7 +2295,7 @@ router.get('/history/w/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var title3 = encodeURIComponent(req.params.page);
-	var exists = fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
+	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
 	if(exists) {
 		var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
 		var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
@@ -2338,7 +2344,7 @@ router.get('/history/:page/:r', function(req, res) {
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
 	var title3 = encodeURIComponent(req.params.page);
-	var exists = fs.exists('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
+	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
 	if(exists) {
 		var neob = fs.readFileSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt', 'utf8');
 		neob = neob.replace(/<br>/g, '[br]')
