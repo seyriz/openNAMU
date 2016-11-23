@@ -451,7 +451,7 @@ router.get('/edit/user/:user', function(req, res) {
 			var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
 			var test = pw;
 			if(pass === test) {
-				if(req.params.user === id) {
+				if(encodeURIComponent(req.params.user) === id) {
 					var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 					if(!exists) {
 					  res.status(200).render('user-edit', { 
@@ -478,19 +478,21 @@ router.get('/edit/user/:user', function(req, res) {
 					  res.end();
 					  return;
 					}
-				} 
+				}
 				else {
-					res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
+					res.redirect('/user/' + encodeURIComponent(req.params.user));
 				}
 			}
 			else {
-				cookies.set( "AqoursGanbaRuby", '' )
-				cookies.set( "WikiID", '' )
+				cookies.set( "AqoursGanbaRuby", '' );
+				cookies.set( "WikiID", '' );
+				res.redirect('/user/' + encodeURIComponent(req.params.user));
 			}
 		}
 		else {
-			cookies.set( "AqoursGanbaRuby", '' )
-			cookies.set( "WikiID", '' )
+			cookies.set( "AqoursGanbaRuby", '' );
+			cookies.set( "WikiID", '' );
+			res.redirect('/user/' + encodeURIComponent(req.params.user));
 		}			
     } 
     else {
