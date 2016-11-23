@@ -440,64 +440,33 @@ router.get('/edit/user/:user', function(req, res) {
     name = rname(name);
     var ip = yourip(req,res);
     var title2 = encodeURIComponent(req.params.user)
-    var dis2 = loginy(req,res)
-    var cookies = new Cookies( req, res )
-    , AqoursGanbaRuby, WikiID
-    if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
-		id = cookies.get( "WikiID" );
-		pw = cookies.get( "AqoursGanbaRuby" );
-		var exists = fs.existsSync('./user/' + id + '.txt');
-		if(exists) {
-			var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
-			var test = pw;
-			if(pass === test) {
-				if(encodeURIComponent(req.params.user) === id) {
-					var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-					if(!exists) {
-					  res.status(200).render('user-edit', { 
-						  title: '사용자:' + req.params.user, 
-						  dis2: dis2, 
-						  title2: title2, 
-						  content: '', 
-						  License: licen, 
-						  wikiname: name 
-					  });
-					  res.end();
-					  return;
-					} 
-					else {
-					  var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-					  res.status(200).render('user-edit', { 
-						  title: '사용자:' + req.params.user, 
-						  dis2: dis2, 
-						  title2: title2, 
-						  content: data, 
-						  License: licen, 
-						  wikiname: name 
-					  });
-					  res.end();
-					  return;
-					}
-				}
-				else {
-					res.redirect('/user/' + encodeURIComponent(req.params.user));
-				}
-			}
-			else {
-				cookies.set( "AqoursGanbaRuby", '' );
-				cookies.set( "WikiID", '' );
-				res.redirect('/user/' + encodeURIComponent(req.params.user));
-			}
-		}
-		else {
-			cookies.set( "AqoursGanbaRuby", '' );
-			cookies.set( "WikiID", '' );
-			res.redirect('/user/' + encodeURIComponent(req.params.user));
-		}			
-    } 
-    else {
-	    res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
-    }
+    var dis2 = loginy(req,res);
+	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+	if(!exists) {
+		res.status(200).render('user-edit', { 
+			title: '사용자:' + req.params.user, 
+			dis2: dis2, 
+			title2: title2, 
+			content: '', 
+			License: licen, 
+		    wikiname: name 
+		});
+		res.end();
+	    return;
+	} 
+	else {
+		var data = fs.readFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+		res.status(200).render('user-edit', { 
+			title: '사용자:' + req.params.user, 
+			dis2: dis2, 
+			title2: title2, 
+			content: data, 
+			License: licen, 
+			wikiname: name 
+	    });
+	    res.end();
+	    return;
+	}
 });
 router.post('/edit/user/:user', function(req, res) {
     licen = rlicen(licen);
@@ -510,15 +479,46 @@ router.post('/edit/user/:user', function(req, res) {
 	    res.redirect('/ban');
     }
     else {
-		var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
-		if(exists) {
-			fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+		var cookies = new Cookies( req, res )
+		, AqoursGanbaRuby, WikiID
+		if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+			id = cookies.get( "WikiID" );
+			pw = cookies.get( "AqoursGanbaRuby" );
+			var exists = fs.existsSync('./user/' + id + '.txt');
+			if(exists) {
+				var pass = fs.readFileSync('./user/' + id + '.txt', 'utf8');
+				var test = pw;
+				if(pass === test) {
+					if(encodeURIComponent(req.params.user) === id) {
+						var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
+						if(exists) {
+							fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+						} 
+						else {
+							fs.openSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt','w+');
+							fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+						}
+						res.redirect('/user/'+encodeURIComponent(req.params.user));
+					}
+					else {
+						res.redirect('/user/' + encodeURIComponent(req.params.user));
+					}
+				}
+				else {
+					cookies.set( "AqoursGanbaRuby", '' );
+					cookies.set( "WikiID", '' );
+					res.redirect('/user/' + encodeURIComponent(req.params.user));
+				}
+			}
+			else {
+				cookies.set( "AqoursGanbaRuby", '' );
+				cookies.set( "WikiID", '' );
+				res.redirect('/user/' + encodeURIComponent(req.params.user));
+			}			
 		} 
 		else {
-			fs.openSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt','w+');
-			fs.writeFileSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt', req.body.content, 'utf8');
+			res.send('<script type="text/javascript">alert("본인 문서가 아닙니다.");</script>')
 		}
-		res.redirect('/user/'+encodeURIComponent(req.params.user));
     }
 });
 // 생성
