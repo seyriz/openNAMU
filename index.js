@@ -126,6 +126,16 @@ function loginy(req,res) {
 	}
 	return dis2;
 }
+
+function loginny(req,res) {
+	var cookies = new Cookies( req, res )
+	, AqoursGanbaRuby, WikiID
+	
+	if(cookies.get( "WikiID" ) && cookies.get( "AqoursGanbaRuby" )) {
+		var dis3 = 'inline-block';
+	}
+	return dis3;
+}
 // 밴
 function stop(ip) {
     var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
@@ -237,9 +247,11 @@ function tplus(ip, today, name, name2) {
 router.get('/register', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	res.status(200).render('register', { 
 		wikiname: name, 
-		dis2: dis2, 
+		dis2: dis2,
+		dis3: dis3,
 		title: '회원가입'  
 	});
 	res.end();
@@ -375,9 +387,11 @@ router.get('/Upload', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	res.status(200).render('upload', { 
 		title: '파일 업로드', 
-		dis2:dis2, 
+		dis2: dis2, 
+		dis3: dis3,
 		wikiname: name 
 	});
 	res.end();
@@ -439,13 +453,15 @@ router.get('/edit/user/:user', function(req, res) {
     licen = rlicen(licen);
     name = rname(name);
     var ip = yourip(req,res);
-    var title2 = encodeURIComponent(req.params.user)
+    var title2 = encodeURIComponent(req.params.user);
     var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.user) + '-page.txt');
 	if(!exists) {
 		res.status(200).render('user-edit', { 
 			title: '사용자:' + req.params.user, 
 			dis2: dis2, 
+			dis3: dis3,
 			title2: title2, 
 			content: '', 
 			License: licen, 
@@ -459,6 +475,7 @@ router.get('/edit/user/:user', function(req, res) {
 		res.status(200).render('user-edit', { 
 			title: '사용자:' + req.params.user, 
 			dis2: dis2, 
+			dis3: dis3,
 			title2: title2, 
 			content: data, 
 			License: licen, 
@@ -601,8 +618,8 @@ router.get('/setup', function(req, res) {
 router.get('/topic/:page', function(req, res) {
     licen = rlicen(licen);
     name = rname(name);
-    FrontPage = rFrontPage(FrontPage);
     var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
     var title2 = encodeURIComponent(req.params.page);
     var exists = fs.existsSync('./topic/' + encodeURIComponent(req.params.page) + '/');
     if(exists) {
@@ -645,7 +662,8 @@ router.get('/topic/:page', function(req, res) {
     }
     res.status(200).render('new-topic', { 
 		title: req.params.page, 
-		dis2:dis2, 
+		dis2: dis2,
+		dis3: dis3,
 		title2: title2,
 		content: add,
 		wikiname: name 
@@ -663,7 +681,6 @@ router.post('/topic/:page', function(req, res) {
 router.get('/topic/:page/:topic/b:number', function(req, res) {
 	name = rname(name);
 	var ip = yourip(req,res);
-	var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
 		res.redirect('/Access');
@@ -698,7 +715,6 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 router.get('/topic/:page/:topic/stop', function(req, res) {
 	name = rname(name);
 	var ip = yourip(req,res);
-    var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
 		res.redirect('/Access');
@@ -719,7 +735,8 @@ router.get('/topic/:page/:topic/stop', function(req, res) {
 router.get('/topic/:page/:topic', function(req, res) {
     licen = rlicen(licen);
     name = rname(name);
-    var dis2 = loginy(req,res)
+    var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);	
     var admin = yourip(req, res);
     var title2 = encodeURIComponent(req.params.page);
     var title3 = encodeURIComponent(req.params.topic);
@@ -740,7 +757,8 @@ router.get('/topic/:page/:topic', function(req, res) {
 		var toronstop = '';		
 		res.status(200).render('topic', {
 			title: req.params.page,
-			dis2:dis2, 
+			dis2: dis2, 
+			dis3: dis3,
 			title2: title2, 
 			title3: req.params.topic, 
 			title4: title3, 
@@ -896,7 +914,8 @@ router.get('/topic/:page/:topic', function(req, res) {
 		}
 		res.status(200).render('topic', { 
 			title: req.params.page, 
-			dis2:dis2, 
+			dis2: dis2, 
+			dis3: dis3, 
 			title2: title2, 
 			title3: req.params.topic, 
 			title4: title3, 
@@ -972,6 +991,7 @@ router.post('/topic/:page/:topic', function(req, res) {
 router.get('/ban/:ip', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var exists = fs.existsSync('./user/' + encodeURIComponent(req.params.ip) + '-ban.txt');
 	if(exists) {
 		var nowthat = '차단 해제';
@@ -983,7 +1003,8 @@ router.get('/ban/:ip', function(req, res) {
 		enter: nowthat, 
 		title: req.params.ip, 
 		title2: encodeURIComponent(req.params.ip), 
-		dis2:dis2, 
+		dis2: dis2,
+		dis3: dis3,
 		wikiname: name 
 	});
 	res.end();
@@ -992,7 +1013,6 @@ router.get('/ban/:ip', function(req, res) {
 
 // 밴 추가
 router.post('/ban/:ip', function(req, res) {
-	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
     aya = admin(ip);
 	if(aya) {
@@ -1048,6 +1068,7 @@ router.get('/admin/:ip', function(req, res) {
 router.get('/ban', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var sun = fs.readdirSync('./user');
 	var shine = 0;
 	var ganba;
@@ -1076,6 +1097,7 @@ router.get('/ban', function(req, res) {
 	res.status(200).render('ban', {
 		title: '밴 목록',
 		dis2: dis2, 
+		dis3: dis3,
 		content: ruby, 
 		wikiname: name 
 	});
@@ -1086,7 +1108,6 @@ router.get('/ban', function(req, res) {
 // ACL
 router.get('/acl/:page', function(req, res) {
 	var ip = yourip(req,res);
-    var dis2 = loginy(req,res);
     aya = admin(ip);
 	if(aya) {
 		res.redirect('/Access');
@@ -1129,7 +1150,8 @@ router.post('/search', function(req, res) {
 router.get('/diff/:page/:r/:rr', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page)+'/r1.txt');
 	if(exists) {
@@ -1146,6 +1168,7 @@ router.get('/diff/:page/:r/:rr', function(req, res) {
 					title2: title2,
 					title3: '<span style="margin-left:5px"></span>(' + req.params.r + ' / ' + req.params.rr + ')',
 					dis2: dis2,
+					dis3: dis3,
 					wikiname: name,
 					License: licen,
 					content: diff.prettyHtml(textDiff) 
@@ -1171,13 +1194,15 @@ router.get('/revert/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/'+ req.params.r +'.txt');
 	if(exists) {
 		res.status(200).render('ok', { 
 			title2: title2,
 			title: req.params.page,
-			dis2:dis2,
+			dis2: dis2,
+			dis3: dis3,
 			wikiname: name,
 			title3: req.params.r 
 		});
@@ -1192,7 +1217,6 @@ router.get('/revert/:page/:r', function(req, res) {
 // 되돌리기 2
 router.post('/revert/:page/:r', function(req, res) {
 	name = rname(name);
-	var dis2 = loginy(req,res);
 	var ip = yourip(req,res);
 	var page = req.params.page;
 	aya = editstop(ip, page);
@@ -1238,6 +1262,7 @@ router.post('/revert/:page/:r', function(req, res) {
 router.get('/delete/:page', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var today = getNow();
 	var title2 = encodeURIComponent(req.params.page);  
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page) + '.txt');
@@ -1248,7 +1273,8 @@ router.get('/delete/:page', function(req, res) {
 		res.status(200).render('delete', { 
 			title: req.params.page,
 			title2: title2,
-			dis2 :dis2,
+			dis2: dis2,
+			dis3: dis3,
 			wikiname: name
 		});
 		res.end();
@@ -1309,6 +1335,7 @@ router.post('/delete/:page', function(req, res) {
 router.get('/move/:page', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
@@ -1317,7 +1344,8 @@ router.get('/move/:page', function(req, res) {
 	else {
 		res.status(200).render('move', { 
 			title: req.params.page,
-			dis2,dis2,
+			dis2: dis2,
+			dis3: dis3,
 			title2: title2,
 			wikiname: name 
 		});
@@ -1417,14 +1445,16 @@ router.get('/w/:page', function(req, res) {
 	    var dis = 'none';
 	    lovelive = req.params.page;
     }
-    var dis2 = loginy(req,res)
+    var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
     var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
 		res.status(404).render('index', { 
 			title: req.params.page, 
 			dis: dis,
-			dis2: dis2, 
+			dis2: dis2,
+			dis3: dis3,
 			title2: title2, 
 			subtitle: encodeURIComponent(lovelive), 
 			content: "<br>이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
@@ -1445,6 +1475,7 @@ router.get('/w/:page', function(req, res) {
 				title: req.params.page, 
 				dis: dis, 
 				dis2: dis2, 
+				dis3: dis3,
 				title2: title2, 
 				subtitle: encodeURIComponent(lovelive), 
 				content: '<br>' + data, 
@@ -1475,6 +1506,7 @@ router.get('/w/:page', function(req, res) {
 				title: req.params.page, 
 				dis: dis, 
 				dis2: dis2, 
+				dis3: dis3,
 				title2: title2, 
 				subtitle: encodeURIComponent(lovelive), 
 				content: cnt, 
@@ -1508,13 +1540,15 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 	    var dis = 'none';
 	    lovelive = req.params.page;
     }
-    var dis2 = loginy(req,res)
+    var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
     var title2 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
 		res.status(404).render('index', { 
 			title: req.params.page, 
 			dis2: dis2, 
+			dis3: dis3, 
 			dis: dis, 
 			title2: title2, 
 			subtitle: encodeURIComponent(lovelive), 
@@ -1551,6 +1585,7 @@ router.get('/w/:page/redirect/:rdrc', function(req, res) {
 				lb: lb,
 				title: req.params.page,
 				dis2: dis2,
+				dis3: dis3, 
 				title2: title2,
 				dis: dis,
 				subtitle: encodeURIComponent(lovelive),
@@ -1569,7 +1604,8 @@ router.post('/preview/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var redirect = /^#(?:넘겨주기|redirect)\s([^\n]*)/ig;
 	var data = req.body.content;
 	data = data.replace(redirect, " * 리다이렉트 [[$1]]");
@@ -1586,7 +1622,8 @@ router.post('/preview/:page', function(req, res) {
 			lbc: leftbarcontect[1], 
 			lb: lb, 
 			title: req.params.page, 
-			dis2:dis2, 
+			dis2: dis2, 
+			dis3: dis3, 
 			title2: encodeURIComponent(req.params.page), 
 			data: data, 
 			data2: req.body.content, 
@@ -1606,7 +1643,8 @@ router.get('/RecentChanges', function(req, res) {
 	var number = fs.readFileSync('./recent/RC-number.txt', 'utf8');
 	var i = 0;
 	var data = '';
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	while(true) {
 		if(Number(number) < 51) {
 			i = i + 1;
@@ -1768,7 +1806,8 @@ router.get('/RecentChanges', function(req, res) {
 	}
   	res.status(200).render('re1', { 
 		title: '최근 변경내역',
-		dis2:dis2, 
+		dis2: dis2, 
+		dis3: dis3, 
 		content: data,
 		License: licen,
 		wikiname: name 
@@ -1782,7 +1821,8 @@ router.get('/RecentDiscuss', function(req, res, next) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var admin = yourip(req, res);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var number = fs.readFileSync('./recent/RD-number.txt', 'utf8');
 	var i = 0;
 	var data = '';
@@ -1907,7 +1947,8 @@ router.get('/RecentDiscuss', function(req, res, next) {
 	}
   	res.status(200).render('de1', { 
 		title: '최근 토론내역', 
-		dis2:dis2, 
+		dis2: dis2, 
+		dis3: dis3, 
 		content: data, 
 		License: licen, 
 		wikiname: name 
@@ -1921,7 +1962,8 @@ router.get('/raw/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	FrontPage = rFrontPage(FrontPage);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
     var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists) {
@@ -1934,7 +1976,8 @@ router.get('/raw/:page', function(req, res) {
 		raw = raw.replace(/;&lt;br&gt;/g, '<br>');
 		res.status(200).render('ban', { 
 			title: req.params.page, 
-			dis2:dis2, 
+			dis2: dis2, 
+			dis3: dis3, 
 			content: raw, 
 			License: licen,
 			wikiname: name 
@@ -1951,7 +1994,8 @@ router.post('/history/:page', function(req, res) {
  
 // 역링크
 router.get('/xref/:page', function(req, res) {
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	name = rname(name);
 	var shine = 0;
 	var ganba;
@@ -1995,7 +2039,8 @@ router.get('/xref/:page', function(req, res) {
 	}
 	res.render('ban', { 
 		title: req.params.page + ' (역 링크)', 
-		dis2:dis2, 
+		dis2: dis2, 
+		dis3: dis3, 
 		content: ruby, 
 		wikiname: name 
 	});
@@ -2005,7 +2050,8 @@ router.get('/xref/:page', function(req, res) {
 
 // 모든 문서
 router.get('/TitleIndex', function(req, res) {
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	name = rname(name);
 	var sun = fs.readdirSync('./data');
 	var shine = 0;
@@ -2039,7 +2085,8 @@ router.get('/TitleIndex', function(req, res) {
 	}
 	res.render('ban', { 
 		title: '모든 문서', 
-		dis2:dis2, 
+		dis2: dis2, 
+		dis3: dis3, 
 		content: ruby + '<br>' + re + '개의 문서', 
 		wikiname: name 
 	});
@@ -2082,6 +2129,7 @@ router.get('/random', function(req, res) {
 router.get('/edit/:page', function(req, res) {
 	name = rname(name);
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	if(encodeURIComponent(req.params.page).length > 255) {
 		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
 	}
@@ -2089,7 +2137,8 @@ router.get('/edit/:page', function(req, res) {
 	var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 	if(!exists){
 		res.render('edit', { 
-			dis2:dis2, 
+			dis2: dis2, 
+			dis3: dis3,
 			title: req.params.page, 
 			title2: encodeURIComponent(req.params.page), 
 			content: "" , 
@@ -2101,7 +2150,8 @@ router.get('/edit/:page', function(req, res) {
 	else{
 		var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
 		res.render('edit', { 
-			dis2:dis2,
+			dis2: dis2,
+			dis3: dis3,
 			title: req.params.page, 
 			title2: encodeURIComponent(req.params.page), 
 			content: data , 
@@ -2118,6 +2168,7 @@ router.get('/edit/:page/:number', function(req, res) {
 	name = rname(name);
 	
 	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	req.params.number = Number(req.params.number);
 	
 	if(encodeURIComponent(req.params.page).length > 255) {
@@ -2152,7 +2203,8 @@ router.get('/edit/:page/:number', function(req, res) {
 				}
 			}
 			res.render('edit', { 
-				dis2:dis2,
+				dis2: dis2,
+				dis3: dis3,
 				title: req.params.page, 
 				title2: encodeURIComponent(req.params.page), 
 				content: test[1],
@@ -2298,6 +2350,8 @@ router.post('/edit/:page', function(req, res) {
 router.get('/history/w/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title3 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
 	if(exists) {
@@ -2321,6 +2375,8 @@ router.get('/history/w/:page/:r', function(req, res) {
 				title3: title3, 
 				title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
 				content: cnt, 
+				dis2: dis2,
+				dis3: dis3,
 				wikiname: name, 
 				License: licen 
 			});
@@ -2333,6 +2389,8 @@ router.get('/history/w/:page/:r', function(req, res) {
 			title: req.params.page, 
 			title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
 			title3: title3, 
+			dis2: dis2,
+			dis3: dis3,
 			content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
 			License: licen, 
 			wikiname: name 
@@ -2346,7 +2404,8 @@ router.get('/history/w/:page/:r', function(req, res) {
 router.get('/history/:page/:r', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
-	FrontPage = rFrontPage(FrontPage);
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title3 = encodeURIComponent(req.params.page);
 	var exists = fs.existsSync('./history/' + encodeURIComponent(req.params.page) + '/' + req.params.r + '.txt');
 	if(exists) {
@@ -2360,6 +2419,8 @@ router.get('/history/:page/:r', function(req, res) {
 			title3: title3, 
 			title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
 			content: raw, 
+			dis2: dis2,
+			dis3: dis3,
 			wikiname: name, 
 			License: licen 
 		});
@@ -2371,6 +2432,8 @@ router.get('/history/:page/:r', function(req, res) {
 			title: req.params.page, 
 			title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
 			title3: title3, 
+			dis2: dis2,
+			dis3: dis3,
 			content: "이 문서가 없습니다. <a href='/edit/"+encodeURIComponent(req.params.page)+"'>편집</a>", 
 			License: licen,
 			wikiname: name 
@@ -2385,7 +2448,8 @@ router.get('/history/:page', function(req, res) {
 	licen = rlicen(licen);
 	name = rname(name);
 	var admin = yourip(req, res);
-	var dis2 = loginy(req,res)
+	var dis2 = loginy(req,res);
+	var dis3 = loginny(req,res);
 	var title2 = encodeURIComponent(req.params.page);
 	var i = 0;
 	var neoa = '<div id="history">';
@@ -2439,7 +2503,8 @@ router.get('/history/:page', function(req, res) {
 			}
 			res.status(200).render('history2', { 
 				title: req.params.page, 
-				dis2:dis2, 
+				dis2: dis2, 
+				dis3: dis3, 
 				title2:title2, 
 				content: neoa, 
 				License: licen,
