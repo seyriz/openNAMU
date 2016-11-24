@@ -1132,8 +1132,34 @@ router.get('/w/', function(req, res) {
 
 // ver
 router.get('/ver', function(req, res) {
-	res.redirect('https://namu.ml/w/%EC%9C%84%ED%82%A4%20%EB%B2%84%EC%A0%84');
+	licen = rlicen(licen);
+	name = rname(name);
+	var dis2 = loginy(req, res);
+	var dis3 = loginny(req, res);
+	var neob = fs.readFileSync('./ver.txt', 'utf8');
+	parseNamu(req, neob, function(cnt){
+		var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
+		var leftbarcontect;
+		if(leftbarcontect = leftbar.exec(cnt)) {
+			lb = 'block';
+		}
+		else {
+			leftbarcontect = ['',''];
+		}
+		res.status(200).render('ban', { 
+			leftbarcontect: leftbarcontect[1], 
+			title: '위키 버전', 
+			content: cnt, 
+			dis2: dis2,
+			dis3: dis3,
+			wikiname: name, 
+			License: licen 
+		});
+		res.end();
+		return;
+	});
 });
+
 
 // 검색 결과를 보여줍니다.
 router.post('/search', function(req, res) {
@@ -2520,9 +2546,11 @@ router.get('/history/:page', function(req, res) {
 // 토론
 router.get('/Access', function(req, res) {
 	var dis2 = loginy(req, res);
+	var dis3 = loginny(req, res);
 	res.status(404).render('ban', { 
 		title: '권한 오류', 
 		dis2: dis2, 
+		dis3: dis3, 
 		content: '어드민이 아닙니다.', 
 		wikiname: name 
 	});
