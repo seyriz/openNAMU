@@ -3,7 +3,7 @@ block content
   div(id='tool')
     nav.menu
       a.menu-item.selected(href='#', onclick='return false') 되돌리기
-      a.menu-item(href='/w/' + title2, aria-label='문서의 내용을 읽습니다.') 문서보기
+      a.menu-item(href='/w/' + title2) 문서
   h1= title + ' (삭제)'
   form#usrform(method='POST', action='/revert/' + title2 + '/' + title3)
     dl.form-group

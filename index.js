@@ -1147,7 +1147,8 @@ router.get('/ver', function(req, res) {
 			leftbarcontect = ['',''];
 		}
 		res.status(200).render('ban', { 
-			leftbarcontect: leftbarcontect[1], 
+			lbc: leftbarcontect[1], 
+			lb: lb,
 			title: '위키 버전', 
 			content: cnt, 
 			dis2: dis2,
@@ -2396,7 +2397,8 @@ router.get('/history/w/:page/:r', function(req, res) {
 				leftbarcontect = ['',''];
 			}
 			res.status(200).render('history', { 
-				leftbarcontect: leftbarcontect[1], 
+				lbc: leftbarcontect[1],
+				lb: lb,
 				title: req.params.page, 
 				title3: title3, 
 				title2: '<span style="margin-left:5px"></span>(' + req.params.r + ')', 
