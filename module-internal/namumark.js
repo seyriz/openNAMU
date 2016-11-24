@@ -369,7 +369,7 @@ module.exports = function(req, n, ba){
 	}
   }
   
-  var h = /(={1,6})\s?([^=]*)\s?(?:={1,6})\r\n/;
+  var h = /(={1,6})\s?([^=]*)\s?(?:={1,6})(?:\s+)?\r\n/;
   var h0c = 0;
   var h1c = 0;
   var h2c = 0;
