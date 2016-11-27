@@ -425,7 +425,7 @@ module.exports = function(req, n, ba){
 		        h5c = h5c + 1;
 		  }
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
-		  toc = toc.replace(/1(0(?:[0]*)?)\./g, '1$1#.');
+		  toc = toc.replace(/([0-9]0(?:[0]*)?)\./g, '$1#.');
 	      toc = toc.replace(/0\./g, '');
 		  toc = toc.replace(/#\./g, '.');
 	      toc = toc.replace(/(.*)\./g, '$1');

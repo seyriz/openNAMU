@@ -347,6 +347,7 @@ body {
     height: 100%;
     width: 15%;
     position: fixed;
+	overflow: scroll;
     left: 0;
     top: 0;
     background: white;
