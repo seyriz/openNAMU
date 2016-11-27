@@ -679,7 +679,6 @@ router.post('/topic/:page', function(req, res) {
 
 // 토론 블라인드
 router.get('/topic/:page/:topic/b:number', function(req, res) {
-	name = rname(name);
 	var ip = yourip(req,res);
     aya = admin(ip);
 	if(aya) {
@@ -690,22 +689,22 @@ router.get('/topic/:page/:topic/b:number', function(req, res) {
 		var sfile = './topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/starter.txt';
 		var exists = fs.existsSync(sfile);
 		if(!exists) {
-			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+			res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 		}
 		else {
 			var exists = fs.existsSync(file + '/' + req.params.number + '.txt');
 			if(!exists) {
-				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 			}
 			else {
-				fs.existsSync(file + '/' + req.params.number + '-stop.txt');
+				var exists = fs.existsSync(file + '/' + req.params.number + '-stop.txt');
 				if(exists) {
 					fs.unlinkSync(file + '/' + req.params.number + '-stop.txt');
 				}
 				else {
 					fs.openSync(file + '/' + req.params.number + '-stop.txt','w');
 				}
-				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic))
+				res.redirect('/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic));
 			}
 		}
 	}
@@ -812,29 +811,29 @@ router.get('/topic/:page/:topic', function(req, res) {
 						if(exists) {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 						}
 						else {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 						}
 					}
 					else {
 						var exists = fs.existsSync(file + '/' + i + '-stop.txt');
 						if(exists) {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 						}
 						else {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #F5C1C1;" id="toron"><tbody><tr><td id="toroncoloradmin"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 						}
 					}
 				}
@@ -845,29 +844,29 @@ router.get('/topic/:page/:topic', function(req, res) {
 						if(exists) {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 						}
 						else {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 						}
 					}
 					else {
 						var exists = fs.existsSync(file + '/' + i + '-stop.txt');
 						if(exists) {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 						}
 						else {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #B0D3AD;" id="toron"><tbody><tr><td id="toroncolorgreen"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 						}
 					}
 				}
@@ -878,29 +877,29 @@ router.get('/topic/:page/:topic', function(req, res) {
 						if(exists) {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(해제)</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 							}
 						}
 						else {
 							var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 							if(exists) {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(해제)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 							else {
-								add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+								add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + ' <a href="/topic/' + encodeURIComponent(req.params.page) + '/' + encodeURIComponent(req.params.topic) + '/b' + i + '">(' + bl + ')</a> <a href="/ban/' + encodeURIComponent(ip) + '">(차단)</a><span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 							}
 						}
 					}
 					else {
 						var exists = fs.existsSync(file + '/' + i + '-stop.txt');
 						if(exists) {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="bl">블라인드 되었습니다.</td></tr></tbody></table><br>';
 						}
 						else {
-							add = add + '<table id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
+							add = add + '<table style="border: 2px solid #D5D5D5;" id="toron"><tbody><tr><td id="toroncolor"><a href="javascript:void(0);" id="' + i + '">#' + i + '</a> ' + ip + '<span style="float:right;">' + today + '</span></td></tr><tr><td id="b' + i + '">' + data + '</td></tr></tbody></table><br>';
 						}
 					}
 				}
@@ -910,7 +909,7 @@ router.get('/topic/:page/:topic', function(req, res) {
 		if(exists) {
 			var toronstop = 'none';
 			
-			add = add + '<table id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
+			add = add + '<table style="border: 2px solid #9dd5e1;" id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
 		}
 		res.status(200).render('topic', { 
 			title: req.params.page, 
