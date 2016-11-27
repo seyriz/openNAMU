@@ -233,7 +233,6 @@ s:hover, strike:hover, del:hover {
 
 .scroll-buttons a:link, .scroll-buttons a:visited {
     color: white;
-	background: #008275;
 }
 div.scroll-buttons a {
     display: inline-block;
@@ -243,7 +242,6 @@ div.scroll-buttons a {
     padding: 5px 8px 9px 8px;
     border: 1px solid #545454;
     border-left: 0;
-    background: #dedede;
     text-decoration: none;
     text-align: center;
     background: rgba(26,26,26,0.9);
@@ -253,14 +251,6 @@ div.scroll-buttons a {
 .footnote-list {
     margin-bottom: -10px;
     display: block;
-}
-
-#left {
-    border-radius: 10px 0 0 0;
-}
-
-#right {
-    border-radius: 0 10px 0 0;
 }
 
 #footnote {
@@ -278,8 +268,6 @@ div.scroll-buttons {
     margin-bottom: -10px;
     bottom: 10px;
     right: 0px;
-	border-left: 1px solid #545454;
-	border-radius: 10px 10px 0 0;
 	opacity: 0.8;
 }
 
