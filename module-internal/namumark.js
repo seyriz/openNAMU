@@ -395,40 +395,49 @@ module.exports = function(req, n, ba){
 				h3c = 0;
 				h4c = 0;
 				h5c = 0;
-			  } else if(wiki === 2) {
+			  }
+			  else if(wiki === 2) {
 				h2c = 0;
 				h3c = 0;
 				h4c = 0;
 				h5c = 0;
-			  } else if(wiki === 3) {
+			  }
+			  else if(wiki === 3) {
 				h3c = 0;
 				h4c = 0;
 				h5c = 0;
-			  } else if(wiki === 4) {
+			  }
+			  else if(wiki === 4) {
 				h4c = 0;
 				h5c = 0;
-			  } else if(wiki === 5) {
+			  }
+			  else if(wiki === 5) {
 				h4c = 0;
 			  }
 		  }
 		  if(wiki === 1) {
 				h0c = h0c + 1;
-		  } else if(wiki === 2) {
+		  }
+		  else if(wiki === 2) {
 		        h1c = h1c + 1;
-		  } else if(wiki === 3) {
+		  }
+		  else if(wiki === 3) {
 		        h2c = h2c + 1;
-		  } else if(wiki === 4) {
+		  }
+		  else if(wiki === 4) {
 		        h3c = h3c + 1;
-		  } else if(wiki === 5) {
+		  }
+		  else if(wiki === 5) {
 		        h4c = h4c + 1;
-		  } else {
+		  }
+		  else {
 		        h5c = h5c + 1;
 		  }
 		  toc = h0c + '.' + h1c + '.' + h2c + '.' + h3c + '.' + h4c + '.' + h5c + '.';
 		  toc = toc.replace(/([0-9]0(?:[0]*)?)\./g, '$1#.');
 	      toc = toc.replace(/0\./g, '');
 		  toc = toc.replace(/#\./g, '.');
-	      toc = toc.replace(/(.*)\./g, '$1');
+	      toc = toc.replace(/\.$/g, '');
 		  rtoc = rtoc + '<a href="#s-' + toc + '">' + toc + '</a>. ' + head[2] + '<br>';
 		  six = six.replace(h, '<h'+wiki+'><a href="#toc" id="s-' + toc + '">' + toc + '.</a> $2</h'+wiki+'>');
 	  } else {
