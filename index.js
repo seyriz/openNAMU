@@ -909,7 +909,7 @@ router.get('/topic/:page/:topic', function(req, res) {
 		if(exists) {
 			var toronstop = 'none';
 			
-			add = add + '<table style="border: 2px solid #9dd5e1;" id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 지금 정지 되었습니다.</td></tr></tbody></table><br>'
+			add = add + '<table style="border: 2px solid #9dd5e1;" id="toron"><tbody><tr><td id="toroncolorstop"><a href="javascript:void(0);" id="stop">#stop</a> 관리자</td></tr><tr><td>이 토론은 관리자에 의하여 정지 되었습니다.</td></tr></tbody></table><br>'
 		}
 		res.status(200).render('topic', { 
 			title: req.params.page, 
