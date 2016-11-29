@@ -1138,28 +1138,16 @@ router.get('/ver', function(req, res) {
 	var dis2 = loginy(req, res);
 	var dis3 = loginny(req, res);
 	var neob = fs.readFileSync('./ver.txt', 'utf8');
-	parseNamu(req, neob, function(cnt){
-		var leftbar = /<div id="toc">(((?!\/div>).)*)<\/div>/;
-		var leftbarcontect;
-		if(leftbarcontect = leftbar.exec(cnt)) {
-			lb = 'block';
-		}
-		else {
-			leftbarcontect = ['',''];
-		}
-		res.status(200).render('ban', { 
-			lbc: leftbarcontect[1], 
-			lb: lb,
-			title: '위키 버전', 
-			content: cnt, 
-			dis2: dis2,
-			dis3: dis3,
-			wikiname: name, 
-			License: licen 
-		});
-		res.end();
-		return;
+	res.status(200).render('ban', { 
+		title: '위키 버전', 
+		content: neob, 
+		dis2: dis2,
+		dis3: dis3,
+		wikiname: name, 
+		License: licen 
 	});
+	res.end();
+	return;
 });
 
 
