@@ -2546,15 +2546,32 @@ router.get('/history/:page', function(req, res) {
 	}
 });
 
-// 토론
+// 액세스 방지
 router.get('/Access', function(req, res) {
 	var dis2 = loginy(req, res);
 	var dis3 = loginny(req, res);
+	name = rname(name);
 	res.status(404).render('ban', { 
 		title: '권한 오류', 
 		dis2: dis2, 
 		dis3: dis3, 
 		content: '어드민이 아닙니다.', 
+		wikiname: name 
+	});
+	res.end();
+	return;
+});
+
+// 기타 도움 문서
+router.get('/other', function(req, res) {
+	var dis2 = loginy(req, res);
+	var dis3 = loginny(req, res);
+	name = rname(name);
+	res.status(404).render('ban', { 
+		title: '기타 메뉴', 
+		dis2: dis2, 
+		dis3: dis3, 
+		content: '<li><a href="/ver">위키 버전</a></li><li><a href="/titleindex">모든 문서</a></li>', 
 		wikiname: name 
 	});
 	res.end();
