@@ -24,7 +24,9 @@ module.exports = function(req, n, ba){
   }
   six = '\r\n' + six + '\r\n';
 
+  /* 추가 파싱 포함 됨 */
   six = six.replace(/<((?:span|font|iframe|table\s?bordercolor=(?:\w+)|table\s?bordercolor=(?:#[0-9a-f-A-F]{3})|table\s?bordercolor=(?:#[0-9a-f-A-F]{6})|table\s?width=(?:[^>]*)|table\s?align=(?:[^>]*)|table\s?bgcolor=(?:\w+)|table\s?bgcolor=(?:#[0-9a-f-A-F]{3})|table\s?bgcolor=(?:#[0-9a-f-A-F]{6})|\:|\(|\)|bgcolor=(?:\w+)|bgcolor=(?:#[0-9a-f-A-F]{3})|bgcolor=(?:#[0-9a-f-A-F]{6})|-(?:[0-9]+)|\|(?:[0-9]+)|big|small|del|s|\/(?:span|font|iframe|big|small|del|s))(\s[^>]+)?)>/ig, '[$1]');
+  /* ----------- */
   
   six = xssFilters.inHTMLData(six);
   
@@ -47,6 +49,25 @@ module.exports = function(req, n, ba){
   six = six.replace(/{{{#!html\s?/ig, "");
   
   six = six.replace(/{{{#!wiki\s?([^\n]*)\n/ig, "<div $1>");
+  
+  var folding = /{{{#!folding\s?([^\n]*)/;
+  var fold;
+  var j = 0;
+  while(true) {
+	  j = j + 1;
+	  if(fold = folding.exec(six)) {
+		  if(fold[1]) {
+			six = six.replace(folding, "<div style=\"border: 1px solid;padding: 10px;padding-bottom: 0;padding-top: 0;\" class=\"folding-area\"><dl class=\"folding\"><dt onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\">$1</dt><dd id=\"folding_" + j + "\" style=\"display: none;\"><div><br>");
+		  }
+		  else {
+			six = six.replace(folding, "<div style=\"border: 1px solid;padding: 10px;padding-bottom: 0;padding-top: 0;\" class=\"folding-area\"><dl class=\"folding\"><dt onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\">숨겨진 내용</dt><dd id=\"folding_" + j + "\" style=\"display: none;\"><div><br>");
+		  }
+	  }
+	  else {
+		  break;
+	  }
+  }
+  six = six.replace(/&}}}/g, '</div></dd></dl></div>');
   
   six = six.replace(/{{{#(\w+)\s?/ig, "<span style#is#\"color:$1;\">");
   six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style#is#\"color:$1;\">");
