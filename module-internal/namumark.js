@@ -57,17 +57,17 @@ module.exports = function(req, n, ba){
 	  j = j + 1;
 	  if(fold = folding.exec(six)) {
 		  if(fold[1]) {
-			six = six.replace(folding, "<div style=\"border: 1px solid;padding: 10px;padding-bottom: 0;padding-top: 0;\" class=\"folding-area\"><dl class=\"folding\"><dt onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\">$1</dt><dd id=\"folding_" + j + "\" style=\"display: none;\"><div><br>");
+			six = six.replace(folding, "<div style=\"border: 1px solid;background: #f5f5f5;\" class=\"folding-area\"><div class=\"folding\"><div style=\"padding: 10px;\" onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\">$1</div><div id=\"folding_" + j + "\" style=\"display: none;\"><div style=\"padding: 10px;\"><br>");
 		  }
 		  else {
-			six = six.replace(folding, "<div style=\"border: 1px solid;padding: 10px;padding-bottom: 0;padding-top: 0;\" class=\"folding-area\"><dl class=\"folding\"><dt onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\">숨겨진 내용</dt><dd id=\"folding_" + j + "\" style=\"display: none;\"><div><br>");
+			six = six.replace(folding, "<div style=\"border: 1px solid;background: #f5f5f5;\" class=\"folding-area\"><div class=\"folding\"><div style=\"padding: 10px;\" onclick=\"var f=document.getElementById('folding_" + j + "');var s=f.style.display=='block';f.style.display=s?'none':'block';this.className=s?'':'opened';\"><br></div><div id=\"folding_" + j + "\" style=\"display: none;\"><div style=\"padding: 10px;\"><br>");
 		  }
 	  }
 	  else {
 		  break;
 	  }
   }
-  six = six.replace(/&}}}/g, '</div></dd></dl></div>');
+  six = six.replace(/&}}}/g, '</div></div></div></div>');
   
   six = six.replace(/{{{#(\w+)\s?/ig, "<span style#is#\"color:$1;\">");
   six = six.replace(/{{{(#[0-9a-f-A-F]{3})\s?/ig, "<span style#is#\"color:$1;\">");
