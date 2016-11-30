@@ -2522,8 +2522,11 @@ router.get('/history/:page', function(req, res) {
 			else {
 				var pageplus = '</a>';
 			}
-			send = htmlencode.htmlEncode(send);
-			send = send.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
+			if(send === '<br>') {}
+			else {
+				send = htmlencode.htmlEncode(send);
+				send = send.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
+			}
 			var exists = fs.existsSync('./user/' + admin + '-admin.txt');
 			if(exists) {
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
