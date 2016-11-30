@@ -1,10 +1,13 @@
 {
-  "name": "Open Wiki Namu Engine Test",
+  "name": "openNAMU",
   "version": "1.0-beta",
   "private": true,
     "scripts": {
     "start": "forever start ./app.js",
     "stop": "forever stopall",
     "restart": "forever stopall && forever start ./app.js"
+  },
+  "dependencies": {
+    "bcrypt": "<=0.8.7"
   }
 }
