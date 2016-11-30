@@ -107,13 +107,13 @@ function yourip(req, res) {
 				test = decodeURIComponent(id);
 			}
 			else {
-				cookies.set( "AqoursGanbaRuby", '' )
-				cookies.set( "WikiID", '' )
+				cookies.set( "AqoursGanbaRuby", '' );
+				cookies.set( "WikiID", '' );
 			}
 		}
 		else {
-			cookies.set( "AqoursGanbaRuby", '' )
-			cookies.set( "WikiID", '' )
+			cookies.set( "AqoursGanbaRuby", '' );
+			cookies.set( "WikiID", '' );
 		}
 	}
 	return test;
@@ -1675,14 +1675,14 @@ router.get('/RecentChanges', function(req, res) {
 					var plus = /\+/g;
 					var leng = fs.readFileSync('./recent/RC-' + i + '-leng.txt', 'utf8');
 					if(plus.exec(leng)) {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:green;">(' + leng + ')</span>';
 					}
 					else {
-						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span> <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+						var pageplus = htmlencode.htmlEncode(page) + '</a> <span style="color:red;">(' + leng + ')</span>';
 					}
 				}
 				else {
-					var pageplus = htmlencode.htmlEncode(page) + '</a>  <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+					var pageplus = htmlencode.htmlEncode(page) + '</a>';
 				}
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
@@ -1725,7 +1725,7 @@ router.get('/RecentChanges', function(req, res) {
 					title = title.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
 				}
 				
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+'</td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+' <a href="/history/'+encodeURIComponent(page)+'">(역사)</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			else {
 				break;
@@ -1739,16 +1739,31 @@ router.get('/RecentChanges', function(req, res) {
 				break;
 			}
 			else {
-				var exists = fs.existsSync('./recent/RC-' + ( i - 1 ) + '.txt', 'utf8');
+				var exists = fs.existsSync('./recent/RC-' + ( i - 1 ) + '.txt');
 				if(exists) {
 					j = Number(number) - 51;
 					while(true) {
-						fs.unlinkSync('./recent/RC-' + j + '.txt');
-						fs.unlinkSync('./recent/RC-' + j + '-ip.txt');
-						fs.unlinkSync('./recent/RC-' + j + '-today.txt');
-						fs.unlinkSync('./recent/RC-' + j + '-title.txt');
-						fs.unlinkSync('./recent/RC-' + j + '-leng.txt');
-						var exists = fs.existsSync('./recent/RC-' + ( j - 1 ) + '.txt', 'utf8');
+						var exists = fs.existsSync('./recent/RC-' + j + '.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RC-' + j + '.txt');
+						}
+						var exists = fs.existsSync('./recent/RC-' + j + '-ip.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RC-' + j + '-ip.txt');
+						}
+						var exists = fs.existsSync('./recent/RC-' + j + '-today.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RC-' + j + '-today.txt');
+						}
+						var exists = fs.existsSync('./recent/RC-' + j + '-title.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RC-' + j + '-title.txt');
+						}
+						var exists = fs.existsSync('./recent/RC-' + j + '-leng.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RC-' + j + '-leng.txt');
+						}
+						var exists = fs.existsSync('./recent/RC-' + ( j - 1 ) + '.txt');
 						if(exists) {
 							j = j - 1;
 						}
@@ -1773,7 +1788,7 @@ router.get('/RecentChanges', function(req, res) {
 					}
 				}
 				else {
-					var pageplus = htmlencode.htmlEncode(page) + '</a>  <a href="/history/'+encodeURIComponent(page)+'">(history)</a>';
+					var pageplus = htmlencode.htmlEncode(page) + '</a>';
 				}
 				var exists = fs.existsSync('./user/' + encodeURIComponent(ip) + '-ban.txt');
 				if(exists) {
@@ -1815,7 +1830,7 @@ router.get('/RecentChanges', function(req, res) {
 					title = htmlencode.htmlEncode(title);
 					title = title.replace(/&lt;a href=&quot;\/w\/(?:(?:(?!&quot;).)*)&quot;&gt;((?:(?!&lt;).)*)&lt;\/a&gt;/g, '<a href="/w/$1">$1</a>');
 				}
-				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+' <a href="/history/'+encodeURIComponent(page)+'">(history)</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
+				data = '<table id="toron"><tbody><tr><td id="yosolo"><a href="/w/'+encodeURIComponent(page)+'">'+pageplus+' <a href="/history/'+encodeURIComponent(page)+'">(역사)</a></td><td id="yosolo">'+ip+'</td><td id="yosolo">'+today+'</td></tr><tr><td colspan="3" id="yosolo">'+title+'</td></tr></tbody></table>' + data;
 			}
 			i = i + 1;
 		}
@@ -1900,15 +1915,27 @@ router.get('/RecentDiscuss', function(req, res, next) {
 				break;
 			}
 			else {
-				var exists = fs.existsSync('./recent/RD-' + ( i - 1 ) + '.txt', 'utf8');
+				var exists = fs.existsSync('./recent/RD-' + ( i - 1 ) + '.txt');
 				if(exists) {
 					j = Number(number) - 51;
 					while(true) {
-						fs.unlinkSync('./recent/RD-' + j + '.txt');
-						fs.unlinkSync('./recent/RD-' + j + '-ip.txt');
-						fs.unlinkSync('./recent/RD-' + j + '-today.txt');
-						fs.unlinkSync('./recent/RD-' + j + '-title.txt');
-						var exists = fs.existsSync('./recent/RD-' + ( j - 1 ) + '.txt', 'utf8');
+						var exists = fs.existsSync('./recent/RD-' + j + '.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RD-' + j + '.txt');
+						}
+						var exists = fs.existsSync('./recent/RD-' + j + '-ip.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RD-' + j + '-ip.txt');
+						}
+						var exists = fs.existsSync('./recent/RD-' + j + '-today.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RD-' + j + '-today.txt');
+						}
+						var exists = fs.existsSync('./recent/RD-' + j + '-title.txt');
+						if(exists) {
+							fs.unlinkSync('./recent/RD-' + j + '-title.txt');
+						}
+						var exists = fs.existsSync('./recent/RD-' + ( j - 1 ) + '.txt');
 						if(exists) {
 							j = j - 1;
 						}
