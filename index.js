@@ -2081,7 +2081,8 @@ router.get('/xref/:page', function(req, res) {
 		ruby = ruby + '</div>';
 	}
 	res.render('ban', { 
-		title: req.params.page + ' (역 링크)', 
+		title: req.params.page,
+		title2: '<span style="margin-left:5px"></span>(역링크)', 
 		dis2: dis2, 
 		dis3: dis3, 
 		content: ruby, 
