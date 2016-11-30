@@ -2206,57 +2206,74 @@ router.get('/edit/:page', function(req, res) {
 });
 
 // 문단 편집
-/* 미 완성 코드
+/* 이걸 언제 완성 하나...
 router.get('/edit/:page/:number', function(req, res) {
 	name = rname(name);
 	
 	var dis2 = loginy(req,res);
 	var dis3 = loginny(req,res);
-	req.params.number = Number(req.params.number);
 	
 	if(encodeURIComponent(req.params.page).length > 255) {
-		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>')
+		res.send('<script type="text/javascript">alert("문서 명이 너무 깁니다.");</script>');
 	}
-	
-	fs.exists('./data/' + encodeURIComponent(req.params.page)+'.txt', function(exists) {
+	else {
+		var exists = fs.existsSync('./data/' + encodeURIComponent(req.params.page)+'.txt');
 		if(!exists){
 			res.redirect('/edit/' + encodeURIComponent(req.params.page));
 		}
 		else{
 			var data = fs.readFileSync('./data/' + encodeURIComponent(req.params.page)+'.txt', 'utf8');
+			var databack = data;
 			data = data + '\r\n';
 			var toc = /(?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n/;
 			var test;
-			var is = /((?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n(?:(?:(?:(?:(?!(?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n).)*)\r\n)+))/;
+			var is = /((?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n(?:(?:(?:(?:(?!(?:={1,6})\s?(?:[^=]*)\s?(?:={1,6})\r\n).)*)(?:\r\n?))+))/;
 			var i = 0;
+			var j = 0;
 			while(true) {
 				if(toc.exec(data)) {
-					i = i + 1;
-					if(req.params.number === i) {
-						test = is.exec(data);
-						test[1] = test[1].replace(/\r\n$/, '');
-						break;
-					}
-					else {
-						data = data.replace(toc, '');
-					}
+					j = j + 1;
+					data = data.replace(toc, '');
 				}
 				else {
 					break;
 				}
 			}
-			res.render('edit', { 
-				dis2: dis2,
-				dis3: dis3,
-				title: req.params.page, 
-				title2: encodeURIComponent(req.params.page), 
-				content: test[1],
-				wikiname: name 
-			});
-			res.end();
-			return;
+			if(j < Number(req.params.number)) {
+				res.redirect('/edit/' + encodeURIComponent(req.params.page));
+			}
+			else {
+				while(true) {
+					if(toc.exec(data)) {
+						i = i + 1;
+						if(Number(req.params.number) === i) {
+							test = is.exec(data);
+							console.log(test);
+							test[1] = test[1].replace(/\r\n$/, '');
+							break;
+						}
+						else {
+							data = data.replace(toc, '');
+						}
+					}
+					else {
+						break;
+					}
+				}
+				res.render('sedit', { 
+					dis2: dis2,
+					dis3: dis3,
+					title: req.params.page, 
+					title2: encodeURIComponent(req.params.page), 
+					content: test[1],
+					content2: test[1],
+					wikiname: name 
+				});
+				res.end();
+				return;
+			}
 		}
-	})
+	}
 });
 */
 
